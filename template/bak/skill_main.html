@@ -1,0 +1,3147 @@
+<!-- template/skill_main.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocAI - Skill-Based RAG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="/static/js/marked.min.js"></script>
+
+    <!-- OPMP Progressive Streaming Integration -->
+    <link rel="stylesheet" href="/static/css/progressive_streaming.css">
+    <script src="/static/js/progressive_markdown_renderer.js"></script>
+
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --primary-light: #818cf8;
+            --secondary: #764ba2;
+            --background: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #e2e8f0;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+            /* Selection colors - more vibrant */
+            --selected-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.15));
+            --selected-border: #667eea;
+            --selected-text: #4338ca;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* ===== LEFT SIDEBAR (Widened for NotebookLM Style) ===== */
+        .sidebar {
+            width: 360px;  /* Widened from 300px to accommodate checkboxes */
+            min-width: 280px;
+            max-width: 500px;
+            background: var(--sidebar-bg);
+            border-right: none;  /* Removed - handle provides visual separation */
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width 0.05s ease-out;
+        }
+
+        /* ===== SIDEBAR RESIZE HANDLE ===== */
+        .sidebar-resize-handle {
+            width: 6px;
+            background: linear-gradient(to right, var(--sidebar-border), transparent);
+            cursor: ew-resize;
+            flex-shrink: 0;
+            position: relative;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-resize-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2px;
+            height: 40px;
+            background: var(--border);
+            border-radius: 1px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .sidebar-resize-handle:hover,
+        .sidebar-resize-handle.dragging {
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .sidebar-resize-handle:hover::after,
+        .sidebar-resize-handle.dragging::after {
+            opacity: 0.5;
+        }
+
+        /* Prevent text selection while resizing */
+        body.resizing {
+            cursor: ew-resize !important;
+            user-select: none !important;
+        }
+
+        body.resizing * {
+            cursor: ew-resize !important;
+        }
+
+        .sidebar-header {
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-header .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Navigation Link */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--input-bg);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            font-size: 0.9rem;
+            width: 20px;
+        }
+
+        .nav-link .nav-arrow {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Sidebar Content - Skill Tree */
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.75rem 0;
+        }
+
+        /* ===== TREE STRUCTURE ===== */
+        .tree-section {
+            margin-bottom: 0.25rem;
+        }
+
+        .tree-header {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.25rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+            color: var(--text-primary);
+        }
+
+        .tree-header:hover {
+            background: var(--input-bg);
+        }
+
+        .tree-header .toggle-icon {
+            width: 18px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .tree-header.expanded .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .tree-header .folder-icon {
+            font-size: 1.1rem;
+            margin-right: 0.625rem;
+            color: #f59e0b;
+        }
+
+        .tree-header .label {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .tree-children {
+            display: none;
+        }
+
+        .tree-section.expanded .tree-children {
+            display: block;
+        }
+
+        /* ===== SKILL ITEMS ===== */
+        .skill-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            margin: 0.125rem 0;
+        }
+
+        .skill-item:hover {
+            background: var(--input-bg);
+        }
+
+        /* SELECTED STATE - More vibrant and clear */
+        .skill-item.selected {
+            background: var(--selected-bg);
+            border-left-color: var(--selected-border);
+        }
+
+        .skill-item .skill-icon {
+            font-size: 1.25rem;
+            width: 28px;
+            flex-shrink: 0;
+        }
+
+        .skill-item .skill-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .skill-item.selected .skill-name {
+            color: var(--selected-text);
+            font-weight: 600;
+        }
+
+        .skill-item .skill-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .skill-item.selected .skill-badge {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== SKILL GROUP (3-Level Tree) ===== */
+        .skill-group {
+            margin: 0.125rem 0;
+        }
+
+        .skill-group-header {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem 0.75rem 2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .skill-group-header:hover {
+            background: var(--input-bg);
+        }
+
+        .skill-group-header.selected {
+            background: var(--selected-bg);
+            border-left-color: var(--selected-border);
+        }
+
+        /* COMMENTED OUT 2025-12-12: Expand icon removed per user request
+        .skill-group-header .expand-icon {
+            width: 16px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .skill-group.expanded .skill-group-header .expand-icon {
+            transform: rotate(90deg);
+        }
+        */
+
+        .skill-group-header .skill-icon {
+            font-size: 1.25rem;
+            width: 28px;
+            flex-shrink: 0;
+        }
+
+        .skill-group-header .skill-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .skill-group-header.selected .skill-name {
+            color: var(--selected-text);
+        }
+
+        .skill-group-header .skill-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .skill-group-header.selected .skill-badge {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== SKILL GROUP CHECK ICON ===== */
+        .skill-group-header .check-icon {
+            display: none;
+            width: 18px;
+            height: 18px;
+            font-size: 0.75rem;
+            color: white;
+            background: var(--primary);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .skill-group-header.selected .check-icon {
+            display: flex;
+        }
+
+        /* COMMENTED OUT 2025-12-12: Expand icon removed
+        .skill-group-header.selected .expand-icon {
+            display: none;
+        }
+        */
+
+        /* ===== SKILL CHILDREN (Nested Items) ===== */
+        /* MODIFIED 2025-12-12: Hidden per user request (data still available for selection) */
+        .skill-children {
+            display: none;  /* Hidden - documents selected via skill row click */
+            margin-left: 1rem;
+            border-left: 2px dashed var(--border);
+        }
+
+        /* COMMENTED OUT 2025-12-12: Expand functionality disabled
+        .skill-group.expanded .skill-children {
+            display: block;
+        }
+        */
+
+        /* ===== SKILL SELECT ALL CHECKBOX ===== */
+        .skill-select-all {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem 0.5rem 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        .skill-select-all:hover {
+            background: var(--input-bg);
+            color: var(--text-secondary);
+        }
+        .skill-select-all-checkbox {
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+        .skill-select-all label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* ===== ATTACHMENT ITEM (NotebookLM Style) ===== */
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem 0.6rem 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .attachment-item:hover {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .attachment-item.selected {
+            background: var(--selected-bg);
+            border-left-color: var(--selected-border);
+            color: var(--selected-text);
+        }
+
+        /* File Type Icons */
+        .attachment-item .attachment-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .attachment-item .attachment-icon.pdf-icon {
+            color: #dc2626; /* Red for PDF */
+        }
+
+        .attachment-item .attachment-icon.doc-icon {
+            color: #2563eb; /* Blue for DOC/DOCX */
+        }
+
+        .attachment-item .attachment-icon.txt-icon {
+            color: #6b7280; /* Gray for TXT */
+        }
+
+        .attachment-item .attachment-icon.default-icon {
+            color: #f59e0b; /* Orange for other */
+        }
+
+        .attachment-item .attachment-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 0.5rem;
+        }
+
+        /* Checkbox at row end */
+        .attachment-item .item-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-left: auto;
+            margin-right: 0.5rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* 3-dot menu on hover */
+        .attachment-item .item-menu-trigger {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .attachment-item:hover .item-menu-trigger {
+            opacity: 1;
+        }
+
+        .attachment-item .item-menu-trigger:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* Item dropdown menu */
+        .item-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0.5rem;
+            min-width: 140px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0;
+            z-index: 1000;
+            display: none;
+        }
+
+        .item-dropdown-menu.show {
+            display: block;
+        }
+
+        .item-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .item-dropdown-item:hover {
+            background: var(--input-bg);
+        }
+
+        .item-dropdown-item i {
+            width: 14px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .attachment-item .skill-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .attachment-item.selected .skill-badge {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===== SELECT ALL HEADER ===== */
+        .select-all-header {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem 0.6rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--input-bg);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .select-all-header .select-all-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 0.75rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .select-all-header .select-all-label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e5e5e5 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: var(--background);
+        }
+
+        /* Header */
+        .main-header {
+            background: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .selected-badge {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .selected-badge.visible {
+            display: flex;
+        }
+
+        .header-btn {
+            padding: 0.5rem 0.875rem;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .header-btn:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        /* ===== CHAT AREA ===== */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-anchor: none;  /* ✅ Prevent browser from auto-scrolling to maintain old message visibility */
+            padding: 1.5rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .welcome-message .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .welcome-message h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .welcome-message p {
+            font-size: 1rem;
+            max-width: 450px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .welcome-message .arrow {
+            font-size: 2.5rem;
+            margin-top: 2rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-15px); }
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;  /* ✅ TOP-RIGHT layout: newest at top, old pushed down OUT of view */
+            gap: 1.25rem;
+            overflow-anchor: none;  /* ✅ Critical: Prevent scroll jump when prepending messages */
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message .sources {
+            margin-top: 1rem;
+            padding-top: 0.875rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .message .sources-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .message .source-item {
+            background: var(--input-bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.375rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--primary);
+        }
+
+        /* ===== INPUT AREA (FIXED AT BOTTOM) ===== */
+        .input-area {
+            background: var(--card-bg);
+            padding: 1rem 1.5rem 1.25rem;
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--input-bg);
+            border-radius: 12px;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+            background: white;
+        }
+
+        .input-wrapper .input-icon {
+            color: var(--text-muted);
+            font-size: 1rem;
+            padding-left: 0.25rem;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.875rem 0.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text-primary);
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.875rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-button.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .send-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1.5rem;
+            border: 4px solid var(--input-bg);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-subtext {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* ===== SKILL ROW DROPDOWN MENU ===== */
+        .skill-row-actions {
+            position: relative;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-menu-trigger {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+
+        .skill-item:hover .skill-menu-trigger,
+        .skill-group-header:hover .skill-menu-trigger,
+        .tree-header:hover .skill-menu-trigger {
+            opacity: 1;
+        }
+
+        /* Tree Header layout for menu */
+        .tree-header {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .tree-header .tree-header-actions {
+            position: absolute;
+            right: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-menu-trigger:hover {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .skill-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            min-width: 160px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border);
+            padding: 0.5rem 0;
+            z-index: 1000;
+            display: none;
+        }
+
+        .skill-dropdown-menu.show {
+            display: block;
+        }
+
+        .skill-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .skill-dropdown-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .skill-dropdown-item i {
+            width: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Rename Modal */
+        .rename-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rename-modal-overlay.show {
+            display: flex;
+        }
+
+        .rename-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .rename-modal h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .rename-modal input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .rename-modal input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .rename-modal-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .rename-modal-buttons button {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rename-modal-buttons .btn-cancel {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .rename-modal-buttons .btn-confirm {
+            background: var(--primary);
+            border: none;
+            color: white;
+        }
+
+        .rename-modal-buttons .btn-confirm:hover {
+            background: #1d4ed8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 72px;
+            }
+            .sidebar-header h1,
+            .nav-link span,
+            .nav-link .nav-arrow,
+            .tree-header .label,
+            .skill-item .skill-name,
+            .skill-item .skill-badge {
+                display: none;
+            }
+            .tree-header, .skill-item {
+                justify-content: center;
+                padding: 0.875rem;
+            }
+            .skill-item {
+                padding-left: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/static/new_logo.png" class="logo" alt="DocAI Logo">
+                <h1>DocAI Skills</h1>
+            </div>
+
+            <!-- Language Toggle (Disabled for now)
+            <div class="nav-link" onclick="toggleLanguage()" style="cursor: pointer;">
+                <i class="fa-solid fa-language"></i>
+                <span id="lang-toggle-text">英文 ↔ 中文</span>
+                <i class="fa-solid fa-sync nav-arrow"></i>
+            </div>
+            -->
+
+            <!-- Link to Config -->
+            <a href="/skill/config" class="nav-link">
+                <i class="fa-solid fa-cog"></i>
+                <span>Skill 配置管理</span>
+                <i class="fa-solid fa-arrow-right nav-arrow"></i>
+            </a>
+
+            <nav class="sidebar-content">
+                <!-- Select All Header - COMMENTED OUT (2025-12-05)
+                <div class="select-all-header" id="select-all-header">
+                    <input type="checkbox" class="select-all-checkbox" id="select-all-checkbox" onclick="toggleSelectAll(event)">
+                    <label class="select-all-label" for="select-all-checkbox" id="select-all-label">選取所有來源</label>
+                </div>
+                -->
+
+                <!-- Skills Tree -->
+                <div class="tree-section expanded" id="skills-tree">
+                    <div class="tree-header expanded" onclick="toggleTree('skills-tree')">
+                        <i class="fa-solid fa-chevron-right toggle-icon"></i>
+                        <i class="fa-solid fa-folder-open folder-icon"></i>
+                        <span class="label" id="skill-tree-label">Skill Tree</span>
+                        <!-- Tree Header Dropdown Menu -->
+                        <div class="tree-header-actions">
+                            <div class="skill-menu-trigger" onclick="toggleTreeMenu(event)">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </div>
+                            <div class="skill-dropdown-menu" id="menu-skill-tree">
+                                <div class="skill-dropdown-item" onclick="showTreeRenameModal()">
+                                    <i class="fa-solid fa-pen"></i>
+                                    <span>重新命名</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tree-children" id="skills-list">
+                        <!-- Skills loaded dynamically -->
+                        <div class="skill-item skeleton" style="height: 44px; margin: 0.25rem 0.5rem;"></div>
+                        <div class="skill-item skeleton" style="height: 44px; margin: 0.25rem 0.5rem;"></div>
+                        <div class="skill-item skeleton" style="height: 44px; margin: 0.25rem 0.5rem;"></div>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- SIDEBAR RESIZE HANDLE -->
+        <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-right">
+                    <div class="selected-badge" id="selected-badge">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span id="selected-name">-</span>
+                    </div>
+                    <button class="header-btn" onclick="clearChat()">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>清除</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Area -->
+            <div class="chat-area" id="chat-area">
+                <div class="welcome-message" id="welcome-message">
+                    <div class="welcome-icon">👈</div>
+                    <h3>請選擇一個技能</h3>
+                    <p>從左側的 Skill Tree 選擇您要查詢的知識庫，然後在下方輸入問題開始智能問答。</p>
+                    <div class="arrow">←</div>
+                </div>
+
+                <!-- Chat messages container - progress bars and responses are dynamically created here -->
+                <div class="chat-messages" id="chat-messages" style="display: none;"></div>
+            </div>
+
+            <!-- Input Area (Fixed at Bottom) -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                    <input
+                        type="text"
+                        id="query-input"
+                        placeholder="請先選擇左側的技能..."
+                        disabled
+                    />
+                    <button class="send-button" id="send-button" disabled onclick="sendQuery()">
+                        <span>搜尋</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Rename Modal -->
+    <div class="rename-modal-overlay" id="rename-modal-overlay" onclick="closeRenameModal(event)">
+        <div class="rename-modal" onclick="event.stopPropagation()">
+            <h3>重新命名</h3>
+            <input type="text" id="rename-input" placeholder="輸入新名稱..." />
+            <input type="hidden" id="rename-skill-id" />
+            <div class="rename-modal-buttons">
+                <button class="btn-cancel" onclick="closeRenameModal()">取消</button>
+                <button class="btn-confirm" onclick="confirmRename()">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">正在進行搜尋......</div>
+            <div class="loading-subtext">系統正在檢索相關內容...</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== State =====
+        let selectedSkills = [];  // Array for multi-select support
+        let isLoading = false;
+        let allSkillsData = [];  // Cache all skills for group lookups
+        let chatHistory = [];     // Track chat messages for persistence
+
+        // ===== Session Storage Keys =====
+        const SESSION_KEYS = {
+            CHAT_HISTORY: 'docai_chat_history',
+            SELECTED_SKILLS: 'docai_selected_skills',
+            CHECKED_ITEMS: 'docai_checked_items'
+        };
+
+        // ===== Session Storage Functions =====
+        // FIXED: Split save functions to prevent race condition
+        // When loadSkills() -> initializeAllSelected() -> saveSelectionState()
+        // It won't overwrite chatHistory (which may not be restored yet)
+
+        function saveChatHistory() {
+            try {
+                sessionStorage.setItem(SESSION_KEYS.CHAT_HISTORY, JSON.stringify(chatHistory));
+            } catch (e) {
+                console.warn('Failed to save chat history:', e);
+            }
+        }
+
+        function saveSelectionState() {
+            try {
+                sessionStorage.setItem(SESSION_KEYS.SELECTED_SKILLS, JSON.stringify(selectedSkills));
+                sessionStorage.setItem(SESSION_KEYS.CHECKED_ITEMS, JSON.stringify([...checkedItems]));
+            } catch (e) {
+                console.warn('Failed to save selection state:', e);
+            }
+        }
+
+        // Legacy function for backward compatibility (only used in clearSessionState)
+        function saveChatState() {
+            saveChatHistory();
+            saveSelectionState();
+        }
+
+        function restoreChatState() {
+            try {
+                // Restore chat history
+                const savedHistory = sessionStorage.getItem(SESSION_KEYS.CHAT_HISTORY);
+                if (savedHistory) {
+                    chatHistory = JSON.parse(savedHistory);
+                    renderChatHistory();
+                }
+
+                // Restore selected skills
+                const savedSkills = sessionStorage.getItem(SESSION_KEYS.SELECTED_SKILLS);
+                if (savedSkills) {
+                    selectedSkills = JSON.parse(savedSkills);
+                    if (selectedSkills.length > 0) {
+                        updateSelectionUIFromRestore();
+                    }
+                }
+
+                // Restore checked items
+                const savedChecked = sessionStorage.getItem(SESSION_KEYS.CHECKED_ITEMS);
+                if (savedChecked) {
+                    const checkedArray = JSON.parse(savedChecked);
+                    checkedItems = new Set(checkedArray);
+                    restoreCheckboxStates();
+                }
+            } catch (e) {
+                console.warn('Failed to restore chat state:', e);
+            }
+        }
+
+        function renderChatHistory() {
+            const container = document.getElementById('chat-messages');
+            if (!container || chatHistory.length === 0) return;
+
+            // Clear welcome message if exists
+            const welcomeMessage = container.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.style.display = 'none';
+            }
+
+            // ✅ Render history in chronological order (oldest first)
+            // Normal column CSS + append = history at bottom, newest messages prepended at top
+            chatHistory.forEach(msg => {
+                const message = document.createElement('div');
+                message.className = `message ${msg.role}`;
+
+                let html = '';
+                if (msg.role === 'assistant') {
+                    html = marked.parse(msg.content);
+                } else {
+                    html = `<p>${escapeHtml(msg.content)}</p>`;
+                }
+
+                // Add sources if available
+                if (msg.sources && msg.sources.length > 0) {
+                    html += `
+                        <div class="sources">
+                            <div class="sources-title">
+                                <i class="fa-solid fa-book-open"></i>
+                                ${t('chat.sources_title')} (${msg.sources.length})
+                            </div>
+                    `;
+                    msg.sources.slice(0, 3).forEach(s => {
+                        const score = s.score ? ((1 - s.score) * 100).toFixed(0) : 'N/A';
+                        const filename = s.source_name || s.metadata?.document_name || 'Unknown';
+                        const preview = s.content ? s.content.substring(0, 100) + '...' : '';
+                        html += `
+                            <div class="source-item">
+                                <strong>${filename}</strong> (${t('chat.relevance')}: ${score}%)<br>
+                                <span style="color: var(--text-muted);">${preview}</span>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+
+                message.innerHTML = html;
+                container.appendChild(message);  // History: append in chronological order
+            });
+
+            // ✅ Clean slate UX: Scroll to 0 (normal column shows newest at top)
+            const chatArea = document.getElementById('chat-area');
+            if (chatArea) {
+                chatArea.scrollTop = 0;
+            }
+        }
+
+        function updateSelectionUIFromRestore() {
+            if (selectedSkills.length === 0) return;
+
+            // Update header title
+            const selectedBadge = document.getElementById('selected-badge');
+            const selectedName = document.getElementById('selected-name');
+
+            if (selectedBadge) selectedBadge.style.display = 'flex';
+            if (selectedName) {
+                selectedName.textContent = selectedSkills.length === 1
+                    ? selectedSkills[0].name
+                    : `${selectedSkills.length} 個來源文件 (${selectedSkills.length} 項)`;
+            }
+
+            // Enable input
+            const input = document.getElementById('query-input');
+            const button = document.getElementById('send-button');
+            if (input) {
+                input.disabled = false;
+                input.placeholder = selectedSkills.length > 1
+                    ? t('chat.input_placeholder_multi', { skill: selectedSkills.length + ' 個來源文件' })
+                    : t('chat.input_placeholder_selected', { skill: selectedSkills[0].name });
+            }
+            if (button) button.disabled = false;
+        }
+
+        function restoreCheckboxStates() {
+            // Restore checkbox states after skills are loaded
+            setTimeout(() => {
+                document.querySelectorAll('.item-checkbox').forEach(cb => {
+                    const itemId = cb.dataset.itemId;
+                    cb.checked = checkedItems.has(itemId);
+                });
+                updateSelectAllState();
+            }, 500);
+        }
+
+        function clearSessionState() {
+            sessionStorage.removeItem(SESSION_KEYS.CHAT_HISTORY);
+            sessionStorage.removeItem(SESSION_KEYS.SELECTED_SKILLS);
+            sessionStorage.removeItem(SESSION_KEYS.CHECKED_ITEMS);
+            chatHistory = [];
+        }
+
+        // ===== Skill Icons =====
+        const skillIcons = {
+            'LLM': '✨',
+            '大語言': '✨',
+            '語言模型': '✨',
+            'AI': '🤖',
+            '民法': '📜',
+            '刑法': '⚔️',
+            'Legal': '⚖️',
+            'Python': '🐍',
+            'Programming': '💻',
+            'Research': '📚',
+            'Business': '📊',
+            'Investment': '💰',
+            '投資': '💰',
+            'default': '📁'
+        };
+
+        function getSkillIcon(skill) {
+            // Check name first
+            for (const [key, icon] of Object.entries(skillIcons)) {
+                if (skill.skill_name && skill.skill_name.includes(key)) return icon;
+            }
+            // Check category
+            for (const [key, icon] of Object.entries(skillIcons)) {
+                if (skill.skill_category && skill.skill_category.includes(key)) return icon;
+            }
+            return skillIcons.default;
+        }
+
+        // ===== File Type Icons (NotebookLM Style) =====
+        function getFileTypeIcon(filename) {
+            if (!filename) return { icon: 'fa-file', class: 'default-icon' };
+
+            const ext = filename.toLowerCase().split('.').pop();
+
+            switch (ext) {
+                case 'pdf':
+                    return { icon: 'fa-file-pdf', class: 'pdf-icon' };
+                case 'doc':
+                case 'docx':
+                    return { icon: 'fa-file-word', class: 'doc-icon' };
+                case 'txt':
+                case 'md':
+                    return { icon: 'fa-file-lines', class: 'txt-icon' };
+                case 'xls':
+                case 'xlsx':
+                    return { icon: 'fa-file-excel', class: 'doc-icon' };
+                case 'ppt':
+                case 'pptx':
+                    return { icon: 'fa-file-powerpoint', class: 'pdf-icon' };
+                default:
+                    return { icon: 'fa-file', class: 'default-icon' };
+            }
+        }
+
+        // ===== Checked Items State =====
+        let checkedItems = new Set();  // Track checked attachment IDs
+
+        // ===== Sidebar Resize =====
+        const SIDEBAR_MIN_WIDTH = 280;
+        const SIDEBAR_MAX_WIDTH = 500;
+        const SIDEBAR_DEFAULT_WIDTH = 360;
+        const SIDEBAR_WIDTH_KEY = 'docai_sidebar_width';
+
+        function initSidebarResize() {
+            const sidebar = document.querySelector('.sidebar');
+            const handle = document.getElementById('sidebar-resize-handle');
+
+            if (!sidebar || !handle) return;
+
+            // Restore saved width
+            const savedWidth = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+            if (savedWidth) {
+                const width = parseInt(savedWidth, 10);
+                if (width >= SIDEBAR_MIN_WIDTH && width <= SIDEBAR_MAX_WIDTH) {
+                    sidebar.style.width = width + 'px';
+                }
+            }
+
+            let isResizing = false;
+            let startX = 0;
+            let startWidth = 0;
+
+            function startResize(e) {
+                isResizing = true;
+                startX = e.clientX || e.touches?.[0]?.clientX || 0;
+                startWidth = sidebar.offsetWidth;
+
+                document.body.classList.add('resizing');
+                handle.classList.add('dragging');
+                sidebar.style.transition = 'none';  // Disable transition while dragging
+
+                e.preventDefault();
+            }
+
+            function doResize(e) {
+                if (!isResizing) return;
+
+                const clientX = e.clientX || e.touches?.[0]?.clientX || 0;
+                const delta = clientX - startX;
+                let newWidth = startWidth + delta;
+
+                // Apply constraints
+                newWidth = Math.max(SIDEBAR_MIN_WIDTH, Math.min(SIDEBAR_MAX_WIDTH, newWidth));
+
+                sidebar.style.width = newWidth + 'px';
+            }
+
+            function stopResize() {
+                if (!isResizing) return;
+
+                isResizing = false;
+                document.body.classList.remove('resizing');
+                handle.classList.remove('dragging');
+                sidebar.style.transition = '';  // Re-enable transition
+
+                // Save width to localStorage
+                const currentWidth = sidebar.offsetWidth;
+                localStorage.setItem(SIDEBAR_WIDTH_KEY, currentWidth.toString());
+            }
+
+            // Mouse events
+            handle.addEventListener('mousedown', startResize);
+            document.addEventListener('mousemove', doResize);
+            document.addEventListener('mouseup', stopResize);
+
+            // Touch events for mobile
+            handle.addEventListener('touchstart', startResize, { passive: false });
+            document.addEventListener('touchmove', doResize, { passive: false });
+            document.addEventListener('touchend', stopResize);
+
+            // Double-click to reset to default
+            handle.addEventListener('dblclick', () => {
+                sidebar.style.width = SIDEBAR_DEFAULT_WIDTH + 'px';
+                localStorage.setItem(SIDEBAR_WIDTH_KEY, SIDEBAR_DEFAULT_WIDTH.toString());
+            });
+        }
+
+        // ===== Initialize =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load UI translations first
+            await loadUITranslations();
+
+            // Restore saved language preference
+            const savedLang = localStorage.getItem('docai_lang');
+            if (savedLang && (savedLang === 'zh' || savedLang === 'en')) {
+                currentLang = savedLang;
+            }
+
+            // Apply translations to UI
+            applyUITranslations();
+
+            // Load skills
+            loadSkills();
+
+            // RESTORED 2025-12-12: Chat history persistence re-enabled per user request
+            // Restore chat state from session storage (after a short delay to let skills load)
+            setTimeout(() => {
+                restoreChatState();
+            }, 300);
+
+            // Enter key to send
+            document.getElementById('query-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendQuery();
+                }
+            });
+
+            // Initialize sidebar resize
+            initSidebarResize();
+        });
+
+        // ===== Toggle Tree =====
+        function toggleTree(sectionId) {
+            const section = document.getElementById(sectionId);
+            const header = section.querySelector('.tree-header');
+            section.classList.toggle('expanded');
+            header.classList.toggle('expanded');
+
+            // Update folder icon
+            const folderIcon = header.querySelector('.folder-icon');
+            if (section.classList.contains('expanded')) {
+                folderIcon.classList.remove('fa-folder');
+                folderIcon.classList.add('fa-folder-open');
+            } else {
+                folderIcon.classList.remove('fa-folder-open');
+                folderIcon.classList.add('fa-folder');
+            }
+        }
+
+        // ===== Language Toggle (Static UI Translation) =====
+        let currentLang = 'zh';  // 'zh' for Chinese, 'en' for English
+        let uiTranslations = null;  // Loaded from JSON file
+
+        // Load UI translations on page load
+        async function loadUITranslations() {
+            try {
+                const response = await fetch('/static/i18n/ui_translations.json');
+                if (response.ok) {
+                    uiTranslations = await response.json();
+                    console.log('UI translations loaded');
+                }
+            } catch (error) {
+                console.error('Failed to load UI translations:', error);
+                // Use inline fallback
+                uiTranslations = {
+                    zh: { lang_toggle: '英文 ↔ 中文' },
+                    en: { lang_toggle: 'English ↔ 中文' }
+                };
+            }
+        }
+
+        // Get translation by key path (e.g., "chat.welcome_title")
+        function t(keyPath, params = {}) {
+            if (!uiTranslations || !uiTranslations[currentLang]) return keyPath;
+
+            const keys = keyPath.split('.');
+            let value = uiTranslations[currentLang];
+
+            for (const key of keys) {
+                if (value && typeof value === 'object' && key in value) {
+                    value = value[key];
+                } else {
+                    return keyPath; // Key not found, return path as fallback
+                }
+            }
+
+            // Replace parameters like {skill}, {count}, {name}
+            if (typeof value === 'string') {
+                Object.entries(params).forEach(([key, val]) => {
+                    value = value.replace(`{${key}}`, val);
+                });
+            }
+
+            return value;
+        }
+
+        function toggleLanguage() {
+            // Toggle language (no LLM, just static UI translation)
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+
+            // Save preference to localStorage
+            localStorage.setItem('docai_lang', currentLang);
+
+            // Update all UI elements
+            applyUITranslations();
+        }
+
+        function applyUITranslations() {
+            if (!uiTranslations) return;
+
+            // Update language toggle button text
+            const toggleText = document.getElementById('lang-toggle-text');
+            if (toggleText) {
+                toggleText.textContent = t('lang_toggle');
+            }
+
+            // Update navigation links
+            const configLink = document.querySelector('a[href="/skill/config"] span');
+            if (configLink) configLink.textContent = t('nav.skill_config');
+
+            // Update Skill Tree label (if not custom renamed)
+            const savedLabel = localStorage.getItem('skillTreeLabel');
+            if (!savedLabel) {
+                const treeLabel = document.getElementById('skill-tree-label');
+                if (treeLabel) treeLabel.textContent = t('sidebar.skill_tree');
+            }
+
+            // Update welcome message
+            const welcomeTitle = document.querySelector('.welcome-message h3');
+            const welcomeDesc = document.querySelector('.welcome-message p');
+            if (welcomeTitle) welcomeTitle.textContent = t('chat.welcome_title');
+            if (welcomeDesc) welcomeDesc.textContent = t('chat.welcome_desc');
+
+            // Update input placeholder
+            const queryInput = document.getElementById('query-input');
+            if (queryInput && queryInput.disabled) {
+                queryInput.placeholder = t('chat.input_placeholder');
+            }
+
+            // Update send button
+            const sendBtn = document.querySelector('.send-button span');
+            if (sendBtn) sendBtn.textContent = t('chat.send');
+
+            // Update clear button
+            const clearBtn = document.querySelector('.header-btn span');
+            if (clearBtn) clearBtn.textContent = t('header.clear');
+
+            // Update loading overlay
+            const loadingText = document.querySelector('.loading-text');
+            const loadingSubtext = document.querySelector('.loading-subtext');
+            if (loadingText) loadingText.textContent = t('loading.searching');
+            if (loadingSubtext) loadingSubtext.textContent = t('loading.searching_desc');
+
+            // Update rename modal
+            const renameModalTitle = document.querySelector('.rename-modal h3');
+            const renameInput = document.getElementById('rename-input');
+            const btnCancel = document.querySelector('.rename-modal-buttons .btn-cancel');
+            const btnConfirm = document.querySelector('.rename-modal-buttons .btn-confirm');
+            if (renameModalTitle) renameModalTitle.textContent = t('rename_modal.title');
+            if (renameInput) renameInput.placeholder = t('rename_modal.placeholder');
+            if (btnCancel) btnCancel.textContent = t('actions.cancel');
+            if (btnConfirm) btnConfirm.textContent = t('actions.confirm');
+
+            // Update Select All label
+            const selectAllLabel = document.getElementById('select-all-label');
+            if (selectAllLabel) selectAllLabel.textContent = t('skill_tree.select_all');
+
+            // Re-render skills to update "Main" label
+            // NEW: Check if data is from tree endpoint or legacy format
+            if (allSkillsData && allSkillsData.length > 0) {
+                if (allSkillsData[0].head_id) {
+                    // New tree format
+                    renderSkillTree(allSkillsData);
+                } else {
+                    // Legacy format
+                    renderSkills(allSkillsData);
+                }
+            }
+        }
+
+        // NOTE: Skill names are NOT translated per user requirement (rule-1)
+        // This function is kept for compatibility but just returns the original name
+        function translateSkillName(name) {
+            return name;  // No translation for skill names
+        }
+
+        // ===== Load Skills =====
+        // NEW: Use /tree endpoint (skill_heads architecture)
+        async function loadSkills() {
+            try {
+                // NEW: Use tree endpoint for skill_heads architecture
+                const response = await fetch('/api/v1/skills/tree');
+                const apiResponse = await response.json();
+
+                // API returns: {"skill_tree": [...], "total_skills": N, ...}
+                // Extract skill_tree array for processing
+                const treeData = apiResponse.skill_tree || apiResponse;
+
+                // Cache tree data for lookups
+                allSkillsData = treeData;
+                renderSkillTree(treeData);
+
+                // NOTE: Removed initializeAllSelected() - now defaults to "none selected"
+
+            } catch (error) {
+                console.error('Failed to load skills:', error);
+                // Fallback to old endpoint if tree fails
+                try {
+                    let response = await fetch('/api/v1/skills/demo');
+                    let skills = await response.json();
+                    if (!skills || skills.length === 0) {
+                        response = await fetch('/api/v1/skills/');
+                        skills = await response.json();
+                    }
+                    allSkillsData = skills;
+                    renderSkills(skills);
+                    // NOTE: Removed initializeAllSelected() - now defaults to "none selected"
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    showFallbackSkills();
+                }
+            }
+        }
+
+        // ===== IMPROVEMENT #1: Initialize All Documents as Selected =====
+        // On initial load, all skills and documents should be checked by default
+        function initializeAllSelected() {
+            // Clear previous selections
+            checkedItems.clear();
+
+            // Collect all document IDs from tree data
+            if (allSkillsData && Array.isArray(allSkillsData)) {
+                allSkillsData.forEach(skill => {
+                    if (skill.documents && skill.documents.length > 0) {
+                        skill.documents.forEach(doc => {
+                            if (doc.skill_id) {
+                                checkedItems.add(doc.skill_id);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Set all checkboxes to checked
+            const allCheckboxes = document.querySelectorAll('.item-checkbox');
+            allCheckboxes.forEach(cb => {
+                cb.checked = true;
+            });
+
+            // Set select-all checkbox to checked
+            const selectAllCheckbox = document.getElementById('select-all-checkbox');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            }
+
+            // Update selectedSkills array and enable query input
+            updateSelectedFromCheckboxes();
+
+            console.log(`[InitializeAllSelected] Checked ${checkedItems.size} documents by default`);
+        }
+
+        // ===== NEW: Render Skill Tree from /tree endpoint =====
+        // This function handles the new skill_heads architecture data format
+        function renderSkillTree(treeData) {
+            const container = document.getElementById('skills-list');
+            container.innerHTML = '';
+
+            if (!treeData || treeData.length === 0) {
+                container.innerHTML = `
+                    <div class="skill-item" style="color: var(--text-muted); cursor: default;">
+                        <span class="skill-icon">📭</span>
+                        <span class="skill-name">${t('skill_tree.no_skills')}</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by display_order
+            const sortedTree = [...treeData].sort((a, b) => {
+                const orderA = a.display_order !== undefined ? a.display_order : 999;
+                const orderB = b.display_order !== undefined ? b.display_order : 999;
+                return orderA - orderB;
+            });
+
+            sortedTree.forEach(skill => {
+                const name = skill.skill_name;
+                const headId = skill.head_id;
+                const hasDocuments = skill.documents && skill.documents.length > 0;
+                const icon = getSkillIcon({ skill_name: name, skill_category: skill.category });
+                const totalChunks = skill.total_chunks || 0;
+
+                if (hasDocuments) {
+                    // Render as expandable group with documents
+                    const groupId = headId.replace(/[^a-zA-Z0-9]/g, '_');
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'skill-group';
+                    groupDiv.id = `group-${groupId}`;
+
+                    // Build all skill IDs for this group (head_id + all document skill_ids)
+                    const allGroupIds = [headId, ...skill.documents.map(d => d.skill_id)];
+                    const allGroupIdsJson = JSON.stringify(allGroupIds).replace(/"/g, '&quot;');
+
+                    groupDiv.innerHTML = `
+                        <!-- MODIFIED 2025-12-12: Click skill row → auto-select all documents + mutual exclusion -->
+                        <div class="skill-group-header" data-skill-id="${headId}" data-head-id="${headId}" data-all-ids="${allGroupIdsJson}" data-group-id="${groupId}" onclick="handleSkillGroupClick('${groupId}', '${headId}', '${escapeHtml(name)}', ${totalChunks}, '${skill.category}', this)">
+                            <i class="fa-solid fa-check check-icon"></i>
+                            <!-- REMOVED 2025-12-12: Expand icon removed per user request -->
+                            <!-- <i class="fa-solid fa-chevron-right expand-icon"></i> -->
+                            <span class="skill-icon">${icon}</span>
+                            <span class="skill-name">${translateSkillName(name)}</span>
+                            <span class="skill-badge">${totalChunks}</span>
+                            ${getDropdownMenuHtml(headId, name)}
+                        </div>
+                        <div class="skill-children">
+                            <!-- REMOVED 2025-12-12: Select-all checkbox hidden per user request
+                            <div class="skill-select-all" onclick="toggleSkillSelectAll('${groupId}', event)">
+                                <input type="checkbox" class="skill-select-all-checkbox" id="skill-select-all-${groupId}" data-group-id="${groupId}">
+                                <label for="skill-select-all-${groupId}">選取此技能的所有文件</label>
+                            </div>
+                            -->
+                            ${skill.documents.map(doc => {
+                                const fileIcon = getFileTypeIcon(doc.source_name);
+                                const safeId = doc.skill_id.replace(/'/g, "\\'");
+                                const safeName = escapeHtml(doc.source_name || 'Document');
+                                const docChunks = doc.total_chunks || 0;
+                                return `
+                                <div class="attachment-item" data-skill-id="${doc.skill_id}" data-group-id="${groupId}" onclick="handleAttachmentClick(event, '${safeId}', '${safeName}', ${docChunks}, '${skill.category}')">
+                                    <span class="attachment-icon ${fileIcon.class}"><i class="fa-solid ${fileIcon.icon}"></i></span>
+                                    <span class="attachment-name" title="${escapeHtml(doc.source_name || 'Document')}">${safeName}</span>
+                                    <span class="skill-badge">${docChunks}</span>
+                                    <input type="checkbox" class="item-checkbox" data-item-id="${doc.skill_id}" onclick="handleCheckboxClick(event)" ${checkedItems.has(doc.skill_id) ? 'checked' : ''}>
+                                    <div class="item-menu-trigger" onclick="toggleItemMenu(event, '${safeId}')">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                    <div class="item-dropdown-menu" id="item-menu-${safeId}">
+                                        <div class="item-dropdown-item" onclick="renameSource(event, '${safeId}', '${safeName}')">
+                                            <i class="fa-solid fa-pen"></i>
+                                            <span>重新命名來源</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    `;
+
+                    container.appendChild(groupDiv);
+                } else {
+                    // Render as simple skill item (no documents yet)
+                    const item = document.createElement('div');
+                    item.className = 'skill-item';
+                    item.dataset.skillId = headId;
+                    item.dataset.headId = headId;
+                    item.onclick = () => selectSkillItemFromTree(headId, name, totalChunks, skill.category, item);
+
+                    item.innerHTML = `
+                        <span class="skill-icon">${icon}</span>
+                        <span class="skill-name">${translateSkillName(name)}</span>
+                        <span class="skill-badge">${totalChunks}</span>
+                        ${getDropdownMenuHtml(headId, name)}
+                    `;
+
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        // ===== NEW: Select Skill Group from Tree Data =====
+        // IMPROVEMENT #2: When clicking on a skill header, select ALL documents under that skill
+        // This allows users to search across all documents without manually expanding and selecting
+        function selectSkillGroupFromTree(headId, name, totalChunks, category, element) {
+            clearAllSelections();
+            element.classList.add('selected');
+
+            // Find the skill in tree data
+            const skill = allSkillsData.find(s => s.head_id === headId);
+            if (!skill) return;
+
+            // Clear previous checkbox selections and rebuild for this skill
+            checkedItems.clear();
+
+            // Uncheck all checkboxes first
+            document.querySelectorAll('.item-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // Collect all document skill_ids for this skill
+            selectedSkills = [];
+
+            // Add all documents and check their checkboxes
+            if (skill.documents && skill.documents.length > 0) {
+                skill.documents.forEach(doc => {
+                    selectedSkills.push({
+                        id: doc.skill_id,
+                        name: doc.source_name || 'Document',
+                        chunks: doc.total_chunks || 0,
+                        category: category,
+                        isAttachment: true
+                    });
+
+                    // Add to checkedItems for consistency
+                    checkedItems.add(doc.skill_id);
+
+                    // Check the checkbox for this document
+                    const checkbox = document.querySelector(`.item-checkbox[data-item-id="${doc.skill_id}"]`);
+                    if (checkbox) checkbox.checked = true;
+
+                    // Also highlight attachment items in UI
+                    const attElement = document.querySelector(`.attachment-item[data-skill-id="${doc.skill_id}"]`);
+                    if (attElement) attElement.classList.add('selected');
+                });
+            }
+
+            // Update select-all checkbox state (will be indeterminate since only one skill is selected)
+            updateSelectAllState();
+
+            // Update UI to show total count
+            const totalCount = selectedSkills.length;
+            updateSelectionUI(name, category, false, totalCount);
+
+            console.log(`[SelectSkillGroup] Selected skill "${name}" with ${totalCount} documents`);
+        }
+
+        // ===== NEW: Select Skill Item from Tree Data (skill with no documents) =====
+        function selectSkillItemFromTree(headId, name, chunks, category, element) {
+            clearAllSelections();
+            element.classList.add('selected');
+
+            // For skills with no documents, we select the head_id directly
+            // The query will need to handle this case
+            selectedSkills = [{ id: headId, name: name, chunks: chunks, category: category, isHead: true }];
+            updateSelectionUI(name, category, false, 1);
+        }
+
+        // ===== Group Skills by Name (Legacy - kept for backward compatibility) =====
+        function groupSkillsByName(skills) {
+            const groups = {};
+
+            // Normalize skills with parent_skill_id, source_name, and display_order
+            const normalizedSkills = skills.map(skill => ({
+                id: skill.id || skill.skill_id,
+                name: skill.name || skill.skill_name,
+                category: skill.tag || skill.skill_category || 'General',
+                chunks: skill.chunkCount || skill.total_chunks || 0,
+                status: skill.status || 'ready',
+                created: skill.created_at || skill.id,
+                parent_skill_id: skill.parent_skill_id || 'root',
+                source_name: skill.source_name || '',  // Document name for instant attachments
+                display_order: skill.display_order !== undefined ? skill.display_order : 999  // NEW: Include display_order
+            }));
+
+            // First pass: identify main skills (parent_skill_id = 'root' and not System Root)
+            normalizedSkills.forEach(skill => {
+                if (skill.parent_skill_id === 'root' && skill.id !== 'root') {
+                    groups[skill.id] = {
+                        main: skill,
+                        attachments: [],
+                        display_order: skill.display_order  // Store display_order at group level
+                    };
+                }
+            });
+
+            // Second pass: attach instant attachments to their parent
+            normalizedSkills.forEach(skill => {
+                if (skill.parent_skill_id !== 'root' && groups[skill.parent_skill_id]) {
+                    groups[skill.parent_skill_id].attachments.push(skill);
+                }
+            });
+
+            return groups;
+        }
+
+        // ===== Toggle Skill Group =====
+        // COMMENTED OUT 2025-12-12: Expand/collapse functionality disabled per user request
+        /*
+        function toggleSkillGroup(groupId, event) {
+            // Prevent triggering selection when clicking expand icon
+            if (event) event.stopPropagation();
+
+            const group = document.getElementById(`group-${groupId}`);
+            group.classList.toggle('expanded');
+        }
+        */
+
+        // ===== Handle Skill Group Click (2025-12-12) =====
+        // Click skill row → auto-select all documents + mutual exclusion
+        function handleSkillGroupClick(groupId, headId, name, totalChunks, category, element) {
+            // COMMENTED OUT 2025-12-12: Expand functionality disabled per user request
+            /*
+            // 1. Expand the group
+            const group = document.getElementById(`group-${groupId}`);
+            if (!group.classList.contains('expanded')) {
+                group.classList.add('expanded');
+            }
+            */
+
+            // 1. Check if this skill is already selected (toggle off if so)
+            if (element.classList.contains('selected')) {
+                // Deselect this skill
+                element.classList.remove('selected');
+                clearAllSelections();
+                return;
+            }
+
+            // 3. Mutual exclusion: clear all other selections first
+            clearAllSelections();
+
+            // 4. Mark this header as selected
+            element.classList.add('selected');
+
+            // 5. Find the skill in tree data
+            const skill = allSkillsData.find(s => s.head_id === headId);
+            if (!skill) return;
+
+            // 6. Select all documents under this skill
+            selectedSkills = [];
+            checkedItems.clear();
+
+            if (skill.documents && skill.documents.length > 0) {
+                skill.documents.forEach(doc => {
+                    selectedSkills.push({
+                        id: doc.skill_id,
+                        name: doc.source_name || 'Document',
+                        chunks: doc.total_chunks || 0,
+                        category: category,
+                        isAttachment: true
+                    });
+
+                    // Add to checkedItems
+                    checkedItems.add(doc.skill_id);
+
+                    // Check the checkbox for this document
+                    const checkbox = document.querySelector(`.item-checkbox[data-item-id="${doc.skill_id}"]`);
+                    if (checkbox) checkbox.checked = true;
+
+                    // Highlight attachment items
+                    const attElement = document.querySelector(`.attachment-item[data-skill-id="${doc.skill_id}"]`);
+                    if (attElement) attElement.classList.add('selected');
+                });
+
+                // Update the "select all" checkbox for this group
+                const selectAllCheckbox = document.getElementById(`skill-select-all-${groupId}`);
+                if (selectAllCheckbox) selectAllCheckbox.checked = true;
+            }
+
+            // 7. Update UI
+            updateSelectAllState();
+            const totalCount = selectedSkills.length;
+            updateSelectionUI(name, category, false, totalCount);
+
+            console.log(`[handleSkillGroupClick] Selected skill "${name}" with ${totalCount} documents`);
+        }
+
+        // ===== Generate Dropdown Menu HTML =====
+        function getDropdownMenuHtml(skillId, skillName) {
+            const safeId = skillId.replace(/'/g, "\\'");
+            const safeName = skillName.replace(/'/g, "\\'");
+            return `
+                <div class="skill-row-actions">
+                    <div class="skill-menu-trigger" onclick="toggleSkillMenu(event, '${safeId}')">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </div>
+                    <div class="skill-dropdown-menu" id="menu-${safeId}">
+                        <div class="skill-dropdown-item" onclick="showRenameModal('${safeId}', '${safeName}')">
+                            <i class="fa-solid fa-pen"></i>
+                            <span>重新命名</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ===== Render Skills (3-Level Tree) =====
+        function renderSkills(skills) {
+            const container = document.getElementById('skills-list');
+            container.innerHTML = '';
+
+            if (!skills || skills.length === 0) {
+                container.innerHTML = `
+                    <div class="skill-item" style="color: var(--text-muted); cursor: default;">
+                        <span class="skill-icon">📭</span>
+                        <span class="skill-name">${t('skill_tree.no_skills')}</span>
+                    </div>
+                `;
+                return;
+            }
+
+            const groups = groupSkillsByName(skills);
+
+            // Sort groups by display_order
+            const sortedGroups = Object.entries(groups).sort((a, b) => {
+                const orderA = a[1].display_order !== undefined ? a[1].display_order : 999;
+                const orderB = b[1].display_order !== undefined ? b[1].display_order : 999;
+                return orderA - orderB;
+            });
+
+            sortedGroups.forEach(([skillId, group]) => {
+                const name = group.main.name;  // Use skill name from main
+                const hasAttachments = group.attachments.length > 0;
+                const icon = getSkillIcon({ skill_name: name, skill_category: group.main.category });
+                const totalChunks = group.main.chunks + group.attachments.reduce((sum, a) => sum + a.chunks, 0);
+
+                if (hasAttachments) {
+                    // Render as expandable group
+                    const groupId = skillId.replace(/[^a-zA-Z0-9]/g, '_');
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'skill-group';
+                    groupDiv.id = `group-${groupId}`;
+
+                    // Build all skill IDs for this group (main + attachments)
+                    const allGroupIds = [group.main.id, ...group.attachments.map(a => a.id)];
+                    const allGroupIdsJson = JSON.stringify(allGroupIds).replace(/"/g, '&quot;');
+
+                    groupDiv.innerHTML = `
+                        <!-- MODIFIED 2025-12-05: Changed from selectSkillGroup to just toggleSkillGroup - no auto-select on header click -->
+                        <div class="skill-group-header" data-skill-id="${group.main.id}" data-all-ids="${allGroupIdsJson}" onclick="toggleSkillGroup('${groupId}', event)">
+                            <!-- OLD: onclick="selectSkillGroup('${group.main.id}', '${escapeHtml(name)}', ${totalChunks}, '${group.main.category}', this)" -->
+                            <i class="fa-solid fa-chevron-right expand-icon"></i>
+                            <span class="skill-icon">${icon}</span>
+                            <span class="skill-name">${translateSkillName(name)}</span>
+                            <span class="skill-badge">${totalChunks}</span>
+                            ${getDropdownMenuHtml(group.main.id, name)}
+                        </div>
+                        <div class="skill-children">
+                            ${group.attachments.map(att => {
+                                const fileIcon = getFileTypeIcon(att.source_name);
+                                const safeId = att.id.replace(/'/g, "\\'");
+                                const safeName = escapeHtml(att.source_name || 'Instant');
+                                return `
+                                <div class="attachment-item" data-skill-id="${att.id}" onclick="handleAttachmentClick(event, '${safeId}', '${safeName}', ${att.chunks}, '${att.category}')">
+                                    <span class="attachment-icon ${fileIcon.class}"><i class="fa-solid ${fileIcon.icon}"></i></span>
+                                    <span class="attachment-name" title="${escapeHtml(att.source_name || 'Instant Attachment')}">${safeName}</span>
+                                    <span class="skill-badge">${att.chunks}</span>
+                                    <input type="checkbox" class="item-checkbox" data-item-id="${att.id}" onclick="handleCheckboxClick(event, '${safeId}')" ${checkedItems.has(att.id) ? 'checked' : ''}>
+                                    <div class="item-menu-trigger" onclick="toggleItemMenu(event, '${safeId}')">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                    <div class="item-dropdown-menu" id="item-menu-${safeId}">
+                                        <div class="item-dropdown-item" onclick="renameSource(event, '${safeId}', '${safeName}')">
+                                            <i class="fa-solid fa-pen"></i>
+                                            <span>重新命名來源</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    `;
+
+                    container.appendChild(groupDiv);
+                } else {
+                    // Render as simple skill item (no attachments)
+                    const item = document.createElement('div');
+                    item.className = 'skill-item';
+                    item.dataset.skillId = group.main.id;
+                    item.onclick = () => selectSkillItem(group.main.id, name, group.main.chunks, group.main.category, item);
+
+                    item.innerHTML = `
+                        <span class="skill-icon">${icon}</span>
+                        <span class="skill-name">${translateSkillName(name)}</span>
+                        <span class="skill-badge">${group.main.chunks}</span>
+                        ${getDropdownMenuHtml(group.main.id, name)}
+                    `;
+
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        // ===== Fallback Skills (使用實際數據庫中的 skill_id) =====
+        // Note: This now includes LLM with instant attachment for 3-level demo
+        function showFallbackSkills() {
+            const fallbackSkills = [
+                { skill_id: 'skill_20251126_104421_4fdb3e9b', skill_name: '六法全書-刑法', skill_category: 'Legal', total_chunks: 272, status: 'ready', parent_skill_id: 'root' },
+                { skill_id: 'skill_20251126_104649_f333015b', skill_name: '六法全書-民法', skill_category: 'Legal', total_chunks: 533, status: 'ready', parent_skill_id: 'root' },
+                { skill_id: 'skill_20251126_105138_b8cc08c1', skill_name: 'LLM', skill_category: 'Technology', total_chunks: 883, status: 'ready', parent_skill_id: 'root' },
+                // Instant attachments for LLM
+                { skill_id: 'skill_20251127_100500_b8cc08c1', skill_name: 'LLM', skill_category: 'Technology', total_chunks: 385, status: 'ready', parent_skill_id: 'skill_20251126_105138_b8cc08c1', source_name: 'Decoding_Large_Language_Models_packt_2024' },
+                { skill_id: 'skill_20251128_030424_b8cc08c1', skill_name: 'LLM', skill_category: 'Technology', total_chunks: 264, status: 'ready', parent_skill_id: 'skill_20251126_105138_b8cc08c1', source_name: 'CSS揭秘' }
+            ];
+            // Cache fallback skills
+            allSkillsData = fallbackSkills;
+            renderSkills(fallbackSkills);
+        }
+
+        // ===== Clear All Selections =====
+        function clearAllSelections() {
+            document.querySelectorAll('.skill-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelectorAll('.skill-group-header').forEach(header => {
+                header.classList.remove('selected');
+            });
+            document.querySelectorAll('.attachment-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+
+        // ===== Update UI After Selection =====
+        function updateSelectionUI(displayName, category, isAttachment = false, count = 1) {
+            // Build title text for selected badge
+            const titleText = count > 1 ? `${displayName} (${count} 項)` : (isAttachment ? `${displayName} (Instant)` : displayName);
+
+            // Show selected badge
+            const badge = document.getElementById('selected-badge');
+            badge.classList.add('visible');
+            document.getElementById('selected-name').textContent = titleText;
+
+            // Enable input
+            const input = document.getElementById('query-input');
+            input.disabled = false;
+            input.placeholder = count > 1
+                ? t('chat.input_placeholder_multi', { skill: displayName })
+                : t('chat.input_placeholder_selected', { skill: displayName });
+            input.focus();
+
+            document.getElementById('send-button').disabled = false;
+
+            // Hide welcome, show chat
+            document.getElementById('welcome-message').style.display = 'none';
+            document.getElementById('chat-messages').style.display = 'flex';
+        }
+
+        // ===== Select Skill Group (NotebookLM Style - No Main Item) =====
+        // When clicking group header, select ALL items (main skill + all attachments)
+        function selectSkillGroup(mainSkillId, name, totalChunks, category, element) {
+            clearAllSelections();
+
+            // Select the group header
+            element.classList.add('selected');
+
+            // Collect main + all attachments for this group
+            selectedSkills = [{ id: mainSkillId, name: name, chunks: totalChunks, category: category, isMain: true }];
+
+            // Find all attachments (skills with parent_skill_id = mainSkillId)
+            const attachments = allSkillsData.filter(s => {
+                const pid = s.parent_skill_id || 'root';
+                return pid === mainSkillId;
+            });
+
+            attachments.forEach(att => {
+                const attId = att.skill_id || att.id;
+                const attName = att.source_name || att.skill_name || 'Instant';
+                const attChunks = att.total_chunks || att.chunkCount || 0;
+                selectedSkills.push({ id: attId, name: attName, chunks: attChunks, category: category, isAttachment: true });
+
+                // Also highlight attachment items in UI
+                const attElement = document.querySelector(`.attachment-item[data-skill-id="${attId}"]`);
+                if (attElement) attElement.classList.add('selected');
+            });
+
+            // Update UI to show total count
+            const totalCount = selectedSkills.length;
+            updateSelectionUI(name, category, false, totalCount);
+        }
+
+        // Legacy function name for backward compatibility
+        function selectMainSkill(mainSkillId, element) {
+            const name = element.querySelector('.skill-name').textContent;
+            selectSkillGroup(mainSkillId, name, 0, 'General', element);
+        }
+
+        // ===== Select Skill Item (Main or Standalone) - Single Select =====
+        function selectSkillItem(skillId, name, chunks, category, element) {
+            clearAllSelections();
+            element.classList.add('selected');
+
+            selectedSkills = [{ id: skillId, name: name, chunks: chunks, category: category }];
+            updateSelectionUI(name, category, false, 1);
+        }
+
+        // ===== Select Attachment - Single Select =====
+        function selectAttachment(skillId, sourceName, chunks, category, element) {
+            clearAllSelections();
+            element.classList.add('selected');
+
+            selectedSkills = [{ id: skillId, name: sourceName, chunks: chunks, category: category, isAttachment: true }];
+            updateSelectionUI(sourceName, category, true, 1);
+        }
+
+        // ===== Legacy Select Skill (Backward Compatibility) =====
+        function selectSkill(skill, element) {
+            if (skill.status === 'not_loaded') {
+                alert('此技能尚未載入');
+                return;
+            }
+            selectSkillItem(skill.id, skill.name, skill.chunks, skill.category, element);
+        }
+
+        // ===== OPMP Progressive Streaming Feature Toggle =====
+        const USE_PROGRESSIVE_STREAMING = true;  // Set to false to use traditional method
+
+        // ===== Smart Auto-Scroll Logic (GLOBAL) =====
+        // Make these global so external JS files can access
+        window.userHasScrolled = false;
+        window.scrollTimeout = null;
+
+        // Detect when user manually scrolls
+        window.setupScrollDetection = function() {
+            const chatArea = document.getElementById('chat-area');
+            if (!chatArea) return;
+
+            chatArea.addEventListener('scroll', function() {
+                // ✅ Clean slate UX: normal column, scrollTop=0 means viewing newest (at top)
+                const isViewingNewest = Math.abs(chatArea.scrollTop) <= 50;
+
+                if (!isViewingNewest) {
+                    // User scrolled DOWN to see older messages - disable auto-scroll
+                    window.userHasScrolled = true;
+                    console.log('User viewing old messages - auto-scroll disabled');
+                } else {
+                    // User at newest (scrollTop≈0) - re-enable auto-scroll
+                    window.userHasScrolled = false;
+                    console.log('User viewing newest - auto-scroll enabled');
+                }
+            });
+        };
+
+        // ✅ Clean slate UX: Keep scroll at 0 (normal column shows newest at top)
+        window.scrollToBottomIfNeeded = function(container) {
+            if (!window.userHasScrolled) {
+                container.scrollTop = 0;  // Normal column: scrollTop=0 shows newest (at top)
+            }
+        };
+
+        // Scroll to show a specific message at the top of the chat area
+        window.scrollMessageToTop = function(messageElement) {
+            const chatArea = document.getElementById('chat-area');
+            const chatMessages = document.getElementById('chat-messages');
+
+            if (chatArea && chatMessages && messageElement) {
+                // ✅ FIX: Calculate offset relative to chat-messages container
+                // messageElement.offsetTop is relative to chat-messages (its parent)
+                // We need to scroll chat-area to show the message near the top
+
+                // Get the position of the message within chat-messages
+                const messageTop = messageElement.offsetTop;
+
+                // Add small padding from top (20px) so message isn't flush with edge
+                const targetScrollTop = messageTop - 20;
+
+                // Scroll the chat-area to position the message at top
+                chatArea.scrollTo({
+                    top: Math.max(0, targetScrollTop),
+                    behavior: 'smooth'
+                });
+
+                // Reset user scroll flag since this is intentional scroll
+                window.userHasScrolled = false;
+
+                console.log('Auto-scroll to message:', {
+                    messageOffsetTop: messageTop,
+                    targetScrollTop: targetScrollTop,
+                    chatAreaScrollTop: chatArea.scrollTop
+                });
+            }
+        };
+
+        // Initialize scroll detection when page loads
+        window.setupScrollDetection();
+
+        // ===== Send Query =====
+        async function sendQuery() {
+            if (selectedSkills.length === 0 || isLoading) return;
+
+            const input = document.getElementById('query-input');
+            const query = input.value.trim();
+
+            if (!query) return;
+
+            // ✅ IMPORTANT: DO NOT add user message here
+            // It will be added AFTER the response/progress containers
+            // to ensure it appears at the TOP
+            input.value = '';
+
+            // Route to progressive streaming or traditional method
+            if (USE_PROGRESSIVE_STREAMING) {
+                await sendProgressiveQuery(query);
+            } else {
+                await sendTraditionalQuery(query);
+            }
+        }
+
+        // ===== Progressive Streaming Query (OPMP) =====
+        async function sendProgressiveQuery(query) {
+            isLoading = true;
+            const button = document.getElementById('send-button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            try {
+                // ✅ Expand Head IDs to include all child document IDs
+                const documentIds = [];
+
+                for (const skill of selectedSkills) {
+                    if (skill.children && skill.children.length > 0) {
+                        // Has children → Add all child IDs
+                        documentIds.push(...skill.children.map(child => child.id));
+                        console.log(`📁 Expanded "${skill.skill_name}": ${skill.children.length} documents`);
+                    } else {
+                        // No children → Add skill itself
+                        documentIds.push(skill.id);
+                    }
+                }
+
+                console.log(`📄 Total Document IDs: ${documentIds.length} docs`, documentIds);
+
+                const skillId = selectedSkills[0].id;
+
+                // Create unique IDs for this query's progress bar and response container
+                const timestamp = Date.now();
+                const progressId = `progress-${timestamp}`;
+                const containerId = `response-${timestamp}`;
+
+                const chatMessages = document.getElementById('chat-messages');
+
+                // ✅ TOP-RIGHT layout: Prepend in REVERSE order
+                // Normal column will display newest at top (top-right of viewport)
+                // Visual order: Query (top-right) → Progress → Response
+
+                // Step 1: Create response container (prepend first → will be at bottom of new messages)
+                const responseContainer = document.createElement('div');
+                responseContainer.className = 'message assistant';
+                responseContainer.id = containerId;
+                chatMessages.insertBefore(responseContainer, chatMessages.firstChild);
+
+                // Step 2: Create progress bar (prepend second → will be above response)
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'progress-container';
+                progressContainer.id = progressId;
+                progressContainer.innerHTML = `<div class="progress-bar">解析問題中.....</div>`;
+                chatMessages.insertBefore(progressContainer, chatMessages.firstChild);
+
+                // Step 3: Add user query (prepend last → appears at top-right)
+                const userMessageElement = addMessage(query, 'user');
+
+                // Keep scroll at 0 to show newest messages at top
+                const chatArea = document.getElementById('chat-area');
+                scrollToBottomIfNeeded(chatArea);
+
+                // Completion callback - called when backend sends 'complete' event
+                const onStreamComplete = (success) => {
+                    console.log(`Stream completed: ${success ? 'success' : 'error'}`);
+
+                    // Progress bar stays visible permanently below its response
+                    // Each query has its own progress bar that persists
+
+                    // Reset UI state
+                    isLoading = false;
+                    button.classList.remove('loading');
+                    button.disabled = false;
+
+                    const input = document.getElementById('query-input');
+                    input.focus();
+
+                    // Smart auto-scroll: only if user hasn't manually scrolled
+                    const chatArea = document.getElementById('chat-area');
+                    scrollToBottomIfNeeded(chatArea);
+                };
+
+                // Use progressive renderer with completion callback
+                startProgressiveChat(
+                    query,
+                    `/api/v1/skills/${skillId}/chat/stream`,
+                    `#${containerId}`,              // Unique response container
+                    `#${progressId} .progress-bar`, // Unique progress bar
+                    documentIds,  // ✅ Use expanded document IDs (not skillIds)
+                    onStreamComplete
+                );
+
+            } catch (error) {
+                console.error('Progressive streaming failed:', error);
+                addMessage('😔 系統發生錯誤，請稍後再試', 'assistant');
+
+                // Reset UI state
+                isLoading = false;
+                button.classList.remove('loading');
+                button.disabled = false;
+
+                const input = document.getElementById('query-input');
+                input.focus();
+            }
+        }
+
+        // ===== Traditional Query (Fallback) =====
+        async function sendTraditionalQuery(query) {
+            isLoading = true;
+            const button = document.getElementById('send-button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            // ✅ FIX: Add user message FIRST (appears at top)
+            addMessage(query, 'user');
+
+            // Show loading overlay
+            showLoading();
+
+            try {
+                // Build request body - support single and multi-skill queries
+                const skillIds = selectedSkills.map(s => s.id);
+                const requestBody = skillIds.length > 1
+                    ? { skill_ids: skillIds, query: query, top_k: 10 }  // Multi-skill
+                    : { skill_id: skillIds[0], query: query, top_k: 10 };  // Single skill
+
+                // Try demo query endpoint first
+                const response = await fetch('/api/v1/skills/demo/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Show search mode info for multi-skill queries
+                    const searchInfo = result.documents_searched > 1
+                        ? `\n\n_📚 ${t('skill_tree.searched_count', { count: result.documents_searched })}_`
+                        : '';
+                    // ✅ FIX: Assistant response added AFTER user query (appears below)
+                    addMessage((result.answer || '找到相關內容') + searchInfo, 'assistant', result.results);
+                } else {
+                    // 用戶友好的錯誤訊息，不顯示技術細節
+                    console.error('Query error:', result.detail);
+                    addMessage('😔 ' + t('chat.no_data_error'), 'assistant');
+                }
+
+            } catch (error) {
+                console.error('Query failed:', error);
+                addMessage('😔 ' + t('chat.network_error'), 'assistant');
+            } finally {
+                isLoading = false;
+                button.classList.remove('loading');
+                button.disabled = false;
+
+                // Hide loading overlay
+                hideLoading();
+
+                const input = document.getElementById('query-input');
+                input.focus();
+            }
+        }
+
+        // ===== Add Message =====
+        function addMessage(content, role, sources = null) {
+            const container = document.getElementById('chat-messages');
+
+            // Save to chat history for persistence
+            chatHistory.push({
+                content: content,
+                role: role,
+                sources: sources,
+                timestamp: Date.now()
+            });
+            // RESTORED 2025-12-12: Chat history persistence re-enabled per user request
+            saveChatHistory();  // Persist chat history only (not selection state)
+
+            const message = document.createElement('div');
+            message.className = `message ${role}`;
+
+            let html = '';
+
+            if (role === 'assistant') {
+                html = marked.parse(content);
+            } else {
+                html = `<p>${escapeHtml(content)}</p>`;
+            }
+
+            // Add sources
+            if (sources && sources.length > 0) {
+                html += `
+                    <div class="sources">
+                        <div class="sources-title">
+                            <i class="fa-solid fa-book-open"></i>
+                            ${t('chat.sources_title')} (${sources.length})
+                        </div>
+                `;
+
+                sources.slice(0, 3).forEach(s => {
+                    const score = s.score ? ((1 - s.score) * 100).toFixed(0) : 'N/A';
+                    // Try multiple sources for filename: source_name, citation, metadata.filename
+                    const filename = s.source_name || s.metadata?.document_name || s.metadata?.filename || 'Unknown';
+                    const preview = s.content ? s.content.substring(0, 100) + '...' : '';
+
+                    html += `
+                        <div class="source-item">
+                            <strong>${filename}</strong> (${t('chat.relevance')}: ${score}%)<br>
+                            <span style="color: var(--text-muted);">${preview}</span>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            }
+
+            message.innerHTML = html;
+            // ✅ TOP-RIGHT layout: Prepend to top (newest at top-right)
+            container.insertBefore(message, container.firstChild);
+
+            // Return the message element for potential scroll positioning
+            return message;
+        }
+
+        // ===== Clear Chat =====
+        function clearChat() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = '';
+
+            // Clear session storage
+            clearSessionState();
+
+            if (selectedSkills.length === 0) {
+                document.getElementById('welcome-message').style.display = 'block';
+                container.style.display = 'none';
+            }
+        }
+
+        // ===== Escape HTML =====
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== Loading Overlay Controls =====
+        function showLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.add('active');
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.remove('active');
+        }
+
+        // ===== Skill Dropdown Menu Functions =====
+        let activeMenu = null;
+
+        function toggleSkillMenu(event, skillId) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const menu = document.getElementById(`menu-${skillId}`);
+            if (!menu) return;
+
+            // Close any open menus first
+            closeAllMenus();
+
+            // Toggle current menu
+            if (activeMenu !== menu) {
+                menu.classList.add('show');
+                activeMenu = menu;
+            } else {
+                activeMenu = null;
+            }
+        }
+
+        function closeAllMenus() {
+            document.querySelectorAll('.skill-dropdown-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            activeMenu = null;
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.skill-row-actions') && !e.target.closest('.tree-header-actions')) {
+                closeAllMenus();
+            }
+        });
+
+        // ===== Rename Modal Functions =====
+        function showRenameModal(skillId, skillName) {
+            closeAllMenus();
+            document.getElementById('rename-input').value = skillName;
+            document.getElementById('rename-skill-id').value = skillId;
+            document.getElementById('rename-modal-overlay').classList.add('show');
+            document.getElementById('rename-input').focus();
+        }
+
+        function closeRenameModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('rename-modal-overlay').classList.remove('show');
+        }
+
+        async function confirmRename() {
+            const skillId = document.getElementById('rename-skill-id').value;
+            const newName = document.getElementById('rename-input').value.trim();
+
+            if (!newName) {
+                alert('請輸入新名稱');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/v1/skills/${skillId}/rename`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ new_name: newName })
+                });
+
+                if (response.ok) {
+                    closeRenameModal();
+                    // Reload skills to reflect the change
+                    loadSkills();
+                    alert(`已成功重新命名為「${newName}」`);
+                } else {
+                    const error = await response.json();
+                    alert(`重新命名失敗: ${error.detail || '未知錯誤'}`);
+                }
+            } catch (error) {
+                console.error('Rename failed:', error);
+                alert(`重新命名失敗: ${error.message}`);
+            }
+        }
+
+        // Handle Enter key in rename input
+        document.getElementById('rename-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                confirmRename();
+            }
+        });
+
+        // ===== Skill Tree Header Rename Functions =====
+        function toggleTreeMenu(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const menu = document.getElementById('menu-skill-tree');
+            if (!menu) return;
+
+            // Close any open menus first
+            closeAllMenus();
+
+            // Toggle current menu
+            if (activeMenu !== menu) {
+                menu.classList.add('show');
+                activeMenu = menu;
+            } else {
+                activeMenu = null;
+            }
+        }
+
+        function showTreeRenameModal() {
+            closeAllMenus();
+            const currentLabel = document.getElementById('skill-tree-label').textContent;
+            document.getElementById('rename-input').value = currentLabel;
+            document.getElementById('rename-skill-id').value = '__skill_tree__';
+            document.getElementById('rename-modal-overlay').classList.add('show');
+            document.getElementById('rename-input').focus();
+        }
+
+        // Override confirmRename to handle both skill and tree header rename
+        const originalConfirmRename = confirmRename;
+        confirmRename = async function() {
+            const skillId = document.getElementById('rename-skill-id').value;
+            const newName = document.getElementById('rename-input').value.trim();
+
+            if (!newName) {
+                alert('請輸入新名稱');
+                return;
+            }
+
+            // Handle Skill Tree header rename (stored in localStorage)
+            if (skillId === '__skill_tree__') {
+                localStorage.setItem('skillTreeLabel', newName);
+                document.getElementById('skill-tree-label').textContent = newName;
+                closeRenameModal();
+                alert(`已成功將標題重新命名為「${newName}」`);
+                return;
+            }
+
+            // Otherwise, call original confirmRename for skills
+            try {
+                const response = await fetch(`/api/v1/skills/${skillId}/rename`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ new_name: newName })
+                });
+
+                if (response.ok) {
+                    closeRenameModal();
+                    loadSkills();
+                    alert(`已成功重新命名為「${newName}」`);
+                } else {
+                    const error = await response.json();
+                    alert(`重新命名失敗: ${error.detail || '未知錯誤'}`);
+                }
+            } catch (error) {
+                console.error('Rename failed:', error);
+                alert(`重新命名失敗: ${error.message}`);
+            }
+        };
+
+        // Load saved Skill Tree label from localStorage on page load
+        (function loadSavedTreeLabel() {
+            const savedLabel = localStorage.getItem('skillTreeLabel');
+            if (savedLabel) {
+                document.getElementById('skill-tree-label').textContent = savedLabel;
+            }
+        })();
+
+        // ===== NotebookLM Style - Select All Functionality =====
+        function toggleSelectAll(event) {
+            event.stopPropagation();
+            const checkbox = document.getElementById('select-all-checkbox');
+            const isChecked = checkbox.checked;
+
+            // Get all item checkboxes
+            const allCheckboxes = document.querySelectorAll('.item-checkbox');
+            allCheckboxes.forEach(cb => {
+                cb.checked = isChecked;
+                const itemId = cb.dataset.itemId;
+                if (isChecked) {
+                    checkedItems.add(itemId);
+                } else {
+                    checkedItems.delete(itemId);
+                }
+            });
+
+            // Update selection based on checked items
+            updateSelectedFromCheckboxes();
+        }
+
+        // ===== Update Select All checkbox state =====
+        function updateSelectAllState() {
+            const allCheckboxes = document.querySelectorAll('.item-checkbox');
+            const selectAllCheckbox = document.getElementById('select-all-checkbox');
+
+            // Guard: If no global select-all checkbox exists, just return
+            if (!selectAllCheckbox) return;
+
+            if (allCheckboxes.length === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                return;
+            }
+
+            const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
+
+            if (checkedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === allCheckboxes.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // ===== Handle Attachment Click (left-click on row) =====
+        function handleAttachmentClick(event, skillId, sourceName, chunks, category) {
+            // If clicking on checkbox or menu, don't select
+            if (event.target.closest('.item-checkbox') ||
+                event.target.closest('.item-menu-trigger') ||
+                event.target.closest('.item-dropdown-menu')) {
+                return;
+            }
+
+            const element = event.currentTarget;
+            selectAttachment(skillId, sourceName, chunks, category, element);
+        }
+
+        // ===== Toggle Skill Select All =====
+        // NEW: Toggle all checkboxes within a specific skill group
+        function toggleSkillSelectAll(groupId, event) {
+            event.stopPropagation();
+
+            const selectAllCheckbox = document.getElementById(`skill-select-all-${groupId}`);
+            const isChecked = selectAllCheckbox.checked;
+
+            // Find all attachment items in this group
+            const groupItems = document.querySelectorAll(`.attachment-item[data-group-id="${groupId}"]`);
+
+            groupItems.forEach(item => {
+                const checkbox = item.querySelector('.item-checkbox');
+                const itemId = checkbox?.dataset?.itemId;
+
+                if (checkbox && itemId) {
+                    checkbox.checked = isChecked;
+                    if (isChecked) {
+                        checkedItems.add(itemId);
+                    } else {
+                        checkedItems.delete(itemId);
+                    }
+                }
+            });
+
+            updateSelectAllState();
+            updateSelectedFromCheckboxes();
+
+            console.log(`[SkillSelectAll] Group ${groupId}: ${isChecked ? 'selected' : 'deselected'} ${groupItems.length} items`);
+        }
+
+        // ===== Update Skill Select All Checkbox State =====
+        // Called when individual checkboxes change to sync the skill-level select-all
+        function updateSkillSelectAllState(groupId) {
+            const selectAllCheckbox = document.getElementById(`skill-select-all-${groupId}`);
+            if (!selectAllCheckbox) return;
+
+            const groupItems = document.querySelectorAll(`.attachment-item[data-group-id="${groupId}"] .item-checkbox`);
+            const checkedCount = Array.from(groupItems).filter(cb => cb.checked).length;
+
+            if (checkedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === groupItems.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // ===== Handle Checkbox Click =====
+        function handleCheckboxClick(event) {
+            event.stopPropagation();
+            const checkbox = event.target;
+            const itemId = checkbox.dataset.itemId;  // ✅ FIX: Always use dataset for consistency
+
+            if (!itemId) {
+                console.error('Checkbox missing data-item-id:', checkbox);
+                return;
+            }
+
+            if (checkbox.checked) {
+                checkedItems.add(itemId);
+            } else {
+                checkedItems.delete(itemId);
+            }
+
+            // Update skill-level select-all checkbox state
+            const attachmentItem = checkbox.closest('.attachment-item');
+            if (attachmentItem) {
+                const groupId = attachmentItem.dataset.groupId;
+                if (groupId) {
+                    updateSkillSelectAllState(groupId);
+                }
+            }
+
+            updateSelectAllState();
+            updateSelectedFromCheckboxes();
+        }
+
+        // ===== Update Selected Skills from Checkboxes =====
+        // NEW: Updated to support both tree and legacy data formats
+        function updateSelectedFromCheckboxes() {
+            if (checkedItems.size === 0) {
+                // Reset to no selection state
+                selectedSkills = [];
+                document.getElementById('selected-badge').classList.remove('visible');
+                document.getElementById('query-input').disabled = true;
+                document.getElementById('query-input').placeholder = t('chat.input_placeholder');
+                document.getElementById('send-button').disabled = true;
+                return;
+            }
+
+            // Build selected skills from checked items
+            selectedSkills = [];
+            checkedItems.forEach(itemId => {
+                // NEW: Handle tree format (documents nested inside skills)
+                if (allSkillsData[0]?.head_id) {
+                    // Tree format - search in documents
+                    for (const skill of allSkillsData) {
+                        if (skill.documents) {
+                            const doc = skill.documents.find(d => d.skill_id === itemId);
+                            if (doc) {
+                                selectedSkills.push({
+                                    id: itemId,
+                                    name: doc.source_name || 'Document',
+                                    chunks: doc.total_chunks || 0,
+                                    category: skill.category || 'General',
+                                    isAttachment: true
+                                });
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // Legacy format
+                    const skill = allSkillsData.find(s => (s.skill_id || s.id) === itemId);
+                    if (skill) {
+                        selectedSkills.push({
+                            id: itemId,
+                            name: skill.source_name || skill.skill_name || 'Unknown',
+                            chunks: skill.total_chunks || skill.chunkCount || 0,
+                            category: skill.skill_category || 'General',
+                            isAttachment: skill.parent_skill_id !== 'root'
+                        });
+                    }
+                }
+            });
+
+            // Update UI
+            const count = selectedSkills.length;
+            const displayName = count === 1 ? selectedSkills[0].name : t('skill_tree.sources_count', { count: count });
+            updateSelectionUI(displayName, 'General', false, count);
+
+            // Save selection state to sessionStorage (not chat history - avoid race condition)
+            saveSelectionState();
+        }
+
+        // ===== Toggle Item Menu (Left-Click) =====
+        let activeItemMenu = null;
+
+        function toggleItemMenu(event, itemId) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const menu = document.getElementById(`item-menu-${itemId}`);
+            if (!menu) return;
+
+            // Close any open menus first
+            closeAllItemMenus();
+
+            // Toggle current menu
+            if (activeItemMenu !== menu) {
+                menu.classList.add('show');
+                activeItemMenu = menu;
+            } else {
+                activeItemMenu = null;
+            }
+        }
+
+        function closeAllItemMenus() {
+            document.querySelectorAll('.item-dropdown-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            activeItemMenu = null;
+        }
+
+        // Close item menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.item-menu-trigger') && !e.target.closest('.item-dropdown-menu')) {
+                closeAllItemMenus();
+            }
+        });
+
+        // ===== Remove Source =====
+        async function removeSource(event, sourceId, sourceName) {
+            event.stopPropagation();
+            closeAllItemMenus();
+
+            if (!confirm(`確定要移除來源「${sourceName}」嗎？`)) {
+                return;
+            }
+
+            try {
+                // Call API to remove the source
+                const response = await fetch(`/api/v1/skills/${sourceId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    // Remove from checked items
+                    checkedItems.delete(sourceId);
+                    // Reload skills
+                    loadSkills();
+                    alert(`已成功移除「${sourceName}」`);
+                } else {
+                    const error = await response.json();
+                    alert(`移除失敗: ${error.detail || '未知錯誤'}`);
+                }
+            } catch (error) {
+                console.error('Remove source failed:', error);
+                alert(`移除失敗: ${error.message}`);
+            }
+        }
+
+        // ===== Rename Source =====
+        function renameSource(event, sourceId, sourceName) {
+            event.stopPropagation();
+            closeAllItemMenus();
+
+            // Use the existing rename modal
+            showRenameModal(sourceId, sourceName);
+        }
+    </script>
+</body>
+</html>

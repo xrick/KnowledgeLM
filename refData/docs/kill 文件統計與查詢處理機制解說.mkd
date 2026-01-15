@@ -1,0 +1,242 @@
+📖 完整解說
+問題一：如何知道一個技能有多少 PDF 文件？
+🗄️ 資料庫架構（三層結構）
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        資料庫三層架構                                │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌─────────────────────┐                                            │
+│  │    skill_heads      │  ← 第一層：技能頭（唯一名稱）              │
+│  │    (技能定義)       │                                            │
+│  ├─────────────────────┤                                            │
+│  │ head_id (PK)        │                                            │
+│  │ skill_name (UNIQUE) │  例: "大語言模型大全"                      │
+│  │ description         │                                            │
+│  │ category            │                                            │
+│  └─────────┬───────────┘                                            │
+│            │ 1:N                                                    │
+│            ▼                                                        │
+│  ┌─────────────────────┐                                            │
+│  │   skill_metadata    │  ← 第二層：每個 PDF 一筆記錄               │
+│  │   (文件記錄)        │                                            │
+│  ├─────────────────────┤                                            │
+│  │ skill_id (PK)       │  例: skill_20251216_060252_xxx             │
+│  │ head_id (FK)        │  連結到 skill_heads                        │
+│  │ source_name         │  PDF 檔名                                  │
+│  │ total_chunks        │  chunk 數量                                │
+│  └─────────┬───────────┘                                            │
+│            │ 1:N                                                    │
+│            ▼                                                        │
+│  ┌─────────────────────┐                                            │
+│  │skill_document_mapping│  ← 第三層：文件詳細資訊                   │
+│  └─────────────────────┘                                            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+🔍 統計 PDF 數量的方法
+API Endpoint: GET /api/v1/skills/tree 程式碼位置: client.py:1253-1299
+
+async def get_skill_tree(self) -> List[Dict[str, Any]]:
+    """取得完整技能樹結構，包含 FAISS 向量數"""
+    
+    # 1. 獲取所有 skill_heads
+    heads = await self.list_skill_heads(enabled_only=False)
+    
+    # 2. 對每個 head，獲取其下的所有文件（PDF）
+    for head in heads:
+        head['documents'] = await self.get_documents_for_head(head['head_id'])
+        
+        # 3. 加入 FAISS 向量統計
+        for doc in head['documents']:
+            index_stats = await get_index_stats(doc['skill_id'])
+            doc['indexed_vectors'] = index_stats.get('vector_count', 0)
+        
+        # 4. 計算總數
+        head['document_count'] = len(head['documents'])  # ✅ PDF 數量
+        head['total_chunks'] = sum(doc['total_chunks'] for doc in head['documents'])
+SQL 查詢邏輯:
+
+-- 獲取每個技能的 PDF 數量
+SELECT 
+    h.skill_name as '技能名稱',
+    COUNT(m.skill_id) as 'PDF文件數',
+    SUM(m.total_chunks) as '總Chunks數'
+FROM skill_heads h
+LEFT JOIN skill_metadata m ON h.head_id = m.head_id
+GROUP BY h.head_id;
+實際資料範例:
+技能名稱	PDF 文件數	總 Chunks 數
+大語言模型大全	1	370
+投資理財	1	207
+AMD	1	67
+問題二：系統如何處理對一個 Skill 進行詢問？
+🔄 查詢處理完整流程
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          Skill 查詢處理流程                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ① 用戶發送查詢                                                             │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ POST /api/v1/skills/demo/query                                     │    │
+│  │ {                                                                  │    │
+│  │   "skill_ids": ["skill_xxx", "skill_yyy"],  // 可多選              │    │
+│  │   "query": "什麼是 LLM?",                                          │    │
+│  │   "top_k": 10                                                      │    │
+│  │ }                                                                  │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ② 驗證 Skill IDs                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ • 支援 skill_id (單一文件) 或 head_id (整個技能)                   │    │
+│  │ • 如果是 head_id → 展開為該技能下所有 skill_ids                    │    │
+│  │ • 檢查每個 skill 是否有對應的 FAISS 索引                           │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ③ 問題向量化                                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ BGE-M3 Embedding: "什麼是 LLM?" → [0.12, -0.34, ..., 0.89] (1024維)│    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ④ 並行向量搜尋 (多個 Skills)                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ asyncio.gather(                                                    │    │
+│  │   search(skill_1, query, top_k=3),  // 每個 skill 取 3 個結果     │    │
+│  │   search(skill_2, query, top_k=3),                                │    │
+│  │   search(skill_3, query, top_k=3),                                │    │
+│  │   ...                                                              │    │
+│  │ )                                                                  │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ⑤ FAISS 向量搜尋 (每個 Skill)                                              │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ 1. 載入索引: data/faiss_indices/skills/{skill_id}/                 │    │
+│  │    ├── index.faiss (向量)                                          │    │
+│  │    └── index.pkl (文檔+Metadata)                                   │    │
+│  │ 2. L2距離計算: faiss.IndexFlatL2.search(query_vector, k)          │    │
+│  │ 3. 返回: [(doc_0, score_0), (doc_1, score_1), ...]                │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ⑥ 結果合併與排序                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ all_results.sort(key=lambda x: x['score'])  // 分數越低越相似     │    │
+│  │ final_results = all_results[:top_k]         // 取前 K 個          │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│       ↓                                                                     │
+│  ⑦ 組裝 Context → LLM 生成回答                                             │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │ System Prompt + Retrieved Chunks + User Query → LLM → Answer       │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+📍 關鍵程式碼位置
+階段	檔案	行數	功能
+API Endpoint	skills.py	369-566	接收查詢請求
+Skill ID 驗證	skills.py	405-439	支援 head_id 展開
+並行搜尋	skills.py	472-503	asyncio.gather
+向量檢索	skill_retrieval_service.py	80-132	呼叫 FAISS
+FAISS 搜尋	client.py	498-592	similarity_search
+索引載入	client.py	618-671	lazy load
+🔑 FAISS 索引載入機制
+程式碼位置: client.py:618-671
+
+def _try_lazy_load_store(self, store_id: str) -> Optional[Any]:
+    """Lazy-load FAISS 索引（按需載入）"""
+    
+    # 1. 嘗試從 skills 目錄載入
+    skill_path = self._faiss_skill_dir / store_id
+    # → ./data/faiss_indices/skills/skill_xxx/
+    
+    if skill_path.exists():
+        # 2. 準備 BGE-M3 embedding 模型（用於查詢向量化）
+        bge_provider = get_bge_embedding_provider()
+        skill_embeddings = BGEEmbeddingWrapper(bge_provider)
+        
+        # 3. 載入 FAISS 索引
+        vector_store = FAISS.load_local(
+            str(skill_path),
+            skill_embeddings,
+            allow_dangerous_deserialization=True  # 允許載入 PKL
+        )
+        # → 讀取 index.faiss + index.pkl
+        
+        return vector_store
+載入的檔案:
+index.faiss: 二進位向量索引
+index.pkl: 文檔內容 + Metadata + 索引映射
+🔍 FAISS 相似度搜尋
+程式碼位置: client.py:498-592
+
+def similarity_search_with_score(self, store_id, query, k=5):
+    # 1. 確保索引已載入（Lazy Load）
+    if store_id not in self._stores:
+        vector_store = self._try_lazy_load_store(store_id)
+        self._stores[store_id] = vector_store
+    
+    vector_store = self._stores[store_id]
+    
+    # 2. 執行 FAISS 相似度搜尋
+    docs_with_scores = vector_store.similarity_search_with_score(query, k=k)
+    # → 內部: query → BGE-M3 embedding → FAISS L2 search → top-k results
+    
+    # 3. 格式化結果
+    results = []
+    for doc, score in docs_with_scores:
+        results.append({
+            "content": doc.page_content,    # 原始文字
+            "metadata": doc.metadata,       # chunk_id, page_number, etc.
+            "score": float(score)           # L2 距離（越小越相似）
+        })
+    
+    return results
+🚀 多技能並行搜尋
+程式碼位置: skills.py:472-503
+
+# 當選擇多個 skills 時，並行搜尋
+if len(content_ids) > 1:
+    tasks = []
+    for doc_id in content_ids[:10]:  # 限制最多 10 個
+        task = retrieval_service.retrieve_context(
+            query=query,
+            content_ids=[doc_id],
+            top_k=3,  # 每個 skill 取 3 個結果
+            include_scores=True
+        )
+        tasks.append(task)
+    
+    # 並行執行
+    all_results = await asyncio.gather(*tasks)
+    
+    # 合併結果
+    context_results = []
+    for results in all_results:
+        context_results.extend(results)
+    
+    # 按分數排序，取最佳 top_k
+    context_results.sort(key=lambda x: x.get('score', float('inf')))
+    context_results = context_results[:top_k]
+Update Todos
+
+分析如何統計 Skill 的 PDF 文件數量
+
+追蹤 Skill 查詢處理流程
+
+繪製完整架構圖
+📋 總結
+問題一回答：如何知道技能有多少 PDF？
+方法	說明
+API	GET /api/v1/skills/tree 返回完整技能樹，包含 document_count
+資料庫	skill_metadata 表中每個 head_id 對應的記錄數 = PDF 數
+程式	get_skill_tree() → get_documents_for_head()
+問題二回答：Skill 查詢處理流程
+
+用戶問題 → API 接收 → Skill ID 驗證 → 問題向量化 (BGE-M3)
+    ↓
+並行搜尋多個 FAISS 索引 → 合併結果 → 排序取 Top-K
+    ↓
+組裝 Context → LLM 生成回答 → 返回給用戶
+關鍵設計特點
+Lazy Loading: FAISS 索引按需載入，節省記憶體
+並行搜尋: 多個 Skills 使用 asyncio.gather 並行查詢
+Per-PDF 隔離: 每個 PDF 有獨立的 FAISS 索引資料夾
+head_id 支援: 可查詢整個技能（自動展開所有文件）

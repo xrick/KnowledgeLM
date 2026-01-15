@@ -1,0 +1,51 @@
+test_sse.html:30 Sending POST request to /api/v1/chat/stream
+test_sse.html:30 Response status: 200 OK
+test_sse.html:30 Response headers:
+test_sse.html:30   access-control-allow-credentials: true
+test_sse.html:30   access-control-allow-origin: http://localhost:8000
+test_sse.html:30   cache-control: no-cache
+test_sse.html:30   connection: keep-alive
+test_sse.html:30   content-type: text/event-stream; charset=utf-8
+test_sse.html:30   date: Wed, 05 Nov 2025 06:35:51 GMT
+test_sse.html:30   server: uvicorn
+test_sse.html:30   transfer-encoding: chunked
+test_sse.html:30   vary: Origin
+test_sse.html:30   x-accel-buffering: no
+test_sse.html:30 Starting to read stream...
+test_sse.html:30 Chunk #1 received (129 bytes): event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 0, "message": "...
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":1,"phase_name":"Query Understanding","progress":0,"message":"Analyzing user query..."}
+test_sse.html:30 ✅ Complete event #1: progress
+test_sse.html:30 Chunk #2 received (293 bytes): event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 100, "message":...
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":1,"phase_name":"Query Understanding","progress":100,"message":"Query expanded into 1 sub-questions"}
+test_sse.html:30 ✅ Complete event #2: progress
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":2,"phase_name":"Parallel Retrieval","progress":0,"message":"Retrieving relevant context from documents..."}
+test_sse.html:30 ✅ Complete event #3: progress
+test_sse.html:30 Chunk #3 received (268 bytes): event: progress
+data: {"phase": 2, "phase_name": "Parallel Retrieval", "progress": 100, "message": ...
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":2,"phase_name":"Parallel Retrieval","progress":100,"message":"Retrieved 0 relevant chunks"}
+test_sse.html:30 ✅ Complete event #4: progress
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":3,"phase_name":"Context Assembly","progress":0,"message":"Building enhanced RAG prompt..."}
+test_sse.html:30 ✅ Complete event #5: progress
+test_sse.html:30 Chunk #4 received (277 bytes): event: progress
+data: {"phase": 3, "phase_name": "Context Assembly", "progress": 100, "message": "P...
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":3,"phase_name":"Context Assembly","progress":100,"message":"Prompt built with context and history"}
+test_sse.html:30 ✅ Complete event #6: progress
+test_sse.html:30   → Event type: progress
+test_sse.html:30   → Data: {"phase":4,"phase_name":"Response Generation","progress":0,"message":"Generating answer from LLM..."}
+test_sse.html:30 ✅ Complete event #7: progress
+test_sse.html:30 Chunk #5 received (100 bytes): event: error
+data: {"error": "HTTP 404", "message": "An error occurred during chat processing"}
+
+
+test_sse.html:30   → Event type: error
+test_sse.html:30   → Data: {"error":"HTTP 404","message":"An error occurred during chat processing"}
+test_sse.html:30 ✅ Complete event #8: error
+test_sse.html:30 Stream DONE. Total chunks: 5, Total events: 8

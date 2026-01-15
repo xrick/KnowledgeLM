@@ -1,0 +1,1331 @@
+2025-11-05 11:27:22,692 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/event-stream'), (b'Date', b'Wed, 05 Nov 2025 03:27:22 GMT'), (b'Transfer-Encoding', b'chunked')])
+2025-11-05 11:27:22,692 - httpx - INFO - HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-05 11:27:22,693 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-05 11:27:22,693 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "根据"}
+
+
+2025-11-05 11:27:22,749 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 11:27:22,807 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "选"}
+
+
+2025-11-05 11:27:22,862 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "中"}
+
+
+2025-11-05 11:27:22,917 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "部分"}
+
+
+2025-11-05 11:27:22,972 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "内容"}
+
+
+2025-11-05 11:27:23,027 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，这"}
+
+
+2025-11-05 11:27:23,082 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "份"}
+
+
+2025-11-05 11:27:23,138 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文件"}
+
+
+2025-11-05 11:27:23,193 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "主要"}
+
+
+2025-11-05 11:27:23,248 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "涉及"}
+
+
+2025-11-05 11:27:23,305 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "以下"}
+
+
+2025-11-05 11:27:23,360 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "几个"}
+
+
+2025-11-05 11:27:23,416 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "方面"}
+
+
+2025-11-05 11:27:23,473 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "：\n\n"}
+
+
+2025-11-05 11:27:23,527 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "1"}
+
+
+2025-11-05 11:27:23,583 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "."}
+
+
+2025-11-05 11:27:23,638 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " **"}
+
+
+2025-11-05 11:27:23,693 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "API"}
+
+
+2025-11-05 11:27:23,750 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 使用"}
+
+
+2025-11-05 11:27:23,805 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 11:27:23,860 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "规范"}
+
+
+2025-11-05 11:27:23,915 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 11:27:23,970 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 11:27:24,024 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "强调"}
+
+
+2025-11-05 11:27:24,080 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 11:27:24,134 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "调用"}
+
+
+2025-11-05 11:27:24,190 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "任何"}
+
+
+2025-11-05 11:27:24,245 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " API"}
+
+
+2025-11-05 11:27:24,300 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " "}
+
+
+2025-11-05 11:27:24,355 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "之前"}
+
+
+2025-11-05 11:27:24,412 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "必须"}
+
+
+2025-11-05 11:27:24,467 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "查看"}
+
+
+2025-11-05 11:27:24,524 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "其"}
+
+
+2025-11-05 11:27:24,579 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "具体"}
+
+
+2025-11-05 11:27:24,635 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "规范"}
+
+
+2025-11-05 11:27:24,690 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "（"}
+
+
+2025-11-05 11:27:24,746 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "如"}
+
+
+2025-11-05 11:27:24,801 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 11:27:24,857 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "档"}
+
+
+2025-11-05 11:27:24,913 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "中的"}
+
+
+2025-11-05 11:27:24,968 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "“"}
+
+
+2025-11-05 11:27:25,024 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Always"}
+
+
+2025-11-05 11:27:25,080 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " look"}
+
+
+2025-11-05 11:27:25,135 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " at"}
+
+
+2025-11-05 11:27:25,190 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " API"}
+
+
+2025-11-05 11:27:25,247 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " specifications"}
+
+
+2025-11-05 11:27:25,302 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " ("}
+
+
+2025-11-05 11:27:25,357 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "using"}
+
+
+2025-11-05 11:27:25,413 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " ap"}
+
+
+2025-11-05 11:27:25,469 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "is"}
+
+
+2025-11-05 11:27:25,525 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ".api"}
+
+
+2025-11-05 11:27:25,580 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "_docs"}
+
+
+2025-11-05 11:27:25,635 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ".show"}
+
+
+2025-11-05 11:27:25,692 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "_api"}
+
+
+2025-11-05 11:27:25,746 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "_doc"}
+
+
+2025-11-05 11:27:25,803 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ")"}
+
+
+2025-11-05 11:27:25,859 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " before"}
+
+
+2025-11-05 11:27:25,915 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " calling"}
+
+
+2025-11-05 11:27:25,970 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " an"}
+
+
+2025-11-05 11:27:26,026 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " API"}
+
+
+2025-11-05 11:27:26,081 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ".”"}
+
+
+2025-11-05 11:27:26,136 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "）。"}
+
+
+2025-11-05 11:27:26,192 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "这"}
+
+
+2025-11-05 11:27:26,247 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "意味着"}
+
+
+2025-11-05 11:27:26,303 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "开发"}
+
+
+2025-11-05 11:27:26,359 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "者"}
+
+
+2025-11-05 11:27:26,414 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "需要"}
+
+
+2025-11-05 11:27:26,469 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "熟"}
+
+
+2025-11-05 11:27:26,525 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "悉"}
+
+
+2025-11-05 11:27:26,580 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "每"}
+
+
+2025-11-05 11:27:26,635 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "个"}
+
+
+2025-11-05 11:27:26,692 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " API"}
+
+
+2025-11-05 11:27:26,747 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 的"}
+
+
+2025-11-05 11:27:26,803 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "操作"}
+
+
+2025-11-05 11:27:26,858 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "指南"}
+
+
+2025-11-05 11:27:26,915 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，以"}
+
+
+2025-11-05 11:27:26,974 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "确保"}
+
+
+2025-11-05 11:27:27,032 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "正确"}
+
+
+2025-11-05 11:27:27,087 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "使用"}
+
+
+2025-11-05 11:27:27,144 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+2025-11-05 11:27:27,199 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "2"}
+
+
+2025-11-05 11:27:27,254 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "."}
+
+
+2025-11-05 11:27:27,310 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " **"}
+
+
+2025-11-05 11:27:27,365 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "代码"}
+
+
+2025-11-05 11:27:27,421 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "编"}
+
+
+2025-11-05 11:27:27,476 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "写"}
+
+
+2025-11-05 11:27:27,531 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 11:27:27,587 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "优化"}
+
+
+2025-11-05 11:27:27,643 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 11:27:27,698 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 11:27:27,754 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "建议"}
+
+
+2025-11-05 11:27:27,809 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 11:27:27,867 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "编"}
+
+
+2025-11-05 11:27:27,922 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "写"}
+
+
+2025-11-05 11:27:27,979 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "程"}
+
+
+2025-11-05 11:27:28,035 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "式"}
+
+
+2025-11-05 11:27:28,091 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "时"}
+
+
+2025-11-05 11:27:28,147 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，"}
+
+
+2025-11-05 11:27:28,202 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "应该"}
+
+
+2025-11-05 11:27:28,258 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "做"}
+
+
+2025-11-05 11:27:28,314 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "小"}
+
+
+2025-11-05 11:27:28,370 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "步骤"}
+
+
+2025-11-05 11:27:28,426 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，每"}
+
+
+2025-11-05 11:27:28,481 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "步"}
+
+
+2025-11-05 11:27:28,537 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "只"}
+
+
+2025-11-05 11:27:28,593 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "编"}
+
+
+2025-11-05 11:27:28,648 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "写"}
+
+
+2025-11-05 11:27:28,706 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "一"}
+
+
+2025-11-05 11:27:28,762 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "段"}
+
+
+2025-11-05 11:27:28,819 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "代码"}
+
+
+2025-11-05 11:27:28,874 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "（"}
+
+
+2025-11-05 11:27:28,930 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "如"}
+
+
+2025-11-05 11:27:28,986 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 11:27:29,042 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "档"}
+
+
+2025-11-05 11:27:29,098 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "中的"}
+
+
+2025-11-05 11:27:29,153 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "“"}
+
+
+2025-11-05 11:27:29,210 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Write"}
+
+
+2025-11-05 11:27:29,266 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " small"}
+
+
+2025-11-05 11:27:29,322 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " chunks"}
+
+
+2025-11-05 11:27:29,377 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " of"}
+
+
+2025-11-05 11:27:29,433 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " code"}
+
+
+2025-11-05 11:27:29,489 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " and"}
+
+
+2025-11-05 11:27:29,544 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " only"}
+
+
+2025-11-05 11:27:29,590 - sse_starlette.sse - DEBUG - ping: : ping - 2025-11-05 03:27:29.590394
+
+
+2025-11-05 11:27:29,600 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " one"}
+
+
+2025-11-05 11:27:29,656 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " chunk"}
+
+
+2025-11-05 11:27:29,712 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " of"}
+
+
+2025-11-05 11:27:29,767 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " code"}
+
+
+2025-11-05 11:27:29,823 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " in"}
+
+
+2025-11-05 11:27:29,879 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " every"}
+
+
+2025-11-05 11:27:29,936 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " step"}
+
+
+2025-11-05 11:27:29,996 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ".”"}
+
+
+2025-11-05 11:27:30,052 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "）。"}
+
+
+2025-11-05 11:27:30,107 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "此外"}
+
+
+2025-11-05 11:27:30,170 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，还"}
+
+
+2025-11-05 11:27:30,227 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提"}
+
+
+2025-11-05 11:27:30,283 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "到"}
+
+
+2025-11-05 11:27:30,338 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "应用"}
+
+
+2025-11-05 11:27:30,395 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "某"}
+
+
+2025-11-05 11:27:30,450 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "些"}
+
+
+2025-11-05 11:27:30,506 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "优化"}
+
+
+2025-11-05 11:27:30,561 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "技术"}
+
+
+2025-11-05 11:27:30,617 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "来"}
+
+
+2025-11-05 11:27:30,674 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提高"}
+
+
+2025-11-05 11:27:30,729 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "程序"}
+
+
+2025-11-05 11:27:30,785 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "效率"}
+
+
+2025-11-05 11:27:30,841 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+2025-11-05 11:27:30,898 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "3"}
+
+
+2025-11-05 11:27:30,955 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "."}
+
+
+2025-11-05 11:27:31,011 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " **"}
+
+
+2025-11-05 11:27:31,067 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "结果"}
+
+
+2025-11-05 11:27:31,123 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "验证"}
+
+
+2025-11-05 11:27:31,182 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 11:27:31,240 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "自"}
+
+
+2025-11-05 11:27:31,304 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "包含"}
+
+
+2025-11-05 11:27:31,362 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "性"}
+
+
+2025-11-05 11:27:31,418 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 11:27:31,473 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 11:27:31,528 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "强调"}
+
+
+2025-11-05 11:27:31,585 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 11:27:31,641 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "执行"}
+
+
+2025-11-05 11:27:31,698 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "程"}
+
+
+2025-11-05 11:27:31,754 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "式"}
+
+
+2025-11-05 11:27:31,809 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "后"}
+
+
+2025-11-05 11:27:31,865 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "要"}
+
+
+2025-11-05 11:27:31,922 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+2025-11-05 11:27:31,979 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "结果"}
+
+
+2025-11-05 11:27:32,035 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "验证"}
+
+
+2025-11-05 11:27:32,092 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，"}
+
+
+2025-11-05 11:27:32,148 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "确保"}
+
+
+2025-11-05 11:27:32,205 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "所有"}
+
+
+2025-11-05 11:27:32,261 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "必要"}
+
+
+2025-11-05 11:27:32,317 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 11:27:32,373 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " imports"}
+
+
+2025-11-05 11:27:32,428 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 和"}
+
+
+2025-11-05 11:27:32,486 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " dependencies"}
+
+
+2025-11-05 11:27:32,542 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 已"}
+
+
+2025-11-05 11:27:32,598 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "经"}
+
+
+2025-11-05 11:27:32,654 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "声明"}
+
+
+2025-11-05 11:27:32,711 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，并"}
+
+
+2025-11-05 11:27:32,767 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "且"}
+
+
+2025-11-05 11:27:32,824 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "代码"}
+
+
+2025-11-05 11:27:32,880 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "完全"}
+
+
+2025-11-05 11:27:32,936 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "是"}
+
+
+2025-11-05 11:27:32,991 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "自"}
+
+
+2025-11-05 11:27:33,047 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "包含"}
+
+
+2025-11-05 11:27:33,104 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 11:27:33,160 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，不"}
+
+
+2025-11-05 11:27:33,216 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "依"}
+
+
+2025-11-05 11:27:33,272 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "赖"}
+
+
+2025-11-05 11:27:33,328 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "外"}
+
+
+2025-11-05 11:27:33,384 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "部"}
+
+
+2025-11-05 11:27:33,440 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文件"}
+
+
+2025-11-05 11:27:33,497 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "（"}
+
+
+2025-11-05 11:27:33,552 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "如"}
+
+
+2025-11-05 11:27:33,608 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 11:27:33,664 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "档"}
+
+
+2025-11-05 11:27:33,721 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "中的"}
+
+
+2025-11-05 11:27:33,777 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "“"}
+
+
+2025-11-05 11:27:33,833 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Perform"}
+
+
+2025-11-05 11:27:33,889 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " result"}
+
+
+2025-11-05 11:27:33,945 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " validation"}
+
+
+2025-11-05 11:27:34,004 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " after"}
+
+
+2025-11-05 11:27:34,060 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " executing"}
+
+
+2025-11-05 11:27:34,116 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " your"}
+
+
+2025-11-05 11:27:34,173 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " code"}
+
+
+2025-11-05 11:27:34,229 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "”"}
+
+
+2025-11-05 11:27:34,285 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "）。\n\n"}
+
+
+2025-11-05 11:27:34,342 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "4"}
+
+
+2025-11-05 11:27:34,398 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "."}
+
+
+2025-11-05 11:27:34,454 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " **"}
+
+
+2025-11-05 11:27:34,510 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "情"}
+
+
+2025-11-05 11:27:34,566 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "境"}
+
+
+2025-11-05 11:27:34,622 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "重"}
+
+
+2025-11-05 11:27:34,678 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "定"}
+
+
+2025-11-05 11:27:34,733 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "向"}
+
+
+2025-11-05 11:27:34,789 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "与"}
+
+
+2025-11-05 11:27:34,846 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "强化"}
+
+
+2025-11-05 11:27:34,902 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "策略"}
+
+
+2025-11-05 11:27:34,958 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 11:27:35,014 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 11:27:35,070 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提"}
+
+
+2025-11-05 11:27:35,126 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "到"}
+
+
+2025-11-05 11:27:35,183 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "当前"}
+
+
+2025-11-05 11:27:35,239 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 11:27:35,295 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "处理"}
+
+
+2025-11-05 11:27:35,352 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " L"}
+
+
+2025-11-05 11:27:35,410 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "LM"}
+
+
+2025-11-05 11:27:35,469 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " ("}
+
+
+2025-11-05 11:27:35,528 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Large"}
+
+
+2025-11-05 11:27:35,585 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " Language"}
+
+
+2025-11-05 11:27:35,643 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " Models"}
+
+
+2025-11-05 11:27:35,699 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ")"}
+
+
+2025-11-05 11:27:35,756 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 时"}
+
+
+2025-11-05 11:27:35,812 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "存在"}
+
+
+2025-11-05 11:27:35,868 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的问题"}
+
+
+2025-11-05 11:27:35,925 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，比如"}
+
+
+2025-11-05 11:27:35,981 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "简"}
+
+
+2025-11-05 11:27:36,041 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "短"}
+
+
+2025-11-05 11:27:36,097 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "偏"}
+
+
+2025-11-05 11:27:36,153 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "误"}
+
+
+2025-11-05 11:27:36,210 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 11:27:36,266 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "情"}
+
+
+2025-11-05 11:27:36,323 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "境"}
+
+
+2025-11-05 11:27:36,435 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "崩"}
+
+
+2025-11-05 11:27:36,548 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "溃"}
+
+
+2025-11-05 11:27:36,605 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，"}
+
+
+2025-11-05 11:27:36,661 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "强调"}
+
+
+2025-11-05 11:27:36,717 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "需要"}
+
+
+2025-11-05 11:27:36,776 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "以"}
+
+
+2025-11-05 11:27:36,832 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "更"}
+
+
+2025-11-05 11:27:36,890 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "详细"}
+
+
+2025-11-05 11:27:36,946 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "、更"}
+
+
+2025-11-05 11:27:37,004 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "具体"}
+
+
+2025-11-05 11:27:37,061 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 11:27:37,118 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "方式"}
+
+
+2025-11-05 11:27:37,175 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "来"}
+
+
+2025-11-05 11:27:37,231 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "增强"}
+
+
+2025-11-05 11:27:37,288 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "代理"}
+
+
+2025-11-05 11:27:37,345 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "系统"}
+
+
+2025-11-05 11:27:37,401 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "（"}
+
+
+2025-11-05 11:27:37,457 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "如"}
+
+
+2025-11-05 11:27:37,514 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 11:27:37,570 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "档"}
+
+
+2025-11-05 11:27:37,626 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "中"}
+
+
+2025-11-05 11:27:37,682 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提"}
+
+
+2025-11-05 11:27:37,740 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "及"}
+
+
+2025-11-05 11:27:37,796 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 11:27:37,852 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "“"}
+
+
+2025-11-05 11:27:37,909 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Self"}
+
+
+2025-11-05 11:27:37,965 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "-r"}
+
+
+2025-11-05 11:27:38,021 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "ag"}
+
+
+2025-11-05 11:27:38,080 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ":"}
+
+
+2025-11-05 11:27:38,136 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " Learning"}
+
+
+2025-11-05 11:27:38,192 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " to"}
+
+
+2025-11-05 11:27:38,248 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " retrieve"}
+
+
+2025-11-05 11:27:38,305 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ","}
+
+
+2025-11-05 11:27:38,361 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " generate"}
+
+
+2025-11-05 11:27:38,417 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ","}
+
+
+2025-11-05 11:27:38,474 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " and"}
+
+
+2025-11-05 11:27:38,530 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " critique"}
+
+
+2025-11-05 11:27:38,587 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " through"}
+
+
+2025-11-05 11:27:38,644 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " self"}
+
+
+2025-11-05 11:27:38,701 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "-ref"}
+
+
+2025-11-05 11:27:38,757 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "lection"}
+
+
+2025-11-05 11:27:38,815 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": ".”"}
+
+
+2025-11-05 11:27:38,872 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "）。\n\n"}
+
+
+2025-11-05 11:27:38,930 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "总结"}
+
+
+2025-11-05 11:27:38,986 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "来说"}
+
+
+2025-11-05 11:27:39,042 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，这"}
+
+
+2025-11-05 11:27:39,100 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "份"}
+
+
+2025-11-05 11:27:39,157 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文件"}
+
+
+2025-11-05 11:27:39,213 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "主要"}
+
+
+2025-11-05 11:27:39,270 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提供"}
+
+
+2025-11-05 11:27:39,328 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "了"}
+
+
+2025-11-05 11:27:39,384 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "关于"}
+
+
+2025-11-05 11:27:39,441 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "编"}
+
+
+2025-11-05 11:27:39,499 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "写"}
+
+
+2025-11-05 11:27:39,556 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "高"}
+
+
+2025-11-05 11:27:39,613 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "效"}
+
+
+2025-11-05 11:27:39,672 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "、"}
+
+
+2025-11-05 11:27:39,734 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "准确"}
+
+
+2025-11-05 11:27:39,793 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "且"}
+
+
+2025-11-05 11:27:39,849 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "可靠"}
+
+
+2025-11-05 11:27:39,906 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的软件"}
+
+
+2025-11-05 11:27:39,964 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "开发"}
+
+
+2025-11-05 11:27:40,021 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "过程"}
+
+
+2025-11-05 11:27:40,078 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，同时"}
+
+
+2025-11-05 11:27:40,136 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "也"}
+
+
+2025-11-05 11:27:40,193 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提出"}
+
+
+2025-11-05 11:27:40,250 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "了"}
+
+
+2025-11-05 11:27:40,307 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 11:27:40,364 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "使用"}
+
+
+2025-11-05 11:27:40,421 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " L"}
+
+
+2025-11-05 11:27:40,478 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "LM"}
+
+
+2025-11-05 11:27:40,535 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 时"}
+
+
+2025-11-05 11:27:40,591 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "需要"}
+
+
+2025-11-05 11:27:40,649 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "注意"}
+
+
+2025-11-05 11:27:40,706 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的一"}
+
+
+2025-11-05 11:27:40,763 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "些"}
+
+
+2025-11-05 11:27:40,820 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "具体"}
+
+
+2025-11-05 11:27:40,878 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "问题"}
+
+
+2025-11-05 11:27:40,935 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 11:27:40,992 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "解决"}
+
+
+2025-11-05 11:27:41,048 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "策略"}
+
+
+2025-11-05 11:27:41,106 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 11:27:41,162 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-05 11:27:41,163 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-05 11:27:41,163 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-05 11:27:41,163 - httpcore.connection - DEBUG - close.started
+2025-11-05 11:27:41,163 - httpcore.connection - DEBUG - close.complete
+2025-11-05 11:27:41,163 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 4, "phase_name": "Response Generation", "progress": 100, "message": "Answer generation complete"}
+
+
+2025-11-05 11:27:41,163 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 0, "message": "Saving chat history..."}
+
+
+2025-11-05 11:27:41,164 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: session_1762313169830_rka9fdg
+2025-11-05 11:27:41,164 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: session_1762313169830_rka9fdg
+2025-11-05 11:27:41,164 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 100, "message": "Chat history saved"}
+
+
+2025-11-05 11:27:41,164 - sse_starlette.sse - DEBUG - chunk: event: complete
+data: {"session_id": "session_1762313169830_rka9fdg", "query": "請問這份文件在說什麼", "answer": "根据您选中部分内容，这份文件主要涉及以下几个方面：\n\n1. **API 使用和规范**：强调在调用任何 API 之前必须查看其具体规范（如文档中的“Always look at API specifications (using apis.api_docs.show_api_doc) before calling an API.”）。这意味着开发者需要熟悉每个 API 的操作指南，以确保正确使用。\n\n2. **代码编写和优化**：建议在编写程式时，应该做小步骤，每步只编写一段代码（如文档中的“Write small chunks of code and only one chunk of code in every step.”）。此外，还提到应用某些优化技术来提高程序效率。\n\n3. **结果验证和自包含性**：强调在执行程式后要进行结果验证，确保所有必要的 imports 和 dependencies 已经声明，并且代码完全是自包含的，不依赖外部文件（如文档中的“Perform result validation after executing your code”）。\n\n4. **情境重定向与强化策略**：提到当前在处理 LLM (Large Language Models) 时存在的问题，比如简短偏误和情境崩溃，强调需要以更详细、更具体的方式来增强代理系统（如文档中提及的“Self-rag: Learning to retrieve, generate, and critique through self-reflection.”）。\n\n总结来说，这份文件主要提供了关于编写高效、准确且可靠的软件开发过程，同时也提出了在使用 LLM 时需要注意的一些具体问题和解决策略。", "context_count": 10, "expanded_questions": ["您能否提供關於此文件的簡短摘要或概述。", "有哪些主要主題或話題被討論了嗎？", "是否有特別重要的信息、數據或結論被包含在這份文件中。"], "metadata": {"timestamp": "2025-11-05T03:27:41.164663+00:00", "language": "zh"}}

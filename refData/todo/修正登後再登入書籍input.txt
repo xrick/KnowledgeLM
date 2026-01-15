@@ -1,0 +1,7 @@
+/sc:estimate ```text
+now we have a problem to solve:
+problem description:
+1. there is a user A, he upload xxx.pdf and yyy.pdf.
+2. sidebar will show xxx.pdf and yyy.pdf
+3. 
+```text 

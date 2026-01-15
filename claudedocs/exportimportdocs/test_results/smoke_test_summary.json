@@ -1,0 +1,46 @@
+{
+  "test_phase": "Smoke Test (Phase 1)",
+  "test_date": "2026-01-07T07:57:21.274173",
+  "total_tests": 1,
+  "passed": 0,
+  "failed": 1,
+  "results": [
+    {
+      "test_id": "TEST-01",
+      "test_name": "Export Single Document Skill",
+      "status": "FAILED",
+      "start_time": "2026-01-07T07:57:21.271963",
+      "end_time": "2026-01-07T07:57:21.273902",
+      "duration_seconds": 0.001939,
+      "steps": [
+        {
+          "step": "Select test skill",
+          "result": "SUCCESS",
+          "details": "Selected: AMD (head_id: head_20251210_182454_48af4341, chunks: 67)",
+          "timestamp": "2026-01-07T07:57:21.272605"
+        },
+        {
+          "step": "Call export API",
+          "result": "IN_PROGRESS",
+          "details": "URL: http://localhost:8000/api/v1/config/skills/export/head_20251210_182454_48af4341",
+          "timestamp": "2026-01-07T07:57:21.272609"
+        },
+        {
+          "step": "Call export API",
+          "result": "FAILED",
+          "details": "HTTP 404",
+          "timestamp": "2026-01-07T07:57:21.273899"
+        }
+      ],
+      "errors": [
+        "Export API failed: HTTP 404"
+      ],
+      "data": {
+        "head_id": "head_20251210_182454_48af4341",
+        "skill_name": "AMD",
+        "total_chunks": 67,
+        "duration_seconds": 0.001939
+      }
+    }
+  ]
+}

@@ -1,0 +1,969 @@
+<!-- template/skill_settings.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>DocAI - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/fontawesome-all.min.css">
+
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --primary-light: #818cf8;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* ===== FULL WIDTH TITLE BANNER ===== */
+        .title-banner {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+            max-width: 100%;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            overflow: hidden;
+            box-sizing: border-box;
+            height: 60px;
+            min-height: 60px;
+            max-height: 60px;
+            line-height: 1.5;
+        }
+        
+        .title-banner * {
+            line-height: 1.5;
+        }
+
+        .title-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .title-banner .logo {
+            height: 28px;
+            width: auto;
+            flex-shrink: 0;
+            display: block;
+            object-fit: contain;
+        }
+
+        .title-banner .title-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .title-banner-right {
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+        }
+
+        .nav-icon-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            padding: 0.5rem 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .nav-icon-item:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .nav-icon-item.active {
+            color: #374151;
+            font-weight: 500;
+            background: #e5e7eb;
+        }
+
+        .nav-icon-item i {
+            font-size: 0.875rem;
+        }
+
+        .nav-icon-item span {
+            font-weight: 500;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.5rem;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .language-selector:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .language-selector i {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .language-selector span {
+            font-weight: 500;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .main-header {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+            flex-shrink: 0;
+            min-height: 60px;
+            max-height: 60px;
+        }
+        
+        .main-header * {
+            line-height: 1.5;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .page-title h2 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .btn-primary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4b5563;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-outline:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            scrollbar-gutter: stable;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: #f9fafb;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #6b7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
+
+        .form-input:disabled,
+        .form-select:disabled {
+            background: #f9fafb;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .read-only-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #e5e7eb;
+            color: #6b7280;
+            margin-left: 0.5rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #f9fafb;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 10000;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-color: #10b981;
+        }
+
+        .toast.error {
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Full Width Title Banner -->
+    <div class="title-banner">
+        <div class="title-banner-left">
+            <img src="/static/mapleleaf_taiwan.svg" class="logo" alt="Maple Leaf Taiwan Logo" 
+                 onerror="this.onerror=null; this.src='../static/mapleleaf_taiwan.svg'; this.onerror=function(){this.onerror=null; this.src='../static/template/mapleleaf_taiwan.svg';};">
+            <div class="title-text">DocAI with Skills</div>
+        </div>
+        <div class="title-banner-right">
+            <a href="/skill" class="nav-icon-item">
+                <i class="fa-solid fa-comments"></i>
+                <span id="nav-skill-chat"></span>
+            </a>
+            <a href="/skill/config" class="nav-icon-item">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span id="nav-skill-mgmt"></span>
+            </a>
+            <a href="/skill/settings" class="nav-icon-item active">
+                <i class="fa-solid fa-gear"></i>
+                <span id="nav-settings"></span>
+            </a>
+            <div class="language-selector" onclick="toggleLanguage()">
+                <i class="fa-solid fa-globe"></i>
+                <span id="lang-display">中文</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <main class="main-content">
+            <header class="main-header">
+                <div class="page-title">
+                    <i class="fa-solid fa-gear"></i>
+                    <h2 id="page-title">Settings</h2>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-reset" class="btn btn-outline" onclick="resetPreferences()">
+                        <i class="fa-solid fa-undo"></i>
+                        <span id="btn-reset-text">Reset</span>
+                    </button>
+                    <button id="btn-save" class="btn btn-primary" onclick="savePreferences()">
+                        <i class="fa-solid fa-save"></i>
+                        <span id="btn-save-text">Save</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- User Preferences Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-user"></i>
+                            <span id="user-preferences-title">User Preferences</span>
+                        </div>
+                        <div class="card-description" id="user-preferences-desc">Customize your experience</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="pref-language">
+                                    <i class="fa-solid fa-globe"></i>
+                                    <span id="pref-language-label">Language</span>
+                                </label>
+                                <select id="pref-language" class="form-select">
+                                    <option value="zh" id="lang-zh">繁體中文</option>
+                                    <option value="en" id="lang-en">English</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="pref-default-model">
+                                    <i class="fa-solid fa-robot"></i>
+                                    <span id="pref-default-model-label">Default Model</span>
+                                </label>
+                                <select id="pref-default-model" class="form-select">
+                                    <option value="">-- Select Model --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-server"></i>
+                            <span id="system-settings-title">System Settings</span>
+                            <span class="read-only-badge">
+                                <i class="fa-solid fa-lock"></i>
+                                <span id="read-only-badge">Read Only</span>
+                            </span>
+                        </div>
+                        <div class="card-description" id="system-settings-desc">System configuration (read-only)</div>
+                    </div>
+                    <div class="card-body">
+                        <!-- LLM Configuration -->
+                        <div class="form-group">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary);" id="llm-config-title">LLM Configuration</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label class="form-label" id="llm-provider-url-label">Provider URL</label>
+                                    <input type="text" id="llm-provider-url" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="llm-model-label">Model Name</label>
+                                    <input type="text" id="llm-model" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="llm-temperature-label">Temperature</label>
+                                    <input type="number" id="llm-temperature" class="form-input" step="0.1" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="llm-timeout-label">Timeout (seconds)</label>
+                                    <input type="number" id="llm-timeout" class="form-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Embedding Configuration -->
+                        <div class="form-group">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary); margin-top: 1.5rem;" id="embedding-config-title">Embedding Configuration</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label class="form-label" id="embedding-model-label">Model Name</label>
+                                    <input type="text" id="embedding-model" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="embedding-dimension-label">Dimension</label>
+                                    <input type="number" id="embedding-dimension" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="embedding-device-label">Device</label>
+                                    <input type="text" id="embedding-device" class="form-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chunking Configuration -->
+                        <div class="form-group">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary); margin-top: 1.5rem;" id="chunking-config-title">Chunking Configuration</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label class="form-label" id="chunk-size-label">Chunk Size</label>
+                                    <input type="number" id="chunk-size" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="chunk-overlap-label">Chunk Overlap</label>
+                                    <input type="number" id="chunk-overlap" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="chunking-strategy-label">Strategy</label>
+                                    <input type="text" id="chunking-strategy" class="form-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Retrieval Configuration -->
+                        <div class="form-group">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary); margin-top: 1.5rem;" id="retrieval-config-title">Retrieval Configuration</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label class="form-label" id="top-k-label">Top K Results</label>
+                                    <input type="number" id="top-k" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="min-similarity-label">Min Similarity Score</label>
+                                    <input type="number" id="min-similarity" class="form-input" step="0.01" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="reranking-enabled-label">Reranking Enabled</label>
+                                    <input type="text" id="reranking-enabled" class="form-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vector Store Configuration -->
+                        <div class="form-group">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary); margin-top: 1.5rem;" id="vector-store-title">Vector Store</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label class="form-label" id="vector-store-backend-label">Backend Type</label>
+                                    <input type="text" id="vector-store-backend" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="milvus-host-label">Milvus Host</label>
+                                    <input type="text" id="milvus-host" class="form-input" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="milvus-port-label">Milvus Port</label>
+                                    <input type="text" id="milvus-port" class="form-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        // ===== Language and Translation =====
+        let currentLang = 'zh';
+        let uiTranslations = null;
+
+        async function loadUITranslations() {
+            try {
+                const response = await fetch('/static/i18n/ui_translations.json');
+                if (response.ok) {
+                    uiTranslations = await response.json();
+                }
+            } catch (error) {
+                console.error('Failed to load UI translations:', error);
+            }
+        }
+
+        function t(keyPath, params = {}) {
+            if (!uiTranslations || !uiTranslations[currentLang]) return keyPath;
+            const keys = keyPath.split('.');
+            let value = uiTranslations[currentLang];
+            for (const key of keys) {
+                if (value && typeof value === 'object' && key in value) {
+                    value = value[key];
+                } else {
+                    return keyPath;
+                }
+            }
+            if (typeof value === 'string') {
+                Object.entries(params).forEach(([key, val]) => {
+                    value = value.replace(`{${key}}`, val);
+                });
+            }
+            return value;
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('docai_lang', currentLang);
+            updateLanguageDisplay();
+            applyUITranslations();
+            // Update language preference in form
+            document.getElementById('pref-language').value = currentLang;
+        }
+
+        function updateLanguageDisplay() {
+            const langDisplay = document.getElementById('lang-display');
+            if (langDisplay) {
+                langDisplay.textContent = currentLang === 'zh' ? '中文' : 'English';
+            }
+        }
+
+        function applyUITranslations() {
+            if (!uiTranslations) return;
+
+            // Navigation
+            const skillChat = document.getElementById('nav-skill-chat');
+            const skillMgmt = document.getElementById('nav-skill-mgmt');
+            const settings = document.getElementById('nav-settings');
+            if (skillChat) skillChat.textContent = t('nav.skill_chat');
+            if (skillMgmt) skillMgmt.textContent = t('header.skills');
+            if (settings) settings.textContent = t('header.settings');
+
+            // Page title
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) pageTitle.textContent = t('settings.page_title');
+
+            // Buttons
+            const btnSave = document.getElementById('btn-save-text');
+            const btnReset = document.getElementById('btn-reset-text');
+            if (btnSave) btnSave.textContent = t('settings.save');
+            if (btnReset) btnReset.textContent = t('settings.reset');
+
+            // User Preferences
+            const userPrefsTitle = document.getElementById('user-preferences-title');
+            const userPrefsDesc = document.getElementById('user-preferences-desc');
+            const prefLangLabel = document.getElementById('pref-language-label');
+            const prefModelLabel = document.getElementById('pref-default-model-label');
+            if (userPrefsTitle) userPrefsTitle.textContent = t('settings.user_preferences');
+            if (userPrefsDesc) userPrefsDesc.textContent = t('settings.user_preferences_desc');
+            if (prefLangLabel) prefLangLabel.textContent = t('settings.language');
+            if (prefModelLabel) prefModelLabel.textContent = t('settings.default_model');
+
+            // Language options
+            const langZh = document.getElementById('lang-zh');
+            const langEn = document.getElementById('lang-en');
+            if (langZh) langZh.textContent = t('settings.traditional_chinese');
+            if (langEn) langEn.textContent = t('settings.english');
+
+            // System Settings
+            const sysSettingsTitle = document.getElementById('system-settings-title');
+            const sysSettingsDesc = document.getElementById('system-settings-desc');
+            const readOnlyBadge = document.getElementById('read-only-badge');
+            if (sysSettingsTitle) sysSettingsTitle.textContent = t('settings.system_settings');
+            if (sysSettingsDesc) sysSettingsDesc.textContent = t('settings.system_settings_desc');
+            if (readOnlyBadge) readOnlyBadge.textContent = t('settings.read_only');
+
+            // Section titles
+            const llmConfigTitle = document.getElementById('llm-config-title');
+            const embeddingConfigTitle = document.getElementById('embedding-config-title');
+            const chunkingConfigTitle = document.getElementById('chunking-config-title');
+            const retrievalConfigTitle = document.getElementById('retrieval-config-title');
+            const vectorStoreTitle = document.getElementById('vector-store-title');
+            if (llmConfigTitle) llmConfigTitle.textContent = t('settings.llm_config');
+            if (embeddingConfigTitle) embeddingConfigTitle.textContent = t('settings.embedding_config');
+            if (chunkingConfigTitle) chunkingConfigTitle.textContent = t('settings.chunking_config');
+            if (retrievalConfigTitle) retrievalConfigTitle.textContent = t('settings.retrieval_config');
+            if (vectorStoreTitle) vectorStoreTitle.textContent = t('settings.vector_store');
+
+            // Field labels
+            const labels = {
+                'llm-provider-url-label': 'settings.provider_url',
+                'llm-model-label': 'settings.model_name',
+                'llm-temperature-label': 'settings.temperature',
+                'llm-timeout-label': 'settings.timeout',
+                'embedding-model-label': 'settings.model_name',
+                'embedding-dimension-label': 'settings.dimension',
+                'embedding-device-label': 'settings.device',
+                'chunk-size-label': 'settings.chunk_size',
+                'chunk-overlap-label': 'settings.chunk_overlap',
+                'chunking-strategy-label': 'settings.strategy',
+                'top-k-label': 'settings.top_k_results',
+                'min-similarity-label': 'settings.min_similarity',
+                'reranking-enabled-label': 'settings.reranking_enabled',
+                'vector-store-backend-label': 'settings.backend_type',
+                'milvus-host-label': 'settings.connection_info',
+                'milvus-port-label': 'settings.connection_info'
+            };
+
+            Object.entries(labels).forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = t(key);
+            });
+        }
+
+        // ===== Settings Data =====
+        let settingsData = null;
+
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/v1/settings');
+                if (response.ok) {
+                    settingsData = await response.json();
+                    populateSettings();
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to load settings:', response.status, errorText);
+                    showToast('Failed to load settings', 'error');
+                }
+            } catch (error) {
+                console.error('Failed to load settings:', error);
+                showToast('Failed to load settings', 'error');
+            }
+        }
+
+        function populateSettings() {
+            if (!settingsData) return;
+
+            // User preferences (editable)
+            const userPrefs = settingsData.user_preferences || {};
+            const langSelect = document.getElementById('pref-language');
+            const modelSelect = document.getElementById('pref-default-model');
+            
+            // Load from localStorage first (client-side preference)
+            const savedLang = localStorage.getItem('docai_lang') || userPrefs.language || 'zh';
+            const savedModel = localStorage.getItem('docai_default_model') || userPrefs.default_model || '';
+            
+            if (langSelect) langSelect.value = savedLang;
+            
+            // Populate model dropdown
+            if (modelSelect) {
+                const models = settingsData.available_models || [];
+                const currentModel = settingsData.system_settings?.default_llm_model || savedModel || '';
+                
+                // Clear existing options except the first placeholder
+                modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+                
+                if (!Array.isArray(models)) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'Error: Invalid model data format';
+                    option.disabled = true;
+                    modelSelect.appendChild(option);
+                } else if (models.length === 0) {
+                    // If no models, show a message
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No models available (Ollama may not be running)';
+                    option.disabled = true;
+                    modelSelect.appendChild(option);
+                } else {
+                    // Sort models: current/default model first, then others
+                    const sortedModels = [...models].sort((a, b) => {
+                        const aName = a.name || '';
+                        const bName = b.name || '';
+                        const aIsCurrent = aName === currentModel;
+                        const bIsCurrent = bName === currentModel;
+                        if (aIsCurrent && !bIsCurrent) return -1;
+                        if (!aIsCurrent && bIsCurrent) return 1;
+                        return aName.localeCompare(bName);
+                    });
+                    
+                    // Add model options
+                    sortedModels.forEach((model) => {
+                        const modelName = model.name || '';
+                        if (!modelName) return;
+                        
+                        const option = document.createElement('option');
+                        option.value = modelName;
+                        option.textContent = modelName;
+                        if (modelName === currentModel || modelName === savedModel) {
+                            option.selected = true;
+                        }
+                        modelSelect.appendChild(option);
+                    });
+                    
+                    // If saved model is not in the list, add it as selected
+                    if (savedModel && !models.find(m => (m.name || '') === savedModel)) {
+                        const option = document.createElement('option');
+                        option.value = savedModel;
+                        option.textContent = `${savedModel} (not in Ollama)`;
+                        option.selected = true;
+                        modelSelect.insertBefore(option, modelSelect.firstChild.nextSibling);
+                    }
+                }
+            }
+
+            // System settings (read-only)
+            const sysSettings = settingsData.system_settings || {};
+            document.getElementById('llm-provider-url').value = sysSettings.llm_provider_url || '';
+            document.getElementById('llm-model').value = sysSettings.default_llm_model || '';
+            document.getElementById('llm-temperature').value = sysSettings.llm_temperature || '';
+            document.getElementById('llm-timeout').value = sysSettings.llm_timeout || '';
+            document.getElementById('embedding-model').value = sysSettings.embedding_model || '';
+            document.getElementById('embedding-dimension').value = sysSettings.embedding_dimension || '';
+            document.getElementById('embedding-device').value = sysSettings.embedding_device || '';
+            document.getElementById('chunk-size').value = sysSettings.chunk_size || '';
+            document.getElementById('chunk-overlap').value = sysSettings.chunk_overlap || '';
+            document.getElementById('chunking-strategy').value = sysSettings.chunking_strategy || '';
+            document.getElementById('top-k').value = sysSettings.top_k_results || '';
+            document.getElementById('min-similarity').value = sysSettings.min_similarity_score || '';
+            document.getElementById('reranking-enabled').value = sysSettings.reranking_enabled ? 'Yes' : 'No';
+            document.getElementById('vector-store-backend').value = sysSettings.vector_store_backend || '';
+            document.getElementById('milvus-host').value = sysSettings.milvus_host || '';
+            document.getElementById('milvus-port').value = sysSettings.milvus_port || '';
+        }
+
+        async function savePreferences() {
+            const lang = document.getElementById('pref-language').value;
+            const modelSelect = document.getElementById('pref-default-model');
+            const model = modelSelect ? modelSelect.value : '';
+
+            try {
+                const response = await fetch('/api/v1/settings/user', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        language: lang,
+                        default_model: model || null
+                    })
+                });
+
+                if (response.ok) {
+                    // Save to localStorage (client-side persistence)
+                    localStorage.setItem('docai_lang', lang);
+                    if (model) {
+                        localStorage.setItem('docai_default_model', model);
+                    } else {
+                        localStorage.removeItem('docai_default_model');
+                    }
+
+                    // Update current language if changed
+                    if (currentLang !== lang) {
+                        currentLang = lang;
+                        updateLanguageDisplay();
+                        applyUITranslations();
+                    }
+
+                    showToast(t('settings.saved'), 'success');
+                } else {
+                    showToast(t('settings.save_error'), 'error');
+                }
+            } catch (error) {
+                console.error('Failed to save preferences:', error);
+                showToast(t('settings.save_error'), 'error');
+            }
+        }
+
+        function resetPreferences() {
+            if (!confirm(t('settings.reset_confirm'))) return;
+
+            // Reset to defaults
+            document.getElementById('pref-language').value = 'zh';
+            const modelSelect = document.getElementById('pref-default-model');
+            if (modelSelect) {
+                // Reset to the first model (which should be the current default)
+                if (modelSelect.options.length > 1) {
+                    // Find the option that matches the system default model
+                    const defaultModel = settingsData?.system_settings?.default_llm_model || '';
+                    if (defaultModel) {
+                        modelSelect.value = defaultModel;
+                    } else {
+                        modelSelect.value = '';
+                    }
+                } else {
+                    modelSelect.value = '';
+                }
+            }
+
+            // Clear localStorage
+            localStorage.removeItem('docai_default_model');
+            // Keep language preference as it affects UI immediately
+
+            showToast('Preferences reset', 'success');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            if (toast && toastMessage) {
+                toastMessage.textContent = message;
+                toast.className = `toast ${type} show`;
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // ===== Initialize =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load language preference
+            const savedLang = localStorage.getItem('docai_lang') || 'zh';
+            currentLang = savedLang;
+
+            // Load translations
+            await loadUITranslations();
+            updateLanguageDisplay();
+            applyUITranslations();
+
+            // Load settings
+            await loadSettings();
+        });
+    </script>
+</body>
+</html>
+

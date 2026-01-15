@@ -1,0 +1,404 @@
+{
+    "zh": {
+        "app_title": "DocAI Skills",
+        "app_config_title": "DocAI Config",
+        "lang_toggle": "英文 ↔ 中文",
+
+        "nav": {
+            "skill_chat": "技能對話",
+            "skill_config": "Skill 配置管理",
+            "file_mode": "切換至檔案模式"
+        },
+
+        "sidebar": {
+            "skill_tree": "技能樹",
+            "configuration": "配置",
+            "skills_pdfs": "技能 & PDFs"
+        },
+
+        "header": {
+            "skill_config": "技能配置管理",
+            "skill_main": "技能主頁",
+            "refresh": "刷新",
+            "add_skill": "新增技能",
+            "clear": "清除",
+            "skills": "技能",
+            "settings": "設定"
+        },
+
+        "chat": {
+            "welcome_title": "歡迎使用 DocAI with Skills",
+            "welcome_desc": "選擇一個技能來查詢其精選知識領域。您也可以上傳個人文件並將其載入技能中，以建立自己的知識庫。提出問題以根據所選技能的內容獲得智能答案。",
+            "input_placeholder": "請先選擇左側的技能...",
+            "input_placeholder_selected": "詢問關於「{skill}」的問題...",
+            "input_placeholder_multi": "詢問關於「{skill}」及其附件的問題...",
+            "send": "搜尋",
+            "sources_title": "相關來源",
+            "relevance": "相關度",
+            "no_data_error": "目前找不到相關資料，請稍後再試或聯繫工程師協助處理。",
+            "network_error": "網路連線發生問題，請檢查網路後再試。",
+            "sources_count": "{count} 個來源文件",
+            "sources_count_with_items": "{count} 個來源文件 ({items} 項)",
+            "clear_current": "清除當前對話",
+            "clear_all_sessions": "清除所有對話記錄",
+            "more_options": "更多選項",
+            "items": "項",
+            "item_count": "{name} ({count} 項)",
+            "instant_attachment": "{name} (Instant)",
+            "no_documents_title": "此技能目前沒有任何文件資料。請先上傳文件以建立知識庫。",
+            "no_documents_hint": "您可以點擊右上角的「技能」來上傳文件。",
+            "upload_documents_placeholder": "請先上傳文件以使用此技能"
+        },
+
+        "loading": {
+            "searching": "正在進行搜尋......",
+            "searching_desc": "系統正在檢索相關內容...",
+            "loading": "載入中..."
+        },
+
+        "config": {
+            "stats": {
+                "skills": "技能",
+                "pdf_sources": "PDF來源",
+                "instant_attachments": "快速附加附件",
+                "documents": "文件",
+                "total_chunks": "頁段"
+            },
+            "skill_card": {
+                "add_pdf": "新增PDF",
+                "export_skill": "匯出技能",
+                "delete_skill": "刪除技能",
+                "enabled": "已啟用",
+                "disabled": "已停用",
+                "pdfs": "PDFs",
+                "chunks": "頁段",
+                "vectors": "向量"
+            },
+            "section": {
+                "skills_pdfs": "技能 & PDF 來源"
+            },
+            "empty": {
+                "no_skills": "尚無技能配置",
+                "add_first": "新增第一個技能"
+            },
+            "modal": {
+                "add_skill_title": "新增新技能",
+                "skill_name": "技能名稱",
+                "skill_name_placeholder": "例如：機器學習",
+                "description": "文件描述",
+                "description_placeholder": "簡短描述",
+                "category": "技能分類",
+                "category_placeholder": "例如：技術",
+                "cancel": "取消",
+                "add": "新增技能",
+                "add_source_title": "新增PDF來源",
+                "skill_label": "技能",
+                "select_pdf": "選擇 PDF 檔案",
+                "choose_file": "選擇檔案",
+                "no_file_chosen": "尚未選擇檔案",
+                "pdf_description_placeholder": "PDF 的簡短描述",
+                "add_source": "增加來源",
+                "loading_logs": "載入日誌中..."
+            },
+            "duplicate_name": {
+                "title": "名稱重複",
+                "suggestion": "請使用其他名稱，或編輯/刪除現有的技能。",
+                "confirm": "知道了"
+            },
+            "rebuild": {
+                "logs_title": "重建日誌",
+                "what_shows": "這顯示什麼？",
+                "what_shows_tooltip": "顯示技能索引重建的進度和詳細資訊",
+                "rebuild_process": "重建過程：即時顯示索引技能 PDF 的進度",
+                "timing_info": "時間資訊：重建開始時間、持續時間、完成時間",
+                "status_details": "狀態詳情：哪些技能被重建、處理了多少頁段",
+                "error_messages": "錯誤訊息：重建過程中遇到的任何問題",
+                "smart_mode": "智能模式：顯示是否僅重建受影響的技能或所有技能",
+                "close": "關閉"
+            },
+            "delete_skill": {
+                "title": "刪除技能確認",
+                "will_delete": "此操作將永久刪除以下資料：",
+                "pdf_sources": "PDF 來源檔案 - 組成此技能的所有 PDF 文件",
+                "faiss_index": "FAISS 向量索引 - 所有向量嵌入資料",
+                "sqlite_records": "SQLite 資料庫記錄 - skill_metadata、chunk_metadata、document_mapping",
+                "config_file": "skill_config.json - 配置檔中的技能定義",
+                "cannot_undo": "此操作無法復原，請謹慎確認！",
+                "confirm_delete": "確認刪除技能"
+            },
+            "delete_source": {
+                "title": "刪除來源",
+                "confirm_delete": "確認刪除"
+            }
+        },
+
+        "actions": {
+            "rename": "重新命名",
+            "remove": "移除",
+            "confirm": "確認",
+            "cancel": "取消",
+            "error_unknown": "未知錯誤"
+        },
+
+        "rename_modal": {
+            "title": "重新命名",
+            "placeholder": "輸入新名稱...",
+            "success": "已成功重新命名為「{name}」",
+            "error": "重新命名失敗"
+        },
+
+        "skill_tree": {
+            "main": "Main",
+            "no_skills": "尚無技能",
+            "searched_count": "搜尋了 {count} 個知識庫",
+            "select_all": "選取所有來源",
+            "sources_count": "{count} 個來源",
+            "remove_source": "移除來源",
+            "rename_source": "重新命名來源",
+            "remove_confirm": "確定要移除來源「{name}」嗎？",
+            "remove_success": "已成功移除「{name}」",
+            "select_model": "選擇模型"
+        },
+
+        "settings": {
+            "page_title": "設定",
+            "user_preferences": "使用者偏好",
+            "system_settings": "系統設定",
+            "user_preferences_desc": "自訂您的使用體驗",
+            "system_settings_desc": "系統配置（僅供檢視）",
+            "language": "語言",
+            "default_model": "預設模型",
+            "select_language": "選擇語言",
+            "select_model": "選擇預設模型",
+            "llm_config": "LLM 配置",
+            "embedding_config": "嵌入模型配置",
+            "chunking_config": "分塊配置",
+            "retrieval_config": "檢索配置",
+            "vector_store": "向量資料庫",
+            "provider_url": "提供者網址",
+            "temperature": "溫度",
+            "timeout": "逾時（秒）",
+            "model_name": "模型名稱",
+            "dimension": "維度",
+            "device": "裝置",
+            "chunk_size": "分塊大小",
+            "chunk_overlap": "分塊重疊",
+            "strategy": "策略",
+            "top_k_results": "Top K 結果數",
+            "min_similarity": "最小相似度分數",
+            "reranking_enabled": "重新排序已啟用",
+            "backend_type": "後端類型",
+            "connection_info": "連線資訊",
+            "read_only": "僅供檢視",
+            "save": "儲存",
+            "saved": "設定已成功儲存",
+            "save_error": "儲存設定失敗",
+            "reset": "重設為預設值",
+            "reset_confirm": "將所有使用者偏好重設為預設值？",
+            "english": "英文",
+            "traditional_chinese": "繁體中文"
+        }
+    },
+
+    "en": {
+        "app_title": "DocAI Skills",
+        "app_config_title": "DocAI Config",
+        "lang_toggle": "English ↔ 中文",
+
+        "nav": {
+            "skill_chat": "Skill Chat",
+            "skill_config": "Skill Configuration",
+            "file_mode": "Switch to File Mode"
+        },
+
+        "sidebar": {
+            "skill_tree": "Skill Tree",
+            "configuration": "Configuration",
+            "skills_pdfs": "Skills & PDFs"
+        },
+
+        "header": {
+            "skill_config": "Skill Configuration",
+            "skill_main": "Skill Main Page",
+            "refresh": "Refresh",
+            "add_skill": "Add Skill",
+            "clear": "Clear",
+            "skills": "Skills",
+            "settings": "Settings"
+        },
+
+        "chat": {
+            "welcome_title": "Welcome to DocAI with Skills",
+            "welcome_desc": "Select a skill to query its curated knowledge domain. You can also upload your personal documents and load them into skills to build your own knowledge bases. Ask questions to get intelligent answers based on the selected skill's content.",
+            "input_placeholder": "Please select a skill first...",
+            "input_placeholder_selected": "Ask about \"{skill}\"...",
+            "input_placeholder_multi": "Ask about \"{skill}\" and its attachments...",
+            "send": "Search",
+            "sources_title": "Related Sources",
+            "relevance": "Relevance",
+            "no_data_error": "No relevant data found. Please try again later or contact support.",
+            "network_error": "Network connection error. Please check your network and try again.",
+            "sources_count": "{count} source documents",
+            "sources_count_with_items": "{count} source documents ({items} items)",
+            "clear_current": "Clear Current Chat",
+            "clear_all_sessions": "Clear All Chat History",
+            "more_options": "More Options",
+            "items": "items",
+            "item_count": "{name} ({count} items)",
+            "instant_attachment": "{name} (Instant)",
+            "no_documents_title": "This skill currently has no document data. Please upload documents first to create a knowledge base.",
+            "no_documents_hint": "You can click \"Skills\" in the upper right corner to upload documents.",
+            "upload_documents_placeholder": "Please upload documents first to use this skill"
+        },
+
+        "loading": {
+            "searching": "Searching......",
+            "searching_desc": "System is retrieving relevant content...",
+            "loading": "Loading..."
+        },
+
+        "config": {
+            "stats": {
+                "skills": "Skills",
+                "pdf_sources": "PDF Sources",
+                "instant_attachments": "Instant Attachments",
+                "documents": "Documents",
+                "total_chunks": "Chunks"
+            },
+            "skill_card": {
+                "add_pdf": "Add PDF",
+                "export_skill": "Export Skill",
+                "delete_skill": "Delete Skill",
+                "enabled": "Enabled",
+                "disabled": "Disabled",
+                "pdfs": "PDFs",
+                "chunks": "chunks",
+                "vectors": "vectors",
+                "toggle_status": "Click to toggle enabled/disabled status"
+            },
+            "section": {
+                "skills_pdfs": "Skills & PDF Sources"
+            },
+            "empty": {
+                "no_skills": "No skills configured",
+                "add_first": "Add First Skill"
+            },
+            "modal": {
+                "add_skill_title": "Add New Skill",
+                "skill_name": "Skill Name",
+                "skill_name_placeholder": "e.g., Machine Learning",
+                "description": "Description",
+                "description_placeholder": "Brief description",
+                "category": "Category",
+                "category_placeholder": "e.g., Technology",
+                "cancel": "Cancel",
+                "add": "Add Skill",
+                "add_source_title": "Add PDF Source",
+                "skill_label": "Skill",
+                "select_pdf": "Select PDF File",
+                "choose_file": "Choose File",
+                "no_file_chosen": "No file chosen",
+                "pdf_description_placeholder": "Brief description of the PDF",
+                "add_source": "Add Source",
+                "loading_logs": "Loading logs..."
+            },
+            "duplicate_name": {
+                "title": "Duplicate Name",
+                "suggestion": "Please use a different name, or edit/delete the existing Skill.",
+                "confirm": "OK"
+            },
+            "rebuild": {
+                "logs_title": "Rebuild Logs",
+                "what_shows": "What does this show?",
+                "what_shows_tooltip": "Shows progress and details of skill index rebuilding",
+                "rebuild_process": "Rebuild Process: Real-time progress of indexing skill PDFs",
+                "timing_info": "Timing Info: When rebuild started, duration, completion time",
+                "status_details": "Status Details: Which skills were rebuilt, how many chunks processed",
+                "error_messages": "Error Messages: Any issues encountered during rebuild",
+                "smart_mode": "Smart Mode: Shows if only affected skills were rebuilt or all skills",
+                "close": "Close"
+            },
+            "delete_skill": {
+                "title": "Delete Skill Confirmation",
+                "will_delete": "This operation will permanently delete the following data:",
+                "pdf_sources": "PDF Source Files - All PDF documents that make up this skill",
+                "faiss_index": "FAISS Vector Index - All vector embedding data",
+                "sqlite_records": "SQLite Database Records - skill_metadata, chunk_metadata, document_mapping",
+                "config_file": "skill_config.json - Skill definition in config file",
+                "cannot_undo": "This operation cannot be undone. Please confirm carefully!",
+                "confirm_delete": "Confirm Delete Skill"
+            },
+            "delete_source": {
+                "title": "Delete Source",
+                "confirm_delete": "Confirm Delete"
+            }
+        },
+
+        "actions": {
+            "rename": "Rename",
+            "remove": "Remove",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "error_unknown": "Unknown error"
+        },
+
+        "rename_modal": {
+            "title": "Rename",
+            "placeholder": "Enter new name...",
+            "success": "Successfully renamed to \"{name}\"",
+            "error": "Failed to rename"
+        },
+
+        "skill_tree": {
+            "main": "Main",
+            "no_skills": "No skills available",
+            "searched_count": "Searched {count} knowledge bases",
+            "select_all": "Select All Sources",
+            "sources_count": "{count} sources",
+            "remove_source": "Remove Source",
+            "rename_source": "Rename Source",
+            "remove_confirm": "Are you sure you want to remove \"{name}\"?",
+            "remove_success": "Successfully removed \"{name}\"",
+            "select_model": "Select Model"
+        },
+
+        "settings": {
+            "page_title": "Settings",
+            "user_preferences": "User Preferences",
+            "system_settings": "System Settings",
+            "user_preferences_desc": "Customize your experience",
+            "system_settings_desc": "System configuration (read-only)",
+            "language": "Language",
+            "default_model": "Default Model",
+            "select_language": "Select Language",
+            "select_model": "Select Default Model",
+            "llm_config": "LLM Configuration",
+            "embedding_config": "Embedding Configuration",
+            "chunking_config": "Chunking Configuration",
+            "retrieval_config": "Retrieval Configuration",
+            "vector_store": "Vector Store",
+            "provider_url": "Provider URL",
+            "temperature": "Temperature",
+            "timeout": "Timeout (seconds)",
+            "model_name": "Model Name",
+            "dimension": "Dimension",
+            "device": "Device",
+            "chunk_size": "Chunk Size",
+            "chunk_overlap": "Chunk Overlap",
+            "strategy": "Strategy",
+            "top_k_results": "Top K Results",
+            "min_similarity": "Min Similarity Score",
+            "reranking_enabled": "Reranking Enabled",
+            "backend_type": "Backend Type",
+            "connection_info": "Connection Info",
+            "read_only": "Read Only",
+            "save": "Save",
+            "saved": "Settings saved successfully",
+            "save_error": "Failed to save settings",
+            "reset": "Reset to Default",
+            "reset_confirm": "Reset all user preferences to default values?",
+            "english": "English",
+            "traditional_chinese": "Traditional Chinese"
+        }
+    }
+}

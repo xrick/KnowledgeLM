@@ -1,0 +1,42 @@
+INFO:     Started server process [87954]
+INFO:     Waiting for application startup.
+/Users/xrickliao/WorkSpaces/Work/Projects/DocAI/docaienv/lib/python3.11/site-packages/pymilvus/client/__init__.py:6: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound, get_distribution
+Milvus service health check failed: <MilvusException: (code=2, message=Fail connecting to server on localhost:19530. Timeout)>
+⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:57235 - "GET /health HTTP/1.1" 200 OK
+[Import] Database transaction failed: UNIQUE constraint failed: skill_document_mapping.mapping_id
+INFO:     127.0.0.1:57260 - "POST /api/v1/skills/config/skills/import HTTP/1.1" 500 Internal Server Error
+[Import] Skipping skill_overviews.csv: no data
+INFO:     127.0.0.1:57455 - "POST /api/v1/skills/config/skills/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57622 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57627 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57628 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57634 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57635 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57636 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57638 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57639 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57640 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57642 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57644 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57645 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57647 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57649 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57650 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57651 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57652 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57653 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57654 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57655 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57767 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57837 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57840 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57845 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57850 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57855 - "POST /api/v1/skills/demo/query HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58054 - "POST /api/v1/skills/demo/query HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.

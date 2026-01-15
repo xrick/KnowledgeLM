@@ -1,0 +1,28 @@
+{
+  "export_version": "1.0",
+  "export_date": "2026-01-08T03:54:59.212935+00:00",
+  "source_head_id": "skill_20251203_071733_2a43e5ac",
+  "skill_ids": [
+    "skill_20251216_043501_2a43e5ac_9ed582"
+  ],
+  "skill_name": "大語言模型大全",
+  "skill_description": "Large Language Model 基礎知識與實作",
+  "category": "Technology",
+  "total_chunks": 369,
+  "document_count": 1,
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_dimension": 1024,
+  "database_tables": [
+    "skill_heads.csv",
+    "skill_metadata.csv",
+    "skill_chunk_metadata.csv",
+    "skill_document_mapping.csv"
+  ],
+  "faiss_folders": [
+    "skill_20251216_043501_2a43e5ac_9ed582"
+  ],
+  "export_metadata": {
+    "system_version": "DocAI v1.0",
+    "export_tool": "skill_export_api"
+  }
+}

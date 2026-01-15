@@ -1,0 +1,4235 @@
+<!-- template/skill_config.html -->
+<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <title>DocAI - Skill Configuration</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <!-- Font Awesome - using local copy to avoid tracking prevention blocking -->
+        <link rel="stylesheet" href="/static/css/fontawesome-all.min.css" />
+
+        <style>
+            :root {
+                --primary: #667eea;
+                --primary-dark: #5a67d8;
+                --primary-light: #818cf8;
+                --secondary: #764ba2;
+                --success: #10b981;
+                --warning: #f59e0b;
+                --danger: #ef4444;
+                --background: #f8fafc;
+                --sidebar-bg: #ffffff;
+                --sidebar-border: #e2e8f0;
+                --card-bg: #ffffff;
+                --text-primary: #1e293b;
+                --text-secondary: #64748b;
+                --text-muted: #94a3b8;
+                --border: #e2e8f0;
+                --input-bg: #f1f5f9;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                height: 100%;
+                width: 100%;
+                overflow: hidden; /* Prevent scrollbar on html - content scrolls within .content-area */
+                position: fixed; /* Prevent any vertical movement */
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            body {
+                height: 100%;
+                width: 100%;
+                font-family: "Inter", "Noto Sans TC", sans-serif;
+                background: var(--background);
+                color: var(--text-primary);
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                position: fixed; /* Prevent any vertical movement */
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            /* ===== FULL WIDTH TITLE BANNER ===== */
+            .title-banner {
+                background: #ffffff;
+                border-bottom: 1px solid #e5e7eb;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.75rem 1.5rem;
+                width: 100%;
+                max-width: 100%;
+                flex-shrink: 0;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                overflow: hidden;
+                box-sizing: border-box;
+                height: 60px; /* Fixed height to prevent shift */
+                min-height: 60px;
+                max-height: 60px;
+                line-height: 1.5; /* Fixed line height for all text inside */
+            }
+
+            .title-banner * {
+                line-height: 1.5; /* Ensure consistent line height for all children */
+            }
+
+            .title-banner-left {
+                display: flex;
+                align-items: center;
+                gap: 0.875rem;
+                flex: 1;
+                min-width: 0;
+                overflow: hidden;
+            }
+
+            .title-banner .logo {
+                height: 28px;
+                width: auto;
+                flex-shrink: 0;
+                display: block;
+                object-fit: contain;
+            }
+
+            .title-banner .title-text {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #1f2937;
+                letter-spacing: -0.01em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .title-banner-right {
+                display: flex;
+                align-items: center;
+                gap: 0.125rem;
+            }
+
+            .nav-icon-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #6b7280;
+                text-decoration: none;
+                font-size: 0.875rem;
+                transition: all 0.2s ease;
+                padding: 0.5rem 0.5rem;
+                border-radius: 6px;
+                cursor: pointer;
+                background: transparent;
+            }
+
+            .nav-icon-item:hover {
+                background: #f3f4f6;
+                color: #374151;
+            }
+
+            .nav-icon-item.active {
+                color: #374151;
+                font-weight: 500;
+                background: #e5e7eb;
+            }
+
+            .nav-icon-item i {
+                font-size: 0.875rem;
+            }
+
+            .nav-icon-item span {
+                font-weight: 500;
+            }
+
+            .language-selector {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0.5rem;
+                background: transparent;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                color: #6b7280;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex-shrink: 0;
+            }
+
+            .language-selector:hover {
+                background: #f3f4f6;
+                color: #374151;
+            }
+
+            .language-selector i {
+                font-size: 0.875rem;
+                color: #6b7280;
+            }
+
+            .language-selector span {
+                font-weight: 500;
+            }
+
+            /* ===== MAIN LAYOUT ===== */
+            .app-container {
+                display: flex;
+                flex-direction: column;
+                height: calc(100vh - 60px); /* 60px for title banner */
+                overflow: hidden;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                flex-shrink: 0;
+            }
+
+            /* ===== MAIN CONTENT ===== */
+            .main-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .main-header {
+                padding: 1rem 1.5rem;
+                background: var(--card-bg);
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+                flex-shrink: 0;
+                min-height: 60px; /* Ensure consistent height */
+                max-height: 60px; /* Prevent expansion */
+                box-sizing: border-box;
+            }
+
+            .main-header * {
+                line-height: 1.5; /* Ensure consistent line height for all children */
+            }
+
+            .page-title {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                min-width: 0;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            .page-title h2 {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 1.25rem;
+                font-weight: 600;
+                line-height: 1.5; /* Fixed line height to prevent height changes */
+                margin: 0; /* Remove any default margins */
+                padding: 0; /* Remove any default padding */
+            }
+
+            .header-actions {
+                display: flex;
+                gap: 0.5rem; /* Reduced from 0.75rem */
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.375rem; /* Reduced from 0.5rem */
+                padding: 0.375rem 0.75rem; /* Reduced from 0.5rem 1rem */
+                border: none;
+                border-radius: 0.5rem;
+                font-size: 0.8125rem; /* Slightly smaller */
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+                min-width: fit-content;
+            }
+
+            .btn span {
+                display: inline-block;
+                min-width: fit-content;
+            }
+
+            /* Make header buttons the same size */
+            #refresh-btn,
+            .header-actions .btn-primary {
+                width: auto;
+                min-width: 5.5rem; /* Same width for both buttons */
+                max-width: 5.5rem;
+            }
+
+            #btn-modal-cancel,
+            #btn-source-cancel {
+                min-width: 4.5rem;
+            }
+
+            #btn-modal-add,
+            #btn-source-add {
+                min-width: 5.5rem;
+            }
+
+            .btn-primary {
+                background: #6b7280;
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background: #4b5563;
+            }
+
+            .btn-success {
+                background: #6b7280;
+                color: white;
+            }
+
+            .btn-warning {
+                background: #6b7280;
+                color: white;
+            }
+
+            .btn-danger {
+                background: #6b7280;
+                color: white;
+            }
+
+            .btn-outline {
+                background: transparent;
+                border: 1px solid #e5e7eb;
+                color: #374151;
+            }
+
+            .btn-outline:hover {
+                background: #f3f4f6;
+                border-color: #d1d5db;
+            }
+
+            /* ===== CONTENT AREA ===== */
+            .content-area {
+                flex: 1;
+                overflow-y: auto;
+                padding: 1.5rem;
+                scrollbar-gutter: stable;
+            }
+
+            /* ===== CARDS ===== */
+            .card {
+                background: var(--card-bg);
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                margin-bottom: 1.5rem;
+            }
+
+            .card-header {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .card-title {
+                font-size: 1rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            /* ===== STATS ===== */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem; /* 2x: 0.5rem → 1rem */
+                margin-bottom: 1rem;
+            }
+
+            .stat-card {
+                background: var(--card-bg);
+                border-radius: 12px; /* 2x: 6px → 12px */
+                padding: 1rem 1.5rem; /* 2x: 0.5rem 0.75rem → 1rem 1.5rem */
+                border: 1px solid #e5e7eb;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                align-items: center;
+                gap: 1rem;
+                position: relative;
+                min-height: 3.5rem;
+            }
+
+            .stat-icon {
+                width: 3.5rem; /* 2x: 1.75rem → 3.5rem */
+                height: 3.5rem; /* 2x: 1.75rem → 3.5rem */
+                border-radius: 8px; /* 2x: 4px → 8px */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.75rem; /* 2x: 0.875rem → 1.75rem */
+                flex-shrink: 0;
+            }
+
+            .stat-icon.blue,
+            .stat-icon.green,
+            .stat-icon.orange,
+            .stat-icon.red {
+                background: #e5e7eb;
+                color: #6b7280;
+            }
+
+            .stat-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                grid-column: 2;
+            }
+
+            .stat-value {
+                font-size: 1.5rem; /* Reduced from 2.25rem for better proportion */
+                font-weight: 600;
+                color: var(--text-primary);
+                line-height: 1.1;
+                text-align: center;
+            }
+
+            .stat-label {
+                font-size: 0.875rem; /* Reduced from 1.5rem for better proportion */
+                color: var(--text-muted);
+                line-height: 1.1;
+                white-space: nowrap;
+                text-align: right;
+                grid-column: 3;
+            }
+
+            /* ===== TABLE ===== */
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th,
+            td {
+                padding: 0.875rem 1rem;
+                text-align: left;
+                border-bottom: 1px solid var(--border);
+            }
+
+            th {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                background: #f9fafb;
+            }
+
+            td {
+                font-size: 0.875rem;
+                color: var(--text-primary);
+            }
+
+            tr:hover {
+                background: #f3f4f6;
+            }
+
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 9999px;
+                font-size: 0.625rem; /* Reduced from 0.75rem */
+                font-weight: 500;
+            }
+
+            .badge-success,
+            .badge-warning,
+            .badge-danger,
+            .badge-info {
+                background: #e5e7eb;
+                color: #374151;
+            }
+
+            /* ===== SKILL CARD ===== */
+            .skill-card {
+                background: var(--card-bg);
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                margin-bottom: 1rem;
+                overflow: hidden;
+            }
+
+            .skill-card-header {
+                padding: 1rem 1.5rem;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .skill-card-header:hover {
+                background: #f3f4f6;
+            }
+
+            .skill-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .skill-icon {
+                font-size: 1.1rem;
+                width: 24px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                filter: grayscale(100%) opacity(0.7);
+                transition: opacity 0.2s ease;
+            }
+
+            .drag-handle {
+                color: #6b7280;
+                cursor: grab;
+                padding: 0.25rem;
+                border-radius: 4px;
+                transition: all 0.2s;
+            }
+
+            .drag-handle:hover {
+                background: #f3f4f6;
+                color: #374151;
+            }
+
+            .drag-handle i {
+                color: #6b7280;
+            }
+
+            .skill-name {
+                font-weight: 600;
+                font-size: 1rem;
+            }
+
+            .skill-meta {
+                font-size: 0.75rem; /* Reduced from 0.875rem */
+                color: #6b7280;
+            }
+
+            .skill-meta .category-tag {
+                color: #6b7280;
+                font-weight: 500;
+                font-size: 0.625rem; /* Smaller font size */
+                padding: 0.125rem 0.375rem; /* Reduced padding */
+            }
+
+            .skill-actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .skill-card-body {
+                padding: 1rem 1.5rem;
+                display: none;
+            }
+
+            .skill-card.expanded .skill-card-body {
+                display: block;
+            }
+
+            .source-list {
+                list-style: none;
+            }
+
+            .source-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.75rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .source-item:last-child {
+                border-bottom: none;
+            }
+
+            .source-info {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .source-icon {
+                color: var(--danger);
+                font-size: 1.25rem;
+            }
+
+            .source-name {
+                font-weight: 500;
+            }
+
+            .source-path {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+            }
+
+            .btn-delete-source {
+                background: transparent;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                transition: all 0.2s ease;
+                opacity: 0.6;
+            }
+
+            .btn-delete-source:hover {
+                background: rgba(239, 68, 68, 0.1);
+                color: var(--danger);
+                opacity: 1;
+            }
+
+            .source-item:hover .btn-delete-source {
+                opacity: 1;
+            }
+
+            /* ===== ALERTS ===== */
+            .alert {
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .alert-warning {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                color: #374151;
+            }
+
+            .alert-success {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                color: #374151;
+            }
+
+            /* ===== MODAL ===== */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+            .modal {
+                background: var(--card-bg);
+                border-radius: 0.75rem;
+                width: 90%;
+                max-width: 500px;
+                max-height: 90vh;
+                overflow: hidden;
+            }
+
+            .modal-header {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-title {
+                font-weight: 600;
+                white-space: nowrap;
+                min-width: fit-content;
+            }
+
+            .modal-close {
+                background: none;
+                border: none;
+                font-size: 1.25rem;
+                color: var(--text-muted);
+                cursor: pointer;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+                overflow-y: auto;
+                scrollbar-gutter: stable;
+            }
+
+            .modal-footer {
+                padding: 1rem 1.5rem;
+                border-top: 1px solid var(--border);
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.75rem;
+            }
+
+            /* ===== FORM ===== */
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-label {
+                display: block;
+                font-size: 0.875rem;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 0.625rem 0.875rem;
+                border: 1px solid var(--border);
+                border-radius: 0.5rem;
+                font-size: 0.875rem;
+                transition: all 0.2s ease;
+            }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+            /* ===== LOADING ===== */
+            .loading-spinner {
+                display: inline-block;
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid var(--input-bg);
+                border-top: 2px solid var(--primary);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+
+            /* ===== DRAG AND DROP ===== */
+            .skill-card {
+                cursor: grab;
+            }
+
+            .skill-card.dragging {
+                opacity: 0.5;
+                cursor: grabbing;
+                transform: scale(0.98);
+            }
+
+            .skill-card.drag-over {
+                border: 2px dashed var(--primary);
+                background: rgba(102, 126, 234, 0.05);
+            }
+
+            .skill-card .drag-handle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                margin-right: 0.5rem;
+                color: var(--text-muted);
+                cursor: grab;
+            }
+
+            .skill-card .drag-handle:hover {
+                color: var(--primary);
+            }
+
+            .skill-card.dragging .drag-handle {
+                cursor: grabbing;
+            }
+
+            .drop-indicator {
+                height: 3px;
+                background: var(--primary);
+                margin: 0.25rem 0;
+                border-radius: 2px;
+                display: none;
+            }
+
+            .drop-indicator.visible {
+                display: block;
+            }
+
+            /* ===== MOBILE RESPONSIVE ===== */
+            @media (max-width: 768px) {
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                    gap: 0.75rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Full Width Title Banner -->
+        <div class="title-banner">
+            <div class="title-banner-left">
+                <img
+                    src="/static/mapleleaf_taiwan.svg"
+                    class="logo"
+                    alt="Maple Leaf Taiwan Logo"
+                    onerror="
+                        this.onerror = null;
+                        this.src = '../static/mapleleaf_taiwan.svg';
+                        this.onerror = function () {
+                            this.onerror = null;
+                            this.src =
+                                '../static/template/mapleleaf_taiwan.svg';
+                        };
+                    "
+                />
+                <div class="title-text">DocAI with Skills</div>
+            </div>
+            <div class="title-banner-right">
+                <a href="/skill" class="nav-icon-item">
+                    <i class="fa-solid fa-comments"></i>
+                    <span id="nav-skill-chat"></span>
+                </a>
+                <a href="/skill/settings" class="nav-icon-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span id="nav-settings"></span>
+                </a>
+                <div class="language-selector" onclick="toggleLanguage()">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="lang-display">中文</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-container">
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="main-header">
+                    <div class="page-title">
+                        <i class="fa-solid fa-cog"></i>
+                        <h2 id="page-title">Skill Configuration</h2>
+                    </div>
+                    <div class="header-actions">
+                        <button
+                            id="refresh-btn"
+                            class="btn btn-outline"
+                            onclick="refreshData()"
+                        >
+                            <i class="fa-solid fa-refresh"></i>
+                            <span id="btn-refresh">Refresh</span>
+                        </button>
+                        <!-- Import Skill 按鈕 -->
+                        <button
+                            class="btn btn-outline"
+                            onclick="
+                                document
+                                    .getElementById('import-file-input')
+                                    .click()
+                            "
+                            title="Import Skill from ZIP"
+                        >
+                            <i class="fa-solid fa-file-import"></i>
+                            <span id="btn-import-skill">Import</span>
+                        </button>
+                        <input
+                            type="file"
+                            id="import-file-input"
+                            accept=".zip"
+                            style="display: none"
+                            onchange="handleImportFile(this)"
+                        />
+                        <button
+                            class="btn btn-primary"
+                            onclick="showAddSkillModal()"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                            <span id="btn-add-skill">Add Skill</span>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="content-area">
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-skills">0</div>
+                            </div>
+                            <div class="stat-label" id="stat-label-skills">
+                                Skills
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-pdfs">0</div>
+                            </div>
+                            <div class="stat-label" id="stat-label-pdfs">
+                                Documents
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fa-solid fa-database"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-instant">
+                                    0
+                                </div>
+                            </div>
+                            <div class="stat-label" id="stat-label-instant">
+                                頁段
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rebuild Warning - Removed from top, now shown per-skill row with 5+ attachments -->
+                    <!-- Old global warning removed per user request - rebuild buttons are now on individual skill rows -->
+
+                    <!-- Skills Section -->
+                    <section id="section-skills">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="fa-solid fa-folder-tree"></i>
+                                    <span id="section-skills-pdfs-title"
+                                        >Skills & PDF Sources</span
+                                    >
+                                </div>
+                            </div>
+                            <div class="card-body" id="skills-container">
+                                <!-- Skills will be loaded here -->
+                                <div
+                                    style="
+                                        text-align: center;
+                                        padding: 2rem;
+                                        color: var(--text-muted);
+                                    "
+                                >
+                                    <div class="loading-spinner"></div>
+                                    <div style="margin-top: 0.5rem">
+                                        Loading...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <!-- Add Skill Modal -->
+        <div class="modal-overlay" id="add-skill-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <div class="modal-title" id="modal-add-skill-title">
+                        Add New Skill
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('add-skill-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" id="label-skill-name"
+                            >Skill Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="new-skill-name"
+                            placeholder=""
+                            data-placeholder-key="config.modal.skill_name_placeholder"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-description"
+                            >Description</label
+                        >
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="new-skill-desc"
+                            placeholder=""
+                            data-placeholder-key="config.modal.description_placeholder"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-category"
+                            >Category</label
+                        >
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="new-skill-category"
+                            placeholder=""
+                            data-placeholder-key="config.modal.category_placeholder"
+                        />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-outline"
+                        onclick="closeModal('add-skill-modal')"
+                        id="btn-modal-cancel"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="addSkill()"
+                        id="btn-modal-add"
+                    >
+                        Add Skill
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Duplicate Name Alert Modal -->
+        <div class="modal-overlay" id="duplicate-name-modal">
+            <div class="modal" style="max-width: 450px">
+                <div
+                    class="modal-header"
+                    style="
+                        background: #f9fafb;
+                        border-bottom: 1px solid #e5e7eb;
+                    "
+                >
+                    <div
+                        class="modal-title"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            color: #374151;
+                        "
+                    >
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            style="font-size: 1.5rem; color: #6b7280"
+                        ></i>
+                        <span id="duplicate-title">名稱重複</span>
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('duplicate-name-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p
+                        id="duplicate-name-message"
+                        style="
+                            margin-bottom: 1rem;
+                            font-size: 0.95rem;
+                            line-height: 1.6;
+                        "
+                    >
+                        <!-- Message will be inserted here -->
+                    </p>
+                    <div
+                        style="
+                            background: var(--input-bg);
+                            padding: 0.875rem;
+                            border-radius: 0.5rem;
+                            border-left: 3px solid var(--warning);
+                        "
+                    >
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin: 0;
+                            "
+                            id="duplicate-suggestion"
+                        >
+                            <strong>建議：</strong
+                            >請使用其他名稱，或編輯/刪除現有的 Skill。
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-primary"
+                        onclick="closeModal('duplicate-name-modal')"
+                        id="btn-duplicate-ok"
+                    >
+                        <i class="fa-solid fa-check"></i> 知道了
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Source Modal -->
+        <div class="modal-overlay" id="add-source-modal">
+            <div class="modal" style="max-width: 600px">
+                <div class="modal-header">
+                    <div class="modal-title" id="modal-add-source-title">
+                        Add PDF Source
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('add-source-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" id="label-skill">Skill</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="source-skill-name"
+                            readonly
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-select-pdf"
+                            >Select PDF File</label
+                        >
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 0.75rem;
+                            "
+                        >
+                            <input
+                                type="file"
+                                id="pdf-file-input"
+                                accept=".pdf"
+                                style="display: none"
+                                onchange="handlePDFFileSelected()"
+                            />
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                onclick="
+                                    document
+                                        .getElementById('pdf-file-input')
+                                        .click()
+                                "
+                                id="btn-choose-file"
+                            >
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span id="choose-file-text">Choose File</span>
+                            </button>
+                            <span
+                                id="file-name-display"
+                                style="color: #6b7280; font-size: 0.875rem"
+                                >No file chosen</span
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-pdf-description"
+                            >Description</label
+                        >
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="new-source-desc"
+                            placeholder=""
+                            data-placeholder-key="config.modal.pdf_description_placeholder"
+                        />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-outline"
+                        onclick="closeModal('add-source-modal')"
+                        id="btn-source-cancel"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="addSource()"
+                        id="btn-source-add"
+                    >
+                        Add Source
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rebuild Status Modal -->
+        <div class="modal-overlay" id="rebuild-status-modal">
+            <div
+                class="modal"
+                style="
+                    max-width: 800px;
+                    max-height: 85vh;
+                    display: flex;
+                    flex-direction: column;
+                "
+            >
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span id="rebuild-logs-title">Rebuild Logs</span>
+                        <i
+                            class="fa-solid fa-circle-info"
+                            style="
+                                font-size: 0.9rem;
+                                margin-left: 0.5rem;
+                                cursor: help;
+                            "
+                            id="rebuild-tooltip"
+                            title=""
+                        ></i>
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('rebuild-status-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                <!-- Info Section -->
+                <div
+                    style="
+                        background: #f9fafb;
+                        border-left: 3px solid #e5e7eb;
+                        padding: 0.75rem 1rem;
+                        margin: 1rem;
+                    "
+                >
+                    <div
+                        style="
+                            font-size: 0.85rem;
+                            color: var(--text-secondary);
+                            font-weight: 500;
+                        "
+                    >
+                        <i
+                            class="fa-solid fa-circle-info"
+                            style="margin-right: 0.5rem"
+                        ></i>
+                        <span id="rebuild-what-shows"
+                            >What does this show?</span
+                        >
+                    </div>
+                    <div
+                        style="
+                            font-size: 0.8rem;
+                            color: var(--text-muted);
+                            margin-top: 0.5rem;
+                            line-height: 1.5;
+                        "
+                    >
+                        <ul
+                            style="margin: 0.5rem 0 0 1.5rem; padding-left: 0"
+                            id="rebuild-info-list"
+                        >
+                            <li id="rebuild-process-item"><strong></strong></li>
+                            <li id="rebuild-timing-item"><strong></strong></li>
+                            <li id="rebuild-status-item"><strong></strong></li>
+                            <li id="rebuild-error-item"><strong></strong></li>
+                            <li id="rebuild-smart-item"><strong></strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Logs Display -->
+                <div
+                    style="
+                        flex: 1;
+                        padding: 0 1rem 1rem 1rem;
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                    "
+                >
+                    <pre
+                        id="rebuild-logs"
+                        style="
+                            background: #1e293b;
+                            color: #e2e8f0;
+                            padding: 1rem;
+                            border-radius: 0.5rem;
+                            font-size: 0.75rem;
+                            white-space: pre-wrap;
+                            flex: 1;
+                            overflow-y: auto;
+                            margin: 0;
+                        "
+                        id="rebuild-logs-placeholder"
+                    >
+Loading logs...</pre
+                    >
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        class="btn btn-outline"
+                        onclick="refreshRebuildStatus()"
+                    >
+                        <i class="fa-solid fa-refresh"></i>
+                        <span id="btn-rebuild-refresh">Refresh</span>
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="closeModal('rebuild-status-modal')"
+                        id="btn-rebuild-close"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Skill Confirmation Modal -->
+        <div class="modal-overlay" id="delete-skill-modal">
+            <div class="modal" style="max-width: 550px">
+                <div
+                    class="modal-header"
+                    style="
+                        background: #f9fafb;
+                        border-bottom: 1px solid #e5e7eb;
+                    "
+                >
+                    <div
+                        class="modal-title"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            color: #374151;
+                        "
+                    >
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            style="font-size: 1.5rem; color: #6b7280"
+                        ></i>
+                        <span id="delete-skill-title">刪除技能確認</span>
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('delete-skill-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 0.5rem 0 1rem 0">
+                        <i
+                            class="fa-solid fa-trash"
+                            style="
+                                font-size: 2.5rem;
+                                color: #6b7280;
+                                margin-bottom: 0.75rem;
+                            "
+                        ></i>
+                        <h3
+                            id="delete-skill-name"
+                            style="margin: 0 0 0.75rem 0; color: #1f2937"
+                        >
+                            技能名稱
+                        </h3>
+                    </div>
+
+                    <div
+                        style="
+                            background: #f9fafb;
+                            border: 1px solid #e5e7eb;
+                            border-radius: 0.5rem;
+                            padding: 1rem;
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        <p
+                            style="
+                                margin: 0 0 0.75rem 0;
+                                font-weight: 600;
+                                color: #374151;
+                            "
+                        >
+                            <i
+                                class="fa-solid fa-exclamation-circle"
+                                style="margin-right: 0.5rem; color: #6b7280"
+                            ></i>
+                            此操作將永久刪除以下資料：
+                        </p>
+                        <ul
+                            style="
+                                margin: 0;
+                                padding-left: 1.5rem;
+                                color: #6b7280;
+                                line-height: 1.8;
+                            "
+                        >
+                            <li>
+                                <strong>PDF 來源檔案</strong> - 組成此技能的所有
+                                PDF 文件
+                            </li>
+                            <li>
+                                <strong>FAISS 向量索引</strong> -
+                                所有向量嵌入資料
+                            </li>
+                            <li>
+                                <strong>SQLite 資料庫記錄</strong> -
+                                skill_metadata、chunk_metadata、document_mapping
+                            </li>
+                            <li>
+                                <strong>skill_config.json</strong> -
+                                配置檔中的技能定義
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div
+                        id="delete-skill-stats"
+                        style="
+                            background: #f9fafb;
+                            padding: 0.875rem;
+                            border-radius: 0.5rem;
+                            font-size: 0.875rem;
+                            color: #6b7280;
+                            border: 1px solid #e5e7eb;
+                        "
+                    >
+                        <!-- Stats will be populated by JS -->
+                    </div>
+
+                    <p
+                        style="
+                            margin: 1rem 0 0 0;
+                            text-align: center;
+                            font-size: 0.9rem;
+                            color: #6b7280;
+                            font-weight: 500;
+                        "
+                    >
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            style="margin-right: 0.25rem"
+                        ></i
+                        >此操作無法復原，請謹慎確認！
+                    </p>
+                </div>
+                <div
+                    class="modal-footer"
+                    style="justify-content: center; gap: 1rem"
+                >
+                    <button
+                        class="btn btn-outline"
+                        onclick="closeModal('delete-skill-modal')"
+                    >
+                        <i class="fa-solid fa-xmark"></i> 取消
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="executeDeleteSkill()"
+                    >
+                        <i class="fa-solid fa-trash"></i> 確認刪除技能
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build ALL Skills Confirmation Modal -->
+        <div class="modal-overlay" id="rebuild-confirm-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <div class="modal-title">⚠️ 完全重建確認</div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('rebuild-confirm-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 1rem 0">
+                        <i
+                            class="fa-solid fa-exclamation-triangle"
+                            style="
+                                font-size: 3rem;
+                                color: #f59e0b;
+                                margin-bottom: 1rem;
+                            "
+                        ></i>
+                        <h3 style="margin: 0 0 1rem 0; color: var(--text)">
+                            即將進行完全重建
+                        </h3>
+                        <p
+                            style="
+                                color: var(--text-muted);
+                                margin: 0 0 1rem 0;
+                                line-height: 1.6;
+                            "
+                        >
+                            此操作將會：
+                        </p>
+                        <ul
+                            style="
+                                text-align: left;
+                                color: var(--text-muted);
+                                margin: 0 auto;
+                                max-width: 280px;
+                                line-height: 1.8;
+                            "
+                        >
+                            <li>清除所有現有的 Skill 索引</li>
+                            <li>重新處理所有 PDF 來源檔案</li>
+                            <li>重新生成所有向量嵌入</li>
+                            <li>此過程可能需要數十分鐘時間</li>
+                        </ul>
+                    </div>
+                    <div
+                        id="rebuild-confirm-stats"
+                        style="
+                            background: var(--bg);
+                            padding: 1rem;
+                            border-radius: 0.5rem;
+                            margin-top: 1rem;
+                            font-size: 0.875rem;
+                            color: var(--text-muted);
+                        "
+                    >
+                        <!-- Stats will be populated by JS -->
+                    </div>
+                </div>
+                <div
+                    class="modal-footer"
+                    style="justify-content: center; gap: 1rem"
+                >
+                    <button
+                        class="btn btn-outline"
+                        onclick="closeModal('rebuild-confirm-modal')"
+                    >
+                        取消
+                    </button>
+                    <button
+                        class="btn"
+                        onclick="executeFullRebuild()"
+                        style="
+                            background: transparent;
+                            border: 1px solid #ef4444;
+                            color: #ef4444;
+                            font-weight: 600;
+                        "
+                    >
+                        是的，進行完全重建
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Progress Modal (SSE Real-time) -->
+        <div class="modal-overlay" id="upload-progress-modal">
+            <div
+                class="modal"
+                style="
+                    max-width: 800px;
+                    max-height: 85vh;
+                    display: flex;
+                    flex-direction: column;
+                "
+            >
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span id="upload-progress-title">上傳處理進度</span>
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="cancelUpload()"
+                        id="upload-close-btn"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                <!-- File Info Section -->
+                <div
+                    style="
+                        background: rgba(59, 130, 246, 0.05);
+                        border-left: 3px solid var(--primary);
+                        padding: 0.75rem 1rem;
+                        margin: 1rem;
+                    "
+                >
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        "
+                    >
+                        <div>
+                            <span
+                                style="font-weight: 600; color: var(--text)"
+                                id="upload-filename"
+                                >-</span
+                            >
+                            <span
+                                style="
+                                    font-size: 0.8rem;
+                                    color: var(--text-muted);
+                                    margin-left: 0.5rem;
+                                "
+                                id="upload-filesize"
+                                >-</span
+                            >
+                        </div>
+                        <div
+                            id="upload-status-badge"
+                            style="
+                                padding: 0.25rem 0.75rem;
+                                border-radius: 9999px;
+                                font-size: 0.75rem;
+                                font-weight: 600;
+                                background: rgba(251, 191, 36, 0.1);
+                                color: #f59e0b;
+                            "
+                        >
+                            處理中...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div style="padding: 0 1rem">
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            font-size: 0.8rem;
+                            color: var(--text-muted);
+                            margin-bottom: 0.25rem;
+                        "
+                    >
+                        <span id="upload-phase">準備中...</span>
+                        <span id="upload-percent">0%</span>
+                    </div>
+                    <div
+                        style="
+                            height: 8px;
+                            background: var(--bg);
+                            border-radius: 4px;
+                            overflow: hidden;
+                        "
+                    >
+                        <div
+                            id="upload-progress-bar"
+                            style="
+                                height: 100%;
+                                width: 0%;
+                                background: linear-gradient(
+                                    90deg,
+                                    var(--primary),
+                                    #60a5fa
+                                );
+                                transition: width 0.3s ease;
+                            "
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- Logs Display -->
+                <div
+                    style="
+                        flex: 1;
+                        padding: 1rem;
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                    "
+                >
+                    <div
+                        style="
+                            font-size: 0.8rem;
+                            color: var(--text-muted);
+                            margin-bottom: 0.5rem;
+                        "
+                    >
+                        <i class="fa-solid fa-terminal"></i> 處理日誌 (自動滾動)
+                    </div>
+                    <pre
+                        id="upload-logs"
+                        style="
+                            background: #1e293b;
+                            color: #e2e8f0;
+                            padding: 1rem;
+                            border-radius: 0.5rem;
+                            font-size: 0.75rem;
+                            font-family:
+                                &quot;JetBrains Mono&quot;,
+                                &quot;Fira Code&quot;, Consolas, monospace;
+                            white-space: pre-wrap;
+                            flex: 1;
+                            overflow-y: auto;
+                            margin: 0;
+                            line-height: 1.6;
+                        "
+                    >
+等待上傳開始...</pre
+                    >
+                </div>
+
+                <div class="modal-footer">
+                    <span
+                        id="upload-elapsed"
+                        style="font-size: 0.8rem; color: var(--text-muted)"
+                    >
+                        <i class="fa-solid fa-clock"></i> 經過時間: 0s
+                    </span>
+                    <div>
+                        <button
+                            class="btn btn-outline"
+                            onclick="cancelUpload()"
+                            id="btn-upload-cancel"
+                        >
+                            <i class="fa-solid fa-stop"></i> 取消
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            onclick="closeUploadModal()"
+                            id="btn-upload-close"
+                            style="display: none"
+                        >
+                            <i class="fa-solid fa-check"></i> 完成
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Source Confirmation Modal -->
+        <div class="modal-overlay" id="delete-source-modal">
+            <div class="modal" style="max-width: 500px">
+                <div
+                    class="modal-header"
+                    style="
+                        background: #f9fafb;
+                        border-bottom: 1px solid #e5e7eb;
+                    "
+                >
+                    <div
+                        class="modal-title"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            color: #374151;
+                        "
+                    >
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            style="color: #6b7280"
+                        ></i>
+                        <span>刪除來源</span>
+                    </div>
+                    <button
+                        class="modal-close"
+                        onclick="closeModal('delete-source-modal')"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 1rem 0">
+                        <i
+                            class="fa-solid fa-file-pdf"
+                            style="
+                                font-size: 3rem;
+                                color: #6b7280;
+                                margin-bottom: 1rem;
+                            "
+                        ></i>
+                        <h3
+                            style="margin: 0 0 0.5rem 0; color: #1f2937"
+                            id="delete-source-name"
+                        >
+                            -
+                        </h3>
+                        <p
+                            style="
+                                color: #6b7280;
+                                margin: 0 0 1rem 0;
+                                font-size: 0.875rem;
+                            "
+                        >
+                            <i
+                                class="fa-solid fa-database"
+                                style="color: #6b7280"
+                            ></i>
+                            <span id="delete-source-chunks">0</span>
+                            <span id="delete-source-chunks-label">chunks</span>
+                        </p>
+                    </div>
+                    <div class="alert alert-warning" style="margin: 0">
+                        <i
+                            class="fa-solid fa-exclamation-circle"
+                            style="color: #6b7280"
+                        ></i>
+                        <div>
+                            <strong>此操作將永久刪除：</strong>
+                            <ul
+                                style="
+                                    margin: 0.5rem 0 0 0;
+                                    padding-left: 1.25rem;
+                                    line-height: 1.6;
+                                "
+                            >
+                                <li>向量嵌入索引 (FAISS)</li>
+                                <li>PDF 原始檔案</li>
+                                <li>所有相關的元資料</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="modal-footer"
+                    style="justify-content: flex-end; gap: 0.75rem"
+                >
+                    <button
+                        class="btn btn-outline"
+                        onclick="closeModal('delete-source-modal')"
+                    >
+                        <i class="fa-solid fa-xmark"></i> 取消
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        id="btn-confirm-delete-source"
+                        onclick="confirmDeleteSource()"
+                    >
+                        <i class="fa-solid fa-trash"></i> 確認刪除
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ===== State =====
+            let configData = null;
+            let currentSection = "skills";
+
+            // ===== SSE Upload State =====
+            let currentEventSource = null;
+            let uploadStartTime = null;
+            let elapsedTimerInterval = null;
+            let isUploadComplete = false;
+
+            // ===== Language System =====
+            let currentLang = "zh"; // 'zh' for Chinese, 'en' for English
+            let uiTranslations = null;
+
+            // Load UI translations on page load
+            async function loadUITranslations() {
+                try {
+                    const response = await fetch(
+                        "/static/i18n/ui_translations.json",
+                    );
+                    if (response.ok) {
+                        uiTranslations = await response.json();
+                        console.log("UI translations loaded");
+                    }
+                } catch (error) {
+                    console.error("Failed to load UI translations:", error);
+                    // Use inline fallback
+                    uiTranslations = {
+                        zh: { lang_toggle: "英文 ↔ 中文" },
+                        en: { lang_toggle: "English ↔ 中文" },
+                    };
+                }
+            }
+
+            // Get translation by key path (e.g., "config.stats.skills")
+            function t(keyPath, params = {}) {
+                if (!uiTranslations || !uiTranslations[currentLang])
+                    return keyPath;
+
+                const keys = keyPath.split(".");
+                let value = uiTranslations[currentLang];
+
+                for (const key of keys) {
+                    if (value && typeof value === "object" && key in value) {
+                        value = value[key];
+                    } else {
+                        return keyPath; // Key not found, return path as fallback
+                    }
+                }
+
+                // Replace parameters like {skill}, {count}, {name}
+                if (typeof value === "string") {
+                    Object.entries(params).forEach(([key, val]) => {
+                        value = value.replace(`{${key}}`, val);
+                    });
+                }
+
+                return value;
+            }
+
+            function toggleLanguage() {
+                // Toggle language (no LLM, just static UI translation)
+                currentLang = currentLang === "zh" ? "en" : "zh";
+
+                // Save preference to localStorage
+                localStorage.setItem("docai_lang", currentLang);
+
+                // Update language display
+                updateLanguageDisplay();
+
+                // Update all UI elements
+                applyUITranslations();
+            }
+
+            function updateLanguageDisplay() {
+                const langDisplay = document.getElementById("lang-display");
+                if (langDisplay) {
+                    langDisplay.textContent =
+                        currentLang === "zh" ? "中文" : "English";
+                }
+            }
+
+            function applyUITranslations() {
+                if (!uiTranslations) return;
+
+                // Update navigation links
+                const navSkillChat = document.getElementById("nav-skill-chat");
+                const navSettings = document.getElementById("nav-settings");
+                if (navSkillChat)
+                    navSkillChat.textContent = t("nav.skill_chat");
+                if (navSettings)
+                    navSettings.textContent =
+                        currentLang === "zh" ? "設定" : "Settings";
+
+                // Update page title
+                const pageTitle = document.getElementById("page-title");
+                if (pageTitle) pageTitle.textContent = t("header.skill_config");
+
+                // Update header buttons
+                const btnRefresh = document.getElementById("btn-refresh");
+                const btnAddSkill = document.getElementById("btn-add-skill");
+                const btnImportSkill =
+                    document.getElementById("btn-import-skill");
+                if (btnRefresh) btnRefresh.textContent = t("header.refresh");
+                if (btnAddSkill)
+                    btnAddSkill.textContent = t("header.add_skill");
+                if (btnImportSkill)
+                    btnImportSkill.textContent =
+                        currentLang === "zh" ? "匯入" : "Import";
+
+                // Update stat labels
+                // NEW: Updated for tree data format
+                const statSkills = document.getElementById("stat-label-skills");
+                const statPdfs = document.getElementById("stat-label-pdfs");
+                const statInstant =
+                    document.getElementById("stat-label-instant");
+                if (statSkills)
+                    statSkills.textContent = t("config.stats.skills");
+                if (statPdfs)
+                    statPdfs.textContent =
+                        t("config.stats.documents") || "Documents";
+                if (statInstant)
+                    statInstant.textContent =
+                        t("config.stats.total_chunks") || "頁段";
+
+                // Update Add Skill modal
+                const modalAddSkillTitle = document.getElementById(
+                    "modal-add-skill-title",
+                );
+                const labelSkillName =
+                    document.getElementById("label-skill-name");
+                const labelDescription =
+                    document.getElementById("label-description");
+                const labelCategory = document.getElementById("label-category");
+                const btnModalCancel =
+                    document.getElementById("btn-modal-cancel");
+                const btnModalAdd = document.getElementById("btn-modal-add");
+                const inputSkillName =
+                    document.getElementById("new-skill-name");
+                const inputSkillDesc =
+                    document.getElementById("new-skill-desc");
+                const inputSkillCategory =
+                    document.getElementById("new-skill-category");
+                if (modalAddSkillTitle)
+                    modalAddSkillTitle.textContent = t(
+                        "config.modal.add_skill_title",
+                    );
+                if (labelSkillName)
+                    labelSkillName.textContent = t("config.modal.skill_name");
+                if (labelDescription)
+                    labelDescription.textContent = t(
+                        "config.modal.description",
+                    );
+                if (labelCategory)
+                    labelCategory.textContent = t("config.modal.category");
+                if (btnModalCancel)
+                    btnModalCancel.textContent = t("config.modal.cancel");
+                if (btnModalAdd)
+                    btnModalAdd.textContent = t("config.modal.add");
+                if (inputSkillName)
+                    inputSkillName.placeholder = t(
+                        "config.modal.skill_name_placeholder",
+                    );
+                if (inputSkillDesc)
+                    inputSkillDesc.placeholder = t(
+                        "config.modal.description_placeholder",
+                    );
+                if (inputSkillCategory)
+                    inputSkillCategory.placeholder = t(
+                        "config.modal.category_placeholder",
+                    );
+
+                // Update Duplicate Name modal
+                const duplicateTitle =
+                    document.getElementById("duplicate-title");
+                const duplicateSuggestion = document.getElementById(
+                    "duplicate-suggestion",
+                );
+                const btnDuplicateOk =
+                    document.getElementById("btn-duplicate-ok");
+                if (duplicateTitle)
+                    duplicateTitle.textContent = t(
+                        "config.duplicate_name.title",
+                    );
+                if (duplicateSuggestion)
+                    duplicateSuggestion.innerHTML =
+                        "<strong>" +
+                        (currentLang === "zh" ? "建議：" : "Suggestion: ") +
+                        "</strong>" +
+                        t("config.duplicate_name.suggestion");
+                if (btnDuplicateOk)
+                    btnDuplicateOk.innerHTML =
+                        '<i class="fa-solid fa-check"></i> ' +
+                        t("config.duplicate_name.confirm");
+
+                // Update Add Source modal
+                const modalAddSourceTitle = document.getElementById(
+                    "modal-add-source-title",
+                );
+                const labelSkill = document.getElementById("label-skill");
+                const labelSelectPdf =
+                    document.getElementById("label-select-pdf");
+                const labelPdfDescription = document.getElementById(
+                    "label-pdf-description",
+                );
+                const btnSourceCancel =
+                    document.getElementById("btn-source-cancel");
+                const btnSourceAdd = document.getElementById("btn-source-add");
+                const inputSourceDesc =
+                    document.getElementById("new-source-desc");
+                const btnChooseFile =
+                    document.getElementById("btn-choose-file");
+                const chooseFileText =
+                    document.getElementById("choose-file-text");
+                const fileNameDisplay =
+                    document.getElementById("file-name-display");
+                if (modalAddSourceTitle)
+                    modalAddSourceTitle.textContent = t(
+                        "config.modal.add_source_title",
+                    );
+                if (labelSkill)
+                    labelSkill.textContent = t("config.modal.skill_label");
+                if (labelSelectPdf)
+                    labelSelectPdf.textContent = t("config.modal.select_pdf");
+                if (labelPdfDescription)
+                    labelPdfDescription.textContent = t(
+                        "config.modal.description",
+                    );
+                if (btnSourceCancel)
+                    btnSourceCancel.textContent = t("config.modal.cancel");
+                if (btnSourceAdd)
+                    btnSourceAdd.textContent = t("config.modal.add_source");
+                if (inputSourceDesc)
+                    inputSourceDesc.placeholder = t(
+                        "config.modal.pdf_description_placeholder",
+                    );
+                if (chooseFileText)
+                    chooseFileText.textContent = t("config.modal.choose_file");
+                if (
+                    (fileNameDisplay &&
+                        !document.getElementById("pdf-file-input").files) ||
+                    document.getElementById("pdf-file-input").files.length === 0
+                ) {
+                    fileNameDisplay.textContent = t(
+                        "config.modal.no_file_chosen",
+                    );
+                }
+
+                // Update Rebuild Status modal
+                const rebuildLogsTitle =
+                    document.getElementById("rebuild-logs-title");
+                const rebuildWhatShows =
+                    document.getElementById("rebuild-what-shows");
+                const rebuildTooltip =
+                    document.getElementById("rebuild-tooltip");
+                const rebuildProcessItem = document.getElementById(
+                    "rebuild-process-item",
+                );
+                const rebuildTimingItem = document.getElementById(
+                    "rebuild-timing-item",
+                );
+                const rebuildStatusItem = document.getElementById(
+                    "rebuild-status-item",
+                );
+                const rebuildErrorItem =
+                    document.getElementById("rebuild-error-item");
+                const rebuildSmartItem =
+                    document.getElementById("rebuild-smart-item");
+                const rebuildLogsPlaceholder = document.getElementById(
+                    "rebuild-logs-placeholder",
+                );
+                const btnRebuildRefresh = document.getElementById(
+                    "btn-rebuild-refresh",
+                );
+                const btnRebuildClose =
+                    document.getElementById("btn-rebuild-close");
+                if (rebuildLogsTitle)
+                    rebuildLogsTitle.textContent = t(
+                        "config.rebuild.logs_title",
+                    );
+                if (rebuildWhatShows)
+                    rebuildWhatShows.textContent = t(
+                        "config.rebuild.what_shows",
+                    );
+                if (rebuildTooltip)
+                    rebuildTooltip.title = t(
+                        "config.rebuild.what_shows_tooltip",
+                    );
+                if (rebuildProcessItem) {
+                    const text = t("config.rebuild.rebuild_process");
+                    rebuildProcessItem.innerHTML =
+                        "<strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[0] + "："
+                            : text.split(":")[0] + ": ") +
+                        "</strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[1]
+                            : text.split(": ")[1] || "");
+                }
+                if (rebuildTimingItem) {
+                    const text = t("config.rebuild.timing_info");
+                    rebuildTimingItem.innerHTML =
+                        "<strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[0] + "："
+                            : text.split(":")[0] + ": ") +
+                        "</strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[1]
+                            : text.split(": ")[1] || "");
+                }
+                if (rebuildStatusItem) {
+                    const text = t("config.rebuild.status_details");
+                    rebuildStatusItem.innerHTML =
+                        "<strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[0] + "："
+                            : text.split(":")[0] + ": ") +
+                        "</strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[1]
+                            : text.split(": ")[1] || "");
+                }
+                if (rebuildErrorItem) {
+                    const text = t("config.rebuild.error_messages");
+                    rebuildErrorItem.innerHTML =
+                        "<strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[0] + "："
+                            : text.split(":")[0] + ": ") +
+                        "</strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[1]
+                            : text.split(": ")[1] || "");
+                }
+                if (rebuildSmartItem) {
+                    const text = t("config.rebuild.smart_mode");
+                    rebuildSmartItem.innerHTML =
+                        "<strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[0] + "："
+                            : text.split(":")[0] + ": ") +
+                        "</strong>" +
+                        (text.includes("：")
+                            ? text.split("：")[1]
+                            : text.split(": ")[1] || "");
+                }
+                if (rebuildLogsPlaceholder)
+                    rebuildLogsPlaceholder.textContent = t(
+                        "config.modal.loading_logs",
+                    );
+                if (btnRebuildRefresh)
+                    btnRebuildRefresh.textContent = t("header.refresh");
+                if (btnRebuildClose)
+                    btnRebuildClose.textContent = t("config.rebuild.close");
+
+                // Update section title
+                const sectionTitle = document.getElementById(
+                    "section-skills-pdfs-title",
+                );
+                if (sectionTitle)
+                    sectionTitle.textContent = t("config.section.skills_pdfs");
+
+                // Update empty state
+                const emptyNoSkills =
+                    document.getElementById("empty-no-skills");
+                const emptyAddFirst =
+                    document.getElementById("empty-add-first");
+                if (emptyNoSkills)
+                    emptyNoSkills.textContent = t("config.empty.no_skills");
+                if (emptyAddFirst)
+                    emptyAddFirst.textContent = t("config.empty.add_first");
+
+                // Update delete source modal
+                const deleteSourceChunksLabel = document.getElementById(
+                    "delete-source-chunks-label",
+                );
+                if (deleteSourceChunksLabel)
+                    deleteSourceChunksLabel.textContent = t(
+                        "config.skill_card.chunks",
+                    );
+
+                // Re-render skills to update dynamic text
+                // NEW: Use tree data format
+                if (configData && configData.tree) {
+                    renderSkills(configData.tree);
+                }
+            }
+
+            // ===== Initialize =====
+            document.addEventListener("DOMContentLoaded", async () => {
+                // Load UI translations first
+                await loadUITranslations();
+
+                // Set default language to Chinese
+                currentLang = "zh";
+
+                // Restore saved language preference
+                const savedLang = localStorage.getItem("docai_lang");
+                if (savedLang && (savedLang === "zh" || savedLang === "en")) {
+                    currentLang = savedLang;
+                } else {
+                    // Save Chinese as default
+                    localStorage.setItem("docai_lang", "zh");
+                }
+
+                // Update language display
+                updateLanguageDisplay();
+
+                // Apply translations to UI
+                applyUITranslations();
+
+                // Load config data
+                loadConfig();
+            });
+
+            // ===== Section Navigation =====
+            function showSection(section) {
+                currentSection = section;
+                document
+                    .querySelectorAll(".menu-item")
+                    .forEach((item) => item.classList.remove("active"));
+                event.target.closest(".menu-item").classList.add("active");
+
+                document.getElementById("section-skills").style.display =
+                    section === "skills" ? "block" : "none";
+            }
+
+            // ===== Data Loading =====
+            // NEW: Use /tree endpoint (skill_heads architecture)
+            async function loadConfig() {
+                try {
+                    const response = await fetch("/api/v1/skills/tree");
+                    const apiResponse = await response.json();
+
+                    // API returns: {"skill_tree": [...], "total_skills": N, "total_documents": N, "total_chunks": N}
+                    // Extract skill_tree array for processing
+                    const treeData = apiResponse.skill_tree || [];
+
+                    // Normalize enabled field (SQLite may return 0/1 or boolean)
+                    treeData.forEach((skill) => {
+                        if (
+                            skill.enabled === 0 ||
+                            skill.enabled === "0" ||
+                            skill.enabled === null
+                        ) {
+                            skill.enabled = false;
+                        } else if (
+                            skill.enabled === 1 ||
+                            skill.enabled === "1" ||
+                            skill.enabled === true
+                        ) {
+                            skill.enabled = true;
+                        }
+                        // If undefined, default to true (enabled)
+                        if (skill.enabled === undefined) {
+                            skill.enabled = true;
+                        }
+                    });
+
+                    // Store tree data for use by other functions
+                    configData = { tree: treeData };
+
+                    // Use pre-computed stats from API response for efficiency
+                    updateStatsFromApi(apiResponse);
+                    renderSkills(treeData);
+                } catch (error) {
+                    console.error("Failed to load config:", error);
+                    document.getElementById("skills-container").innerHTML =
+                        '<div style="text-align: center; padding: 2rem; color: var(--danger);">Failed to load configuration</div>';
+                }
+            }
+
+            // NEW: Update stats directly from API response (more efficient)
+            function updateStatsFromApi(apiResponse) {
+                document.getElementById("stat-skills").textContent =
+                    apiResponse.total_skills || 0;
+                document.getElementById("stat-pdfs").textContent =
+                    apiResponse.total_documents || 0;
+                document.getElementById("stat-instant").textContent =
+                    apiResponse.total_chunks || 0;
+            }
+
+            function refreshData() {
+                // Hard refresh the page (reloads from server, bypasses cache)
+                location.reload();
+            }
+
+            // ===== Stats Update =====
+            // NEW: Updated for /tree endpoint data format
+            function updateStats(treeData) {
+                const skills = treeData || [];
+                let totalDocs = 0;
+                let totalChunks = 0;
+
+                skills.forEach((skill) => {
+                    totalDocs += skill.document_count || 0;
+                    totalChunks += skill.total_chunks || 0;
+                });
+
+                document.getElementById("stat-skills").textContent =
+                    skills.length;
+                document.getElementById("stat-pdfs").textContent = totalDocs;
+                // Show total chunks instead of instant attachments count
+                document.getElementById("stat-instant").textContent =
+                    totalChunks;
+            }
+
+            // ===== Render Skills =====
+            // NEW: Updated for /tree endpoint data format (skill_heads architecture)
+            function renderSkills(treeData) {
+                const container = document.getElementById("skills-container");
+
+                // IMPORTANT: Save expanded state before re-rendering (Fix for delete-unfold bug)
+                const expandedSkillNames = new Set();
+                container
+                    .querySelectorAll(".skill-card.expanded")
+                    .forEach((card) => {
+                        const skillName = card.getAttribute("data-skill-name");
+                        if (skillName) expandedSkillNames.add(skillName);
+                    });
+
+                const skills = treeData || [];
+
+                if (!skills || skills.length === 0) {
+                    container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <div id="empty-no-skills">No skills configured</div>
+                        <button class="btn btn-primary" style="margin-top: 1rem;" onclick="showAddSkillModal()">
+                            <i class="fa-solid fa-plus"></i> <span id="empty-add-first">Add First Skill</span>
+                        </button>
+                    </div>
+                `;
+                    return;
+                }
+
+                // Sort skills by display_order
+                const sortedSkills = [...skills].sort((a, b) => {
+                    const orderA =
+                        a.display_order !== undefined ? a.display_order : 999;
+                    const orderB =
+                        b.display_order !== undefined ? b.display_order : 999;
+                    return orderA - orderB;
+                });
+
+                let html = "";
+                sortedSkills.forEach((skill, index) => {
+                    // NEW: Use documents array from tree data
+                    const documents = skill.documents || [];
+                    const docCount = skill.document_count || documents.length;
+                    const totalChunks = skill.total_chunks || 0;
+                    const totalVectors = skill.total_vectors || 0;
+                    const icon = getSkillIcon({
+                        skill_name: skill.skill_name,
+                        skill_category: skill.category,
+                    });
+                    const safeSkillName = skill.skill_name.replace(/'/g, "\\'");
+                    const safeHeadId = (skill.head_id || "").replace(
+                        /'/g,
+                        "\\'",
+                    );
+
+                    html += `
+                    <div class="skill-card" id="skill-card-${index}" draggable="true"
+                         data-skill-name="${skill.skill_name}"
+                         data-head-id="${skill.head_id}"
+                         data-original-index="${index}"
+                         ondragstart="handleDragStart(event, ${index})"
+                         ondragend="handleDragEnd(event)"
+                         ondragover="handleDragOver(event)"
+                         ondragleave="handleDragLeave(event)"
+                         ondrop="handleDrop(event, ${index})">
+                        <div class="skill-card-header" onclick="toggleSkillCard(${index})">
+                            <div class="skill-info">
+                                <div class="drag-handle" onclick="event.stopPropagation()">
+                                    <i class="fa-solid fa-grip-vertical"></i>
+                                </div>
+                                <span class="skill-icon" data-skill-name="${skill.skill_name}">${icon}</span>
+                                <div>
+                                    <div class="skill-name">${skill.skill_name}</div>
+                                    <div class="skill-meta"><span class="category-tag">${skill.category || (currentLang === "zh" ? "一般" : "General")}</span> · ${docCount} ${t("config.skill_card.pdfs")} · ${totalChunks} ${t("config.skill_card.chunks")}</div>
+                                </div>
+                            </div>
+                            <div class="skill-actions" onclick="event.stopPropagation()">
+                                <button class="btn btn-outline btn-sm" style="padding: 0.375rem; min-width: 32px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="showAddSourceModal('${safeSkillName}')" title="${t("config.skill_card.add_pdf") || "新增PDF"}">
+                                    <i class="fa-solid fa-plus" style="color: #6b7280;"></i>
+                                </button>
+                                <button class="btn btn-outline btn-sm" style="padding: 0.375rem; min-width: 32px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="exportSkill('${safeHeadId}', '${safeSkillName}')" title="${t("config.skill_card.export_skill") || "匯出技能"}">
+                                    <i class="fa-solid fa-file-export" style="color: #6b7280;"></i>
+                                </button>
+                                <button class="btn btn-outline btn-sm" style="padding: 0.375rem; min-width: 32px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" onclick="showDeleteSkillModal('${safeSkillName}', ${docCount}, '${safeHeadId}')" title="${t("config.skill_card.delete_skill") || "刪除技能"}">
+                                    <i class="fa-solid fa-trash" style="color: #6b7280;"></i>
+                                </button>
+                                <span class="badge ${skill.enabled !== false && skill.enabled !== 0 && skill.enabled !== null ? "badge-success" : "badge-warning"}"
+                                      onclick="event.stopPropagation(); toggleSkillEnabled('${safeHeadId}', ${skill.enabled === false || skill.enabled === 0 || skill.enabled === null ? "true" : "false"}, ${index})"
+                                      style="cursor: pointer; user-select: none;"
+                                      title="${t("config.skill_card.toggle_status")}">
+                                    ${skill.enabled !== false && skill.enabled !== 0 && skill.enabled !== null ? t("config.skill_card.enabled") : t("config.skill_card.disabled")}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="skill-card-body">
+                            ${
+                                documents.length > 0
+                                    ? `
+                                <ul class="source-list">
+                                    ${documents
+                                        .map(
+                                            (doc, di) => `
+                                        <li class="source-item">
+                                            <div class="source-info">
+                                                <i class="fa-solid fa-file-pdf source-icon"></i>
+                                                <div>
+                                                    <div class="source-name">${doc.source_name || "Unknown"}</div>
+                                                    <div class="source-path">
+                                                        ${doc.total_chunks || 0} chunks ·
+                                                        ${doc.indexed_vectors !== undefined ? doc.indexed_vectors : 0} vectors
+                                                        ${
+                                                            doc.indexed_vectors !==
+                                                                doc.total_chunks &&
+                                                            doc.total_chunks > 0
+                                                                ? `<span style="color: #f59e0b; margin-left: 0.25rem;" title="Index incomplete">⚠️</span>`
+                                                                : ""
+                                                        }
+                                                        ${doc.created_at ? " · " + new Date(doc.created_at).toLocaleDateString() : ""}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span class="badge badge-info">
+                                                    <i class="fa-solid fa-database"></i> ${doc.skill_id ? doc.skill_id.substring(0, 12) + "..." : ""}
+                                                </span>
+                                                <button class="btn-delete-source" onclick="event.stopPropagation(); showDeleteSourceModal('${doc.skill_id}', '${(doc.source_name || "Unknown").replace(/'/g, "\\'")}', ${doc.total_chunks || 0})" title="刪除來源">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    `,
+                                        )
+                                        .join("")}
+                                </ul>
+                            `
+                                    : `
+                                <div style="text-align: center; padding: 1rem; color: var(--text-muted);">
+                                    <i class="fa-solid fa-inbox" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                    <div>No documents yet. Add PDFs to get started.</div>
+                                </div>
+                            `
+                            }
+                        </div>
+                    </div>
+                `;
+                });
+
+                container.innerHTML = html;
+
+                // IMPORTANT: Restore expanded state after re-rendering (Fix for delete-unfold bug)
+                container.querySelectorAll(".skill-card").forEach((card) => {
+                    const skillName = card.getAttribute("data-skill-name");
+                    if (skillName && expandedSkillNames.has(skillName)) {
+                        card.classList.add("expanded");
+                    }
+                });
+            }
+
+            function toggleSkillCard(index) {
+                const card = document.getElementById(`skill-card-${index}`);
+                card.classList.toggle("expanded");
+            }
+
+            // ===== Toggle Skill Enabled/Disabled =====
+            async function toggleSkillEnabled(headId, newEnabled, cardIndex) {
+                if (!headId) {
+                    alert("錯誤：無法取得技能 ID");
+                    return;
+                }
+
+                // Convert string to boolean properly
+                const enabledValue =
+                    newEnabled === "true" ||
+                    newEnabled === true ||
+                    newEnabled === "True";
+
+                console.log("Toggling skill enabled:", {
+                    headId,
+                    newEnabled,
+                    enabledValue,
+                });
+
+                // Find the badge element to update immediately
+                const card = document.getElementById(`skill-card-${cardIndex}`);
+                const badge = card ? card.querySelector(".badge") : null;
+
+                try {
+                    const response = await fetch(
+                        `/api/v1/skills/heads/${encodeURIComponent(headId)}`,
+                        {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ enabled: enabledValue }),
+                        },
+                    );
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log("Toggle skill enabled response:", result);
+
+                        // Update the local data structure to reflect the change
+                        if (configData && configData.tree) {
+                            const skill = configData.tree.find(
+                                (s) => s.head_id === headId,
+                            );
+                            if (skill) {
+                                skill.enabled = enabledValue;
+                                console.log(
+                                    "Updated local data structure:",
+                                    skill,
+                                );
+                            }
+                        }
+
+                        // Update the badge immediately in the UI
+                        if (badge) {
+                            if (enabledValue) {
+                                badge.className = "badge badge-success";
+                                badge.textContent = t(
+                                    "config.skill_card.enabled",
+                                );
+                            } else {
+                                badge.className = "badge badge-warning";
+                                badge.textContent = t(
+                                    "config.skill_card.disabled",
+                                );
+                            }
+                            // Update the onclick handler with the new state
+                            badge.setAttribute(
+                                "onclick",
+                                `event.stopPropagation(); toggleSkillEnabled('${headId}', ${!enabledValue}, ${cardIndex})`,
+                            );
+                        }
+
+                        // Show success message
+                        const statusText = enabledValue ? "已啟用" : "已停用";
+                        showToast(`技能${statusText}`, "success");
+
+                        // Don't reload config - we've already updated the UI and local data
+                        // This prevents the badge from reverting to the old state
+                    } else {
+                        const error = await response
+                            .json()
+                            .catch(() => ({ detail: "未知錯誤" }));
+                        alert(`操作失敗: ${error.detail || "未知錯誤"}`);
+                        console.error(
+                            "Toggle skill enabled failed:",
+                            response.status,
+                            error,
+                        );
+                    }
+                } catch (e) {
+                    alert(`操作錯誤: ${e.message}`);
+                    console.error("Toggle skill enabled error:", e);
+                }
+            }
+
+            // ===== Skill Icon =====
+            // ===== Skill Icon (same as skill_main.html) =====
+            const skillIcons = {
+                LLM: "✨",
+                大語言: "✨",
+                語言模型: "✨",
+                AI: "🤖",
+                民法: "📜",
+                刑法: "⚔️",
+                Legal: "⚖️",
+                Python: "🐍",
+                Programming: "💻",
+                Research: "📚",
+                Business: "📊",
+                Investment: "💰",
+                投資: "💰",
+                default: "📁",
+            };
+
+            function getSkillIcon(skill) {
+                // Check name first
+                for (const [key, icon] of Object.entries(skillIcons)) {
+                    if (skill.skill_name && skill.skill_name.includes(key))
+                        return icon;
+                }
+                // Check category
+                for (const [key, icon] of Object.entries(skillIcons)) {
+                    if (
+                        skill.skill_category &&
+                        skill.skill_category.includes(key)
+                    )
+                        return icon;
+                }
+                return skillIcons.default;
+            }
+
+            // ===== Modal Functions =====
+            function showModal(id) {
+                document.getElementById(id).classList.add("active");
+            }
+
+            function closeModal(id) {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    modal.classList.remove("active");
+                    // 處理動態建立的 modal（使用 inline style display: flex）
+                    if (modal.style.display === "flex") {
+                        modal.style.display = "none";
+                    }
+                }
+            }
+
+            function showAddSkillModal() {
+                document.getElementById("new-skill-name").value = "";
+                document.getElementById("new-skill-desc").value = "";
+                document.getElementById("new-skill-category").value = "";
+                showModal("add-skill-modal");
+            }
+
+            function showDuplicateNameModal(message) {
+                // Set the error message
+                document.getElementById("duplicate-name-message").textContent =
+                    message;
+                // Show the modal
+                showModal("duplicate-name-modal");
+            }
+
+            // ===== PDF File Handler =====
+            function handlePDFFileSelected() {
+                const fileInput = document.getElementById("pdf-file-input");
+                const fileNameDisplay =
+                    document.getElementById("file-name-display");
+                if (fileInput.files && fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    if (fileNameDisplay) {
+                        fileNameDisplay.textContent = fileName;
+                        fileNameDisplay.style.color = "#374151";
+                    }
+                } else {
+                    if (fileNameDisplay) {
+                        fileNameDisplay.textContent = t(
+                            "config.modal.no_file_chosen",
+                        );
+                        fileNameDisplay.style.color = "#6b7280";
+                    }
+                }
+            }
+
+            // Handle file drop (Not supported on native input directly in this simple mode, but kept empty to prevent errors if called)
+            function handleFileDrop(e) {
+                // Dropping files onto native input works natively in most browsers
+            }
+
+            // Call this when the modal is shown
+            function showAddSourceModal(skillName) {
+                document.getElementById("source-skill-name").value = skillName;
+                document.getElementById("pdf-file-input").value = "";
+                document.getElementById("new-source-desc").value = "";
+                const fileNameDisplay =
+                    document.getElementById("file-name-display");
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = t(
+                        "config.modal.no_file_chosen",
+                    );
+                    fileNameDisplay.style.color = "#6b7280";
+                }
+                showModal("add-source-modal");
+            }
+
+            // ===== Delete Source Modal =====
+            let pendingDeleteSkillId = null;
+
+            function showDeleteSourceModal(skillId, sourceName, chunks) {
+                pendingDeleteSkillId = skillId;
+                document.getElementById("delete-source-name").textContent =
+                    sourceName;
+                document.getElementById("delete-source-chunks").textContent =
+                    chunks;
+                showModal("delete-source-modal");
+            }
+
+            async function confirmDeleteSource() {
+                if (!pendingDeleteSkillId) {
+                    alert("Error: No skill ID specified");
+                    return;
+                }
+
+                const btn = document.getElementById(
+                    "btn-confirm-delete-source",
+                );
+                const originalText = btn.innerHTML;
+                btn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> 刪除中...';
+                btn.disabled = true;
+
+                try {
+                    const response = await fetch(
+                        `/api/v1/skills/${pendingDeleteSkillId}`,
+                        {
+                            method: "DELETE",
+                        },
+                    );
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log("Delete result:", result);
+                        closeModal("delete-source-modal");
+                        // Refresh the skill list
+                        loadConfig();
+                        // Show success message
+                        showToast("來源已成功刪除", "success");
+                    } else {
+                        const error = await response.json();
+                        alert(error.detail || "刪除失敗");
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    pendingDeleteSkillId = null;
+                }
+            }
+
+            // Simple toast notification
+            function showToast(message, type = "info") {
+                const toast = document.createElement("div");
+                const iconColor = "#6b7280";
+                const bgColor = "#f9fafb";
+                const borderColor = "#e5e7eb";
+                const textColor = "#374151";
+
+                toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                padding: 1rem 1.5rem;
+                background: ${bgColor};
+                color: ${textColor};
+                border: 1px solid ${borderColor};
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            `;
+                toast.innerHTML = `<i class="fa-solid fa-${type === "success" ? "check-circle" : type === "error" ? "times-circle" : "info-circle"}" style="color: ${iconColor};"></i> <span>${message}</span>`;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.animation = "slideOut 0.3s ease";
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // ===== API Calls =====
+            // NEW: Use /heads endpoint (skill_heads architecture)
+            async function addSkill() {
+                const name = document
+                    .getElementById("new-skill-name")
+                    .value.trim();
+                const desc = document
+                    .getElementById("new-skill-desc")
+                    .value.trim();
+                const category = document
+                    .getElementById("new-skill-category")
+                    .value.trim();
+
+                if (!name) {
+                    alert("Please enter a skill name");
+                    return;
+                }
+
+                try {
+                    // NEW: Use /heads endpoint instead of /config/skills
+                    const response = await fetch("/api/v1/skills/heads", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            skill_name: name,
+                            description: desc,
+                            category: category || "General",
+                        }),
+                    });
+
+                    if (response.ok) {
+                        closeModal("add-skill-modal");
+                        loadConfig();
+                    } else if (response.status === 409) {
+                        // Handle duplicate name error with custom modal
+                        const error = await response.json();
+                        showDuplicateNameModal(error.detail);
+                        closeModal("add-skill-modal");
+                    } else {
+                        const error = await response.json();
+                        alert(error.detail || "Failed to add skill");
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                }
+            }
+
+            // ===== SSE Upload Helper Functions =====
+            function formatFileSize(bytes) {
+                if (bytes === 0) return "0 Bytes";
+                const k = 1024;
+                const sizes = ["Bytes", "KB", "MB", "GB"];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return (
+                    parseFloat((bytes / Math.pow(k, i)).toFixed(2)) +
+                    " " +
+                    sizes[i]
+                );
+            }
+
+            function appendUploadLog(message, type = "info") {
+                const logsEl = document.getElementById("upload-logs");
+                if (!logsEl) return;
+
+                const timestamp = new Date().toLocaleTimeString("zh-TW", {
+                    hour12: false,
+                });
+                const typeColors = {
+                    info: "#60a5fa", // blue
+                    success: "#34d399", // green
+                    error: "#f87171", // red
+                    warning: "#fbbf24", // yellow
+                    phase: "#a78bfa", // purple
+                };
+                const color = typeColors[type] || "#e2e8f0";
+                const prefix =
+                    type === "error"
+                        ? "❌ "
+                        : type === "success"
+                          ? "✅ "
+                          : type === "phase"
+                            ? "🔷 "
+                            : "";
+
+                logsEl.innerHTML += `<span style="color: #64748b;">[${timestamp}]</span> <span style="color: ${color};">${prefix}${message}</span>\n`;
+
+                // Auto-scroll to bottom
+                logsEl.scrollTop = logsEl.scrollHeight;
+            }
+
+            function updateUploadProgress(percent, phase) {
+                const progressBar = document.getElementById(
+                    "upload-progress-bar",
+                );
+                const percentEl = document.getElementById("upload-percent");
+                const phaseEl = document.getElementById("upload-phase");
+
+                if (progressBar) progressBar.style.width = `${percent}%`;
+                if (percentEl) percentEl.textContent = `${percent}%`;
+                if (phaseEl) phaseEl.textContent = phase || "處理中...";
+            }
+
+            function updateUploadStatus(status, isSuccess = true) {
+                const badge = document.getElementById("upload-status-badge");
+                if (!badge) return;
+
+                if (isSuccess) {
+                    badge.textContent = status;
+                    badge.style.background = "rgba(52, 211, 153, 0.1)";
+                    badge.style.color = "#10b981";
+                } else {
+                    badge.textContent = status;
+                    badge.style.background = "rgba(248, 113, 113, 0.1)";
+                    badge.style.color = "#ef4444";
+                }
+            }
+
+            function startElapsedTimer() {
+                uploadStartTime = Date.now();
+                const elapsedEl = document.getElementById("upload-elapsed");
+
+                elapsedTimerInterval = setInterval(() => {
+                    const elapsed = Math.floor(
+                        (Date.now() - uploadStartTime) / 1000,
+                    );
+                    const mins = Math.floor(elapsed / 60);
+                    const secs = elapsed % 60;
+                    if (elapsedEl) {
+                        elapsedEl.innerHTML = `<i class="fa-solid fa-clock"></i> 經過時間: ${mins > 0 ? mins + "m " : ""}${secs}s`;
+                    }
+                }, 1000);
+            }
+
+            function stopElapsedTimer() {
+                if (elapsedTimerInterval) {
+                    clearInterval(elapsedTimerInterval);
+                    elapsedTimerInterval = null;
+                }
+            }
+
+            function resetUploadModal() {
+                document.getElementById("upload-filename").textContent = "-";
+                document.getElementById("upload-filesize").textContent = "-";
+                document.getElementById("upload-logs").innerHTML =
+                    "等待上傳開始...";
+                document.getElementById("upload-progress-bar").style.width =
+                    "0%";
+                document.getElementById("upload-percent").textContent = "0%";
+                document.getElementById("upload-phase").textContent =
+                    "準備中...";
+                document.getElementById("upload-elapsed").innerHTML =
+                    '<i class="fa-solid fa-clock"></i> 經過時間: 0s';
+
+                // Reset status badge
+                const badge = document.getElementById("upload-status-badge");
+                badge.textContent = "處理中...";
+                badge.style.background = "rgba(251, 191, 36, 0.1)";
+                badge.style.color = "#f59e0b";
+
+                // Reset buttons
+                document.getElementById("btn-upload-cancel").style.display =
+                    "inline-flex";
+                document.getElementById("btn-upload-close").style.display =
+                    "none";
+
+                isUploadComplete = false;
+            }
+
+            function cancelUpload() {
+                if (currentEventSource) {
+                    currentEventSource.close();
+                    currentEventSource = null;
+                }
+                stopElapsedTimer();
+
+                if (!isUploadComplete) {
+                    appendUploadLog("上傳已取消", "warning");
+                }
+
+                closeModal("upload-progress-modal");
+            }
+
+            function closeUploadModal() {
+                if (currentEventSource) {
+                    currentEventSource.close();
+                    currentEventSource = null;
+                }
+                stopElapsedTimer();
+                closeModal("upload-progress-modal");
+                loadConfig(); // Refresh the skill list
+            }
+
+            async function addSource() {
+                const skillName =
+                    document.getElementById("source-skill-name").value;
+                const fileInput = document.getElementById("pdf-file-input");
+                const desc = document
+                    .getElementById("new-source-desc")
+                    .value.trim();
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert("Please select a PDF file");
+                    return;
+                }
+
+                const file = fileInput.files[0];
+
+                // Validate file is PDF
+                if (!file.name.toLowerCase().endsWith(".pdf")) {
+                    alert("Please select a PDF file");
+                    return;
+                }
+
+                // Close the add-source modal and open progress modal
+                closeModal("add-source-modal");
+                resetUploadModal();
+
+                // Set file info
+                document.getElementById("upload-filename").textContent =
+                    file.name;
+                document.getElementById("upload-filesize").textContent =
+                    formatFileSize(file.size);
+                document.getElementById("upload-progress-title").textContent =
+                    `上傳處理進度 - ${skillName}`;
+
+                // Show progress modal
+                document
+                    .getElementById("upload-progress-modal")
+                    .classList.add("active");
+
+                // Start elapsed timer
+                startElapsedTimer();
+
+                // Clear logs and show start message
+                document.getElementById("upload-logs").innerHTML = "";
+                appendUploadLog(`開始上傳: ${file.name}`, "info");
+                appendUploadLog(
+                    `檔案大小: ${formatFileSize(file.size)}`,
+                    "info",
+                );
+                appendUploadLog(`目標 Skill: ${skillName}`, "info");
+                appendUploadLog("─".repeat(50), "info");
+
+                try {
+                    // Use FormData for file upload
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    if (desc) {
+                        formData.append("description", desc);
+                    }
+
+                    const safeSkillName = encodeURIComponent(skillName);
+
+                    // First, upload the file and get task_id
+                    appendUploadLog("正在上傳檔案到伺服器...", "info");
+
+                    const response = await fetch(
+                        `/api/v1/skills/config/skills/${safeSkillName}/upload-source-stream`,
+                        {
+                            method: "POST",
+                            body: formData,
+                        },
+                    );
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(
+                            error.detail || "Failed to upload file",
+                        );
+                    }
+
+                    // Now handle SSE stream
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = "";
+                    let currentEventType = null; // Track event type from SSE
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split("\n");
+                        buffer = lines.pop() || ""; // Keep incomplete line in buffer
+
+                        for (const line of lines) {
+                            // Parse event type line
+                            if (line.startsWith("event: ")) {
+                                currentEventType = line.slice(7).trim();
+                            }
+                            // Parse data line
+                            else if (line.startsWith("data: ")) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    // Add event type to data object
+                                    data._eventType = currentEventType;
+                                    handleSSEEvent(data);
+                                    currentEventType = null; // Reset for next event
+                                } catch (e) {
+                                    console.log("Parse error:", line);
+                                }
+                            }
+                        }
+                    }
+
+                    // Stream ended - if upload was successful, refresh the page data in background
+                    if (isUploadComplete) {
+                        appendUploadLog("資料同步中...", "info");
+                        // Refresh config in background so the new document shows when modal closes
+                        loadConfig()
+                            .then(() => {
+                                appendUploadLog("✅ 技能列表已更新", "success");
+                            })
+                            .catch((err) => {
+                                console.error("Failed to refresh config:", err);
+                            });
+                    }
+                } catch (e) {
+                    appendUploadLog(`錯誤: ${e.message}`, "error");
+                    updateUploadStatus("上傳失敗", false);
+                    stopElapsedTimer();
+
+                    // Show close button instead of cancel
+                    document.getElementById("btn-upload-cancel").style.display =
+                        "none";
+                    document.getElementById("btn-upload-close").style.display =
+                        "inline-flex";
+                }
+            }
+
+            function handleSSEEvent(data) {
+                // Use SSE event type first, fallback to data fields
+                const eventType = data._eventType || data.type || data.event;
+                // Get progress percentage (backend sends 'percent', we also check 'progress' and 'progress_percent')
+                const progressPercent =
+                    data.percent !== undefined
+                        ? data.percent
+                        : data.progress !== undefined
+                          ? data.progress
+                          : data.progress_percent;
+
+                switch (eventType) {
+                    case "start":
+                        appendUploadLog(
+                            `開始處理 PDF: ${data.filename}`,
+                            "phase",
+                        );
+                        updateUploadProgress(5, "開始處理...");
+                        break;
+
+                    case "file_saved":
+                        appendUploadLog(data.message, "success");
+                        updateUploadProgress(8, "檔案已保存");
+                        break;
+
+                    // ========== Large PDF Processing Events (New) ==========
+                    case "processing_start":
+                        // Initial event for large PDF streaming mode
+                        const mode =
+                            data.mode === "standard" ? "標準模式" : "串流模式";
+                        appendUploadLog(`📄 開始處理 (${mode})`, "phase");
+                        appendUploadLog(
+                            `總頁數: ${data.total_pages || "N/A"}`,
+                            "info",
+                        );
+                        if (data.resumed) {
+                            appendUploadLog(
+                                `🔄 從第 ${data.start_page + 1} 頁恢復處理`,
+                                "info",
+                            );
+                        }
+                        updateUploadProgress(5, "初始化處理...");
+                        break;
+
+                    case "resume":
+                        // Resuming from checkpoint
+                        appendUploadLog(
+                            `📌 ${data.message || `從第 ${data.resume_from_page + 1} 頁恢復`}`,
+                            "phase",
+                        );
+                        updateUploadProgress(
+                            data.resume_from_page
+                                ? Math.round(
+                                      (data.resume_from_page /
+                                          (data.total_pages || 1)) *
+                                          100,
+                                  )
+                                : 10,
+                            "恢復處理中...",
+                        );
+                        break;
+
+                    case "batch_start":
+                        // Starting a batch processing
+                        appendUploadLog(
+                            `🔄 處理批次: 頁 ${data.batch_pages}`,
+                            "info",
+                        );
+                        if (progressPercent !== undefined) {
+                            updateUploadProgress(
+                                progressPercent,
+                                `批次處理中 (${data.batch_size || "?"} 頁)...`,
+                            );
+                        }
+                        break;
+
+                    case "checkpoint":
+                        // Checkpoint has two phases: batch_start and batch_complete
+                        if (data.phase === "batch_start") {
+                            // Starting a batch - show page range
+                            appendUploadLog(
+                                `🔄 處理批次 ${data.batch_num}: 頁 ${data.pages}`,
+                                "info",
+                            );
+                            if (progressPercent !== undefined) {
+                                updateUploadProgress(
+                                    progressPercent,
+                                    `處理批次 ${data.batch_num}...`,
+                                );
+                            }
+                        } else if (data.phase === "batch_complete") {
+                            // Batch complete - show page number (without chunks count)
+                            appendUploadLog(
+                                `✓ 檢查點: 第 ${data.page || "?"} 頁`,
+                                "success",
+                            );
+                            if (progressPercent !== undefined) {
+                                updateUploadProgress(
+                                    progressPercent,
+                                    `已處理 ${data.page || "?"} 頁...`,
+                                );
+                            }
+                        }
+                        break;
+
+                    case "dirty":
+                        // Batch marked as dirty (failed)
+                        appendUploadLog(
+                            `⚠️ 批次失敗 (頁 ${data.batch_pages}): ${data.error || "未知錯誤"}`,
+                            "error",
+                        );
+                        appendUploadLog(`將在稍後重試...`, "info");
+                        break;
+
+                    case "heartbeat":
+                        // Keep-alive event, no UI update needed
+                        console.log("SSE heartbeat received:", data.timestamp);
+                        break;
+                    // ========== End Large PDF Events ==========
+
+                    case "phase_start":
+                        appendUploadLog(
+                            data.message || `階段: ${data.phase}`,
+                            "phase",
+                        );
+                        // Update progress based on phase
+                        if (data.phase === "extract")
+                            updateUploadProgress(10, "提取文字中...");
+                        else if (data.phase === "embedding")
+                            updateUploadProgress(40, "生成向量嵌入...");
+                        else if (data.phase === "faiss")
+                            updateUploadProgress(80, "儲存 FAISS 索引...");
+                        else if (data.phase === "metadata")
+                            updateUploadProgress(90, "儲存元資料...");
+                        break;
+
+                    case "progress":
+                        appendUploadLog(data.message, "info");
+                        if (progressPercent !== undefined) {
+                            // Map progress based on current phase
+                            let mappedProgress = progressPercent;
+                            if (data.phase === "extract") {
+                                mappedProgress =
+                                    10 + Math.round(progressPercent * 0.3); // 10-40%
+                            } else if (data.phase === "embedding") {
+                                mappedProgress =
+                                    40 + Math.round(progressPercent * 0.4); // 40-80%
+                            }
+                            updateUploadProgress(
+                                mappedProgress,
+                                data.phase || "處理中...",
+                            );
+                        }
+                        break;
+
+                    case "phase_complete":
+                        appendUploadLog(
+                            data.message || `✓ ${data.phase} 完成`,
+                            "success",
+                        );
+                        // Update progress based on completed phase
+                        if (data.phase === "extract")
+                            updateUploadProgress(40, "文字提取完成");
+                        else if (data.phase === "embedding")
+                            updateUploadProgress(80, "向量嵌入完成");
+                        else if (data.phase === "faiss")
+                            updateUploadProgress(90, "FAISS 儲存完成");
+                        else if (data.phase === "metadata")
+                            updateUploadProgress(95, "元資料儲存完成");
+                        break;
+
+                    case "complete":
+                        isUploadComplete = true;
+                        appendUploadLog("─".repeat(50), "info");
+                        appendUploadLog(
+                            `🎉 ${data.message || "處理完成！"}`,
+                            "success",
+                        );
+                        appendUploadLog(
+                            `Skill ID: ${data.skill_id || "N/A"}`,
+                            "info",
+                        );
+                        // Use correct field names from backend (total_chunks, total_pages)
+                        appendUploadLog(
+                            `頁段數量: ${data.total_chunks || data.chunks_created || "N/A"}`,
+                            "info",
+                        );
+                        appendUploadLog(
+                            `頁面數: ${data.total_pages || data.pages_extracted || data.processed_pages || "N/A"}`,
+                            "info",
+                        );
+                        if (data.total_time || data.processing_time_seconds) {
+                            const time =
+                                data.total_time ||
+                                `${data.processing_time_seconds}s`;
+                            appendUploadLog(`處理時間: ${time}`, "info");
+                        }
+                        if (data.avg_page_time_ms) {
+                            appendUploadLog(
+                                `平均每頁: ${data.avg_page_time_ms.toFixed(1)} ms`,
+                                "info",
+                            );
+                        }
+                        if (
+                            data.dirty_batches &&
+                            data.dirty_batches.length > 0
+                        ) {
+                            appendUploadLog(
+                                `⚠️ ${data.dirty_batches.length} 個批次需要重試`,
+                                "error",
+                            );
+                        }
+                        if (data.resumed) {
+                            appendUploadLog(`📌 此為恢復處理的任務`, "info");
+                        }
+
+                        updateUploadProgress(100, "完成！");
+                        updateUploadStatus("完成", true);
+                        stopElapsedTimer();
+
+                        // Show close button instead of cancel
+                        document.getElementById(
+                            "btn-upload-cancel",
+                        ).style.display = "none";
+                        document.getElementById(
+                            "btn-upload-close",
+                        ).style.display = "inline-flex";
+                        break;
+
+                    case "error":
+                        appendUploadLog(
+                            `❌ ${data.message || data.error || "處理失敗"}`,
+                            "error",
+                        );
+                        if (data.processed_pages) {
+                            appendUploadLog(
+                                `已處理頁數: ${data.processed_pages}`,
+                                "info",
+                            );
+                        }
+                        if (data.total_chunks) {
+                            appendUploadLog(
+                                `已建立 chunks: ${data.total_chunks}`,
+                                "info",
+                            );
+                        }
+                        updateUploadStatus("處理失敗", false);
+                        stopElapsedTimer();
+
+                        // Show close button
+                        document.getElementById(
+                            "btn-upload-cancel",
+                        ).style.display = "none";
+                        document.getElementById(
+                            "btn-upload-close",
+                        ).style.display = "inline-flex";
+                        break;
+
+                    default:
+                        // For any unhandled event type, still log the message
+                        if (data.message) {
+                            appendUploadLog(data.message, "info");
+                        }
+                        console.log("Unhandled SSE event:", eventType, data);
+                }
+            }
+
+            async function removeSource(skillName, path) {
+                if (
+                    !confirm(
+                        `Remove "${path.split("/").pop()}" from ${skillName}?`,
+                    )
+                )
+                    return;
+
+                try {
+                    const response = await fetch(
+                        `/api/v1/skills/config/skills/${encodeURIComponent(skillName)}/sources`,
+                        {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ path: path }),
+                        },
+                    );
+
+                    if (response.ok) {
+                        loadConfig();
+                    } else {
+                        const error = await response.json();
+                        alert(error.detail || "Failed to remove source");
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                }
+            }
+
+            async function removeInstantAttachment(skillName, path) {
+                if (!confirm(`Remove "${path.split("/").pop()}"?`)) return;
+
+                try {
+                    const response = await fetch(
+                        "/api/v1/skills/config/instant-attachments",
+                        {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                skill_name: skillName,
+                                path: path,
+                            }),
+                        },
+                    );
+
+                    if (response.ok) {
+                        loadConfig();
+                    } else {
+                        alert("Failed to remove attachment");
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                }
+            }
+
+            // ===== Build ALL Skills Modal =====
+            // NEW: Updated for tree data format
+            function showRebuildConfirmModal() {
+                // Populate stats in the modal using tree data
+                const treeData = configData?.tree || [];
+                const skillCount = treeData.length;
+
+                // Calculate totals from tree data
+                let totalDocs = 0;
+                let totalChunks = 0;
+                treeData.forEach((skill) => {
+                    totalDocs += skill.document_count || 0;
+                    totalChunks += skill.total_chunks || 0;
+                });
+
+                const statsHtml = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div>📚 Skills: <strong>${skillCount}</strong></div>
+                    <div>📄 文件數量: <strong>${totalDocs}</strong></div>
+                    <div>📊 總頁段: <strong>${totalChunks}</strong></div>
+                </div>
+            `;
+
+                document.getElementById("rebuild-confirm-stats").innerHTML =
+                    statsHtml;
+                showModal("rebuild-confirm-modal");
+            }
+
+            async function executeFullRebuild() {
+                closeModal("rebuild-confirm-modal");
+
+                try {
+                    const response = await fetch("/api/v1/skills/rebuild", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            clean_first: true,
+                            use_smart_strategy: false, // 完全重建，不使用智能策略
+                            force_all: true, // 強制重建全部
+                        }),
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        alert(
+                            `✅ 完全重建已開始\n\n模式: 完全重建 (Full Rebuild)\n\n請查看 Rebuild Logs 了解進度。`,
+                        );
+                        showRebuildStatus();
+                    } else {
+                        const error = await response.json();
+                        alert("重建失敗: " + (error.detail || "Unknown error"));
+                    }
+                } catch (e) {
+                    alert("錯誤: " + e.message);
+                }
+            }
+
+            // Rebuild a single skill by ID
+            async function rebuildSkill(skillName) {
+                if (
+                    !confirm(
+                        `Rebuild skill "${skillName}"?\n\nThis will regenerate the vector index for this skill.`,
+                    )
+                )
+                    return;
+
+                try {
+                    const response = await fetch("/api/v1/skills/rebuild", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            skill_name: skillName,
+                            clean_first: true,
+                            use_smart_strategy: false,
+                            force_all: false,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        alert(
+                            `✅ Rebuild started for skill: ${skillName}\n\nCheck logs for progress.`,
+                        );
+                        showRebuildStatus();
+                    } else {
+                        const error = await response.json();
+                        alert(
+                            "Failed to start rebuild: " +
+                                (error.detail || "Unknown error"),
+                        );
+                    }
+                } catch (e) {
+                    alert("Error: " + e.message);
+                }
+            }
+
+            async function showRebuildStatus() {
+                showModal("rebuild-status-modal");
+                refreshRebuildStatus();
+            }
+
+            async function refreshRebuildStatus() {
+                try {
+                    const response = await fetch(
+                        "/api/v1/skills/rebuild/status",
+                    );
+                    const data = await response.json();
+
+                    const logsEl = document.getElementById("rebuild-logs");
+                    if (data.recent_logs && data.recent_logs.length > 0) {
+                        logsEl.textContent = data.recent_logs.join("\n");
+                    } else {
+                        logsEl.textContent =
+                            "No logs available.\nLast modified: " +
+                            (data.last_modified || "N/A");
+                    }
+                } catch (e) {
+                    document.getElementById("rebuild-logs").textContent =
+                        "Error loading logs: " + e.message;
+                }
+            }
+
+            // ===== Drag and Drop Functions =====
+            let draggedIndex = null;
+
+            function handleDragStart(event, index) {
+                draggedIndex = index;
+                event.target.classList.add("dragging");
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", index);
+            }
+
+            function handleDragEnd(event) {
+                event.target.classList.remove("dragging");
+                // Remove drag-over from all cards
+                document.querySelectorAll(".skill-card").forEach((card) => {
+                    card.classList.remove("drag-over");
+                });
+                draggedIndex = null;
+            }
+
+            function handleDragOver(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                const card = event.target.closest(".skill-card");
+                if (card && !card.classList.contains("dragging")) {
+                    card.classList.add("drag-over");
+                }
+            }
+
+            function handleDragLeave(event) {
+                const card = event.target.closest(".skill-card");
+                if (card) {
+                    card.classList.remove("drag-over");
+                }
+            }
+
+            function handleDrop(event, dropIndex) {
+                event.preventDefault();
+                const card = event.target.closest(".skill-card");
+                if (card) {
+                    card.classList.remove("drag-over");
+                }
+
+                if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+                // NEW: Reorder skills in tree data
+                const skills = configData.tree || [];
+
+                // Sort by display_order first
+                skills.sort((a, b) => {
+                    const orderA =
+                        a.display_order !== undefined ? a.display_order : 999;
+                    const orderB =
+                        b.display_order !== undefined ? b.display_order : 999;
+                    return orderA - orderB;
+                });
+
+                // Move the dragged skill to the new position
+                const [movedSkill] = skills.splice(draggedIndex, 1);
+                skills.splice(dropIndex, 0, movedSkill);
+
+                // Update display_order for all skills
+                skills.forEach((skill, idx) => {
+                    skill.display_order = idx;
+                });
+
+                // Re-render and save
+                renderSkills(skills);
+                saveSkillOrder(skills);
+            }
+
+            async function saveSkillOrder(skills) {
+                try {
+                    // NEW: Build the order array with head_id and display_order
+                    const orderData = skills.map((skill, index) => ({
+                        head_id: skill.head_id,
+                        skill_name: skill.skill_name,
+                        display_order: index,
+                    }));
+
+                    const response = await fetch(
+                        "/api/v1/skills/config/reorder",
+                        {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ order: orderData }),
+                        },
+                    );
+
+                    if (!response.ok) {
+                        console.error("Failed to save skill order");
+                    }
+                } catch (error) {
+                    console.error("Error saving skill order:", error);
+                }
+            }
+
+            // ===== Delete Skill Functions =====
+            // NEW: Support head_id based deletion (skill_heads architecture)
+            let skillToDelete = null;
+            let headIdToDelete = null;
+
+            function showDeleteSkillModal(skillName, docCount, headId) {
+                skillToDelete = skillName;
+                headIdToDelete = headId;
+
+                // Update modal content
+                document.getElementById("delete-skill-name").textContent =
+                    `「${skillName}」`;
+
+                // Show stats
+                const statsHtml = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div><i class="fa-solid fa-folder" style="color: #6b7280; margin-right: 0.5rem;"></i>技能名稱: <strong>${skillName}</strong></div>
+                    <div><i class="fa-solid fa-file-pdf" style="color: #6b7280; margin-right: 0.5rem;"></i>文件數量: <strong>${docCount} 個</strong></div>
+                </div>
+            `;
+                document.getElementById("delete-skill-stats").innerHTML =
+                    statsHtml;
+
+                showModal("delete-skill-modal");
+            }
+
+            async function executeDeleteSkill() {
+                if (!skillToDelete) {
+                    alert("錯誤：未選擇要刪除的技能");
+                    return;
+                }
+
+                const confirmBtn = document.querySelector(
+                    "#delete-skill-modal .btn-primary",
+                );
+                const originalText = confirmBtn.innerHTML;
+                confirmBtn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> 刪除中...';
+                confirmBtn.disabled = true;
+
+                try {
+                    let response;
+
+                    // NEW: Prefer head_id based deletion if available
+                    if (headIdToDelete) {
+                        // Use new /heads/{head_id} endpoint
+                        response = await fetch(
+                            `/api/v1/skills/heads/${encodeURIComponent(headIdToDelete)}`,
+                            {
+                                method: "DELETE",
+                            },
+                        );
+                    } else {
+                        // Fallback to old endpoint for backward compatibility
+                        response = await fetch(
+                            `/api/v1/skills/config/skills/${encodeURIComponent(skillToDelete)}`,
+                            {
+                                method: "DELETE",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ delete_complete: true }),
+                            },
+                        );
+                    }
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        closeModal("delete-skill-modal");
+
+                        // Show success message
+                        const deletionSummary = [];
+                        // 支援兩種 API 回傳格式：
+                        // - faiss_deleted (布林值，舊 API)
+                        // - faiss_indices_deleted (數字，新 /heads/{head_id} API)
+                        if (
+                            result.faiss_deleted ||
+                            result.faiss_indices_deleted > 0
+                        )
+                            deletionSummary.push(
+                                `FAISS 索引${result.faiss_indices_deleted > 0 ? ` (${result.faiss_indices_deleted} 個)` : ""}`,
+                            );
+                        if (
+                            result.sqlite_deleted ||
+                            result.documents_deleted > 0
+                        )
+                            deletionSummary.push("SQLite 資料");
+                        if (result.config_deleted)
+                            deletionSummary.push("配置檔記錄");
+                        if (result.pdfs_deleted > 0)
+                            deletionSummary.push(
+                                `${result.pdfs_deleted} 個 PDF 檔案`,
+                            );
+                        if (result.documents_deleted > 0)
+                            deletionSummary.push(
+                                `${result.documents_deleted} 個文件記錄`,
+                            );
+
+                        alert(
+                            `✅ 技能「${skillToDelete}」已成功刪除\n\n已刪除:\n- ${deletionSummary.join("\n- ") || "相關資料"}`,
+                        );
+
+                        // Reload config to refresh the UI
+                        loadConfig();
+                    } else {
+                        const error = await response.json();
+                        alert(`❌ 刪除失敗: ${error.detail || "未知錯誤"}`);
+                    }
+                } catch (e) {
+                    alert(`❌ 刪除錯誤: ${e.message}`);
+                } finally {
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.disabled = false;
+                    skillToDelete = null;
+                    headIdToDelete = null;
+                }
+            }
+
+            // ===== Export Skill Functions =====
+            async function exportSkill(headId, skillName) {
+                if (!headId) {
+                    alert("錯誤：無法取得技能 ID");
+                    return;
+                }
+
+                // Show loading state
+                const exportBtn = event.target.closest("button");
+                const originalIcon = exportBtn.innerHTML;
+                exportBtn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin" style="color: #6b7280;"></i>';
+                exportBtn.disabled = true;
+
+                try {
+                    const response = await fetch(
+                        `/api/v1/skills/config/skills/export/${encodeURIComponent(headId)}`,
+                    );
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.detail || "匯出失敗");
+                    }
+
+                    // Get the filename from Content-Disposition header
+                    const contentDisposition = response.headers.get(
+                        "Content-Disposition",
+                    );
+                    let filename = `${skillName}_export.zip`;
+                    if (contentDisposition) {
+                        const match = contentDisposition.match(
+                            /filename\*?=(?:UTF-8'')?["']?([^"';\n]+)/i,
+                        );
+                        if (match && match[1]) {
+                            filename = decodeURIComponent(match[1]);
+                        }
+                    }
+
+                    // Download the file
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+
+                    showToast(`✅ 技能「${skillName}」匯出成功`, "success");
+                } catch (e) {
+                    alert(`❌ 匯出錯誤: ${e.message}`);
+                } finally {
+                    exportBtn.innerHTML = originalIcon;
+                    exportBtn.disabled = false;
+                }
+            }
+
+            // ===== Import Skill Functions (v2.0 with Preview) =====
+            let pendingImportFile = null; // 暫存待匯入的檔案
+
+            async function handleImportFile(input) {
+                const file = input.files[0];
+                if (!file) return;
+
+                // Validate file type
+                if (!file.name.toLowerCase().endsWith(".zip")) {
+                    alert("❌ 請選擇 ZIP 檔案");
+                    input.value = "";
+                    return;
+                }
+
+                // Validate file size (max 500MB)
+                const maxSize = 500 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    alert("❌ 檔案過大，最大支援 500MB");
+                    input.value = "";
+                    return;
+                }
+
+                // 先呼叫 preview API，再顯示詳細 Modal
+                await previewAndShowImportModal(file);
+            }
+
+            async function previewAndShowImportModal(file) {
+                // 顯示載入中 Modal
+                showImportLoadingModal(file.name);
+
+                try {
+                    // 呼叫 preview API
+                    const formData = new FormData();
+                    formData.append("file", file);
+
+                    const response = await fetch(
+                        "/api/v1/skills/config/skills/preview",
+                        {
+                            method: "POST",
+                            body: formData,
+                        },
+                    );
+
+                    const preview = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(preview.detail || "預覽失敗");
+                    }
+
+                    // 關閉載入 Modal，顯示預覽 Modal
+                    closeModal("import-loading-modal");
+                    pendingImportFile = file; // 暫存檔案供後續匯入使用
+                    showImportPreviewModal(preview, file.name);
+                } catch (e) {
+                    closeModal("import-loading-modal");
+                    alert(`❌ 預覽錯誤: ${e.message}`);
+                    document.getElementById("import-file-input").value = "";
+                }
+            }
+
+            function showImportLoadingModal(filename) {
+                let modal = document.getElementById("import-loading-modal");
+                if (!modal) {
+                    modal = document.createElement("div");
+                    modal.id = "import-loading-modal";
+                    modal.className = "modal-overlay active";
+                    modal.style.cssText =
+                        "display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;";
+                    document.body.appendChild(modal);
+                }
+
+                modal.innerHTML = `
+                    <div class="modal" style="max-width: 400px; background: var(--card-bg); border-radius: 0.75rem; padding: 2rem; text-align: center;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary);">正在解析 ZIP 檔案...</h3>
+                        <p style="margin: 0; color: var(--text-muted); font-size: 0.875rem;">${filename}</p>
+                    </div>
+                `;
+                modal.classList.add("active");
+            }
+
+            function showImportPreviewModal(preview, filename) {
+                let modal = document.getElementById("import-preview-modal");
+                if (!modal) {
+                    modal = document.createElement("div");
+                    modal.id = "import-preview-modal";
+                    modal.className = "modal-overlay";
+                    modal.style.cssText =
+                        "display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;";
+                    document.body.appendChild(modal);
+                }
+
+                // 格式化匯出日期
+                let exportDateStr = preview.export_date;
+                if (exportDateStr && exportDateStr !== "Unknown") {
+                    try {
+                        const date = new Date(exportDateStr);
+                        exportDateStr = date.toLocaleString("zh-TW", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+                    } catch (e) {
+                        // 保持原樣
+                    }
+                }
+
+                // 建立文件列表 HTML
+                const maxDocsToShow = 5;
+                let documentsHtml = "";
+                if (preview.documents && preview.documents.length > 0) {
+                    const docsToShow = preview.documents.slice(
+                        0,
+                        maxDocsToShow,
+                    );
+                    documentsHtml = docsToShow
+                        .map(
+                            (doc) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i>
+                                <span style="font-size: 0.875rem;">${doc.name}</span>
+                            </span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">${doc.chunks} chunks</span>
+                        </div>
+                    `,
+                        )
+                        .join("");
+
+                    if (preview.documents.length > maxDocsToShow) {
+                        documentsHtml += `
+                            <div style="padding: 0.5rem 0; color: var(--text-muted); font-size: 0.875rem; text-align: center;">
+                                ... 還有 ${preview.documents.length - maxDocsToShow} 個文件
+                            </div>
+                        `;
+                    }
+                } else {
+                    documentsHtml =
+                        '<div style="padding: 0.5rem 0; color: var(--text-muted); text-align: center;">無法取得文件列表</div>';
+                }
+
+                // 衝突警告
+                let conflictWarningHtml = "";
+                if (preview.has_name_conflict) {
+                    conflictWarningHtml = `
+                        <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; color: #f59e0b;">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <strong>名稱衝突</strong>
+                            </div>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--text-secondary);">
+                                技能名稱「${preview.skill_name}」已存在，匯入時將自動重命名
+                            </p>
+                        </div>
+                    `;
+                }
+
+                modal.innerHTML = `
+                    <div class="modal" style="max-width: 550px; background: var(--card-bg); border-radius: 0.75rem; overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
+                        <div class="modal-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fa-solid fa-file-import" style="color: var(--primary);"></i>
+                                <span style="font-weight: 600;">匯入技能預覽</span>
+                            </div>
+                            <button class="modal-close" onclick="closeImportPreview()" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+                        </div>
+
+                        <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                            <!-- 技能資訊卡片 -->
+                            <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 48px; height: 48px; background: var(--primary); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-graduation-cap" style="color: white; font-size: 1.25rem;"></i>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1.125rem; color: var(--text-primary);">${preview.skill_name}</h3>
+                                        <span style="font-size: 0.75rem; color: var(--text-muted);">v${preview.export_version} 格式</span>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);">${preview.document_count}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">文件</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);">${preview.total_chunks.toLocaleString()}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Chunks</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);">${preview.file_size_mb}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">MB</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${conflictWarningHtml}
+
+                            <!-- 匯出日期 -->
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                                <i class="fa-solid fa-calendar" style="color: var(--text-muted);"></i>
+                                <span style="font-size: 0.875rem; color: var(--text-secondary);">匯出日期：${exportDateStr}</span>
+                            </div>
+
+                            <!-- 文件列表 -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <i class="fa-solid fa-folder-open" style="color: var(--text-muted);"></i>
+                                    <span style="font-weight: 500; font-size: 0.875rem;">包含文件</span>
+                                </div>
+                                <div style="background: var(--input-bg); border-radius: 0.5rem; padding: 0.5rem 1rem; max-height: 200px; overflow-y: auto;">
+                                    ${documentsHtml}
+                                </div>
+                            </div>
+
+                            <!-- 注意事項 -->
+                            <div style="background: var(--input-bg); border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--text-secondary);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <i class="fa-solid fa-info-circle"></i>
+                                    <span style="font-weight: 500;">匯入說明</span>
+                                </div>
+                                <ul style="margin: 0; padding-left: 1.25rem; line-height: 1.6;">
+                                    <li>將匯入 FAISS 向量索引和所有元資料</li>
+                                    <li>原有 ID 將被保留（若無衝突）</li>
+                                    <li>匯入後即可立即使用此技能</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.75rem;">
+                            <button class="btn btn-outline" onclick="closeImportPreview()">
+                                <i class="fa-solid fa-xmark"></i> 取消
+                            </button>
+                            <button class="btn btn-primary" id="btn-confirm-import" onclick="executeImportFromPreview()">
+                                <i class="fa-solid fa-file-import"></i> 確認匯入
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                modal.style.display = "flex";
+                modal.classList.add("active");
+            }
+
+            function closeImportPreview() {
+                const modal = document.getElementById("import-preview-modal");
+                if (modal) {
+                    modal.style.display = "none";
+                    modal.classList.remove("active");
+                }
+                const fileInput = document.getElementById("import-file-input");
+                if (fileInput) {
+                    fileInput.value = "";
+                }
+                pendingImportFile = null;
+            }
+
+            async function executeImportFromPreview() {
+                if (!pendingImportFile) {
+                    alert("❌ 找不到待匯入的檔案");
+                    return;
+                }
+
+                const confirmBtn =
+                    document.getElementById("btn-confirm-import");
+                const originalText = confirmBtn.innerHTML;
+                confirmBtn.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> 匯入中...';
+                confirmBtn.disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append("file", pendingImportFile);
+
+                    const response = await fetch(
+                        "/api/v1/skills/config/skills/import",
+                        {
+                            method: "POST",
+                            body: formData,
+                        },
+                    );
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.detail || "匯入失敗");
+                    }
+
+                    // 使用完整的關閉邏輯（包含 display:none）
+                    closeImportPreview();
+
+                    // Show success message
+                    let successMsg = `
+✅ 技能匯入成功！
+
+技能名稱: ${result.skill_name}
+匯入文件: ${result.document_count} 個
+匯入 Chunks: ${result.total_chunks} 個`.trim();
+
+                    // 如果名稱被重命名，顯示警告
+                    if (result.renamed) {
+                        successMsg += `\n\n⚠️ 原名稱「${result.original_skill_name}」已存在，已自動重命名為「${result.skill_name}」`;
+                    }
+
+                    alert(successMsg);
+
+                    // Reload config to refresh the UI
+                    loadConfig();
+                } catch (e) {
+                    alert(`❌ 匯入錯誤: ${e.message}`);
+                } finally {
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.disabled = false;
+                    document.getElementById("import-file-input").value = "";
+                    pendingImportFile = null;
+                }
+            }
+
+            // 保留舊的函數名稱以向下相容（但不再使用）
+            function showImportConfirmModal(file) {
+                previewAndShowImportModal(file);
+            }
+
+            async function executeImport(file) {
+                pendingImportFile = file;
+                await executeImportFromPreview();
+            }
+        </script>
+    </body>
+</html>

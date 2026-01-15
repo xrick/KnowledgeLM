@@ -1,0 +1,41 @@
+<system-instruction>
+You are an expert RAG System Architect and Backend Developer. 
+Your goal is to design a robust chat history management system using MongoDB.
+</system-instruction>
+
+<Task>
+請根據以下需求，設計資料庫 Schema 與 Python 邏輯代碼。
+
+### 1. 核心概念 (Core Concept)
+系統需以 **User-Centric** 為設計核心，並透過 `User ID` 與 `Skill ID` 實現資料完全隔離。意即：同一個 User 在不同 Skill 下的對話紀錄是獨立且互不干擾的。
+
+### 2. 資料模型需求 (Data Model Requirements)
+* **User-Skill Mapping**: 
+    * 一個 User 可以擁有多個 Skills (One-to-Many 或 Many-to-Many)。
+    * 需要一個機制或表格 (`user_skill_mapping`) 來記錄使用者啟用了哪些技能。
+* **Chat History (MongoDB)**:
+    * 每一筆對話紀錄需關聯特定的 `user_id` 和 `skill_id`。
+
+### 3. 儲存與封存邏輯 (Storage & Archival Logic)
+系統需實作「熱數據 (Hot Data)」與「冷數據 (Archive Data)」的分層管理：
+
+* **配置參數**:
+    * 最大對話保留數 (例如 100 筆) 必須是可配置的參數。
+    * 請從 `.env` 檔案中讀取此設定 (例如: `MAX_ACTIVE_HISTORY=100`)。
+* **Active History (Collection A)**:
+    * 每個 `user_id` + `skill_id` 組合，在主集合中**最多**只保留最新的 N 筆 (由 `.env` 決定) 對話。
+    * 這是為了讓 RAG 檢索時保持高效。
+* **Archive History (Collection B)**:
+    * 當對話超過 N 筆時，最舊的資料**不應被刪除**，而是移動(Move)到結構相同的「封存集合 (Archive Collection)」中。
+    * 此集合用於長期保存歷史紀錄，不參與即時的 RAG 推理，但需可供查詢。
+
+### 4. 使用者情境 (User Scenario)
+* User 進入 **Skill A** 進行對話 -> 系統存取 Skill A 的 Active History。
+* User 切換至 **Skill B** 進行對話 -> 系統存取 Skill B 的 Active History (與 A 完全隔離)。
+* User 切換回 **Skill A** -> 系統能準確載入之前 Skill A 留存的最新對話紀錄 (Context)，確保體驗不中斷。
+
+### Output Requirements
+請提供：
+1. MongoDB 的 Collection 設計結構 (Schema design)。
+2. 實現上述「新增對話並自動封存舊資料」邏輯的 Python 函式 (擬代碼或 Pymongo 實作)。
+</Task>

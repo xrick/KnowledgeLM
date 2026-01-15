@@ -1,0 +1,323 @@
+GMT'), (b'Transfer-Encoding', b'chunked')])
+2025-11-05 12:07:18,184 - httpx - INFO - HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-05 12:07:18,184 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-05 12:07:18,185 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "當"}
+
+
+2025-11-05 12:07:18,230 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "然"}
+
+
+2025-11-05 12:07:18,276 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，我"}
+
+
+2025-11-05 12:07:18,323 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "很"}
+
+
+2025-11-05 12:07:18,369 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "樂"}
+
+
+2025-11-05 12:07:18,414 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "意"}
+
+
+2025-11-05 12:07:18,508 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "幫"}
+
+
+2025-11-05 12:07:18,553 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "助"}
+
+
+2025-11-05 12:07:18,598 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "你"}
+
+
+2025-11-05 12:07:18,644 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 12:07:18,690 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "請"}
+
+
+2025-11-05 12:07:18,743 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提供"}
+
+
+2025-11-05 12:07:18,788 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 12:07:18,834 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "需要"}
+
+
+2025-11-05 12:07:18,880 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "摘要"}
+
+
+2025-11-05 12:07:18,926 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 12:07:18,972 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文件"}
+
+
+2025-11-05 12:07:19,019 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，"}
+
+
+2025-11-05 12:07:19,076 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或者"}
+
+
+2025-11-05 12:07:19,122 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "將"}
+
+
+2025-11-05 12:07:19,169 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "其"}
+
+
+2025-11-05 12:07:19,218 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "內容"}
+
+
+2025-11-05 12:07:19,266 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "轉"}
+
+
+2025-11-05 12:07:19,321 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "貼"}
+
+
+2025-11-05 12:07:19,367 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "到"}
+
+
+2025-11-05 12:07:19,414 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "此"}
+
+
+2025-11-05 12:07:19,461 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "處"}
+
+
+2025-11-05 12:07:19,514 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，我"}
+
+
+2025-11-05 12:07:19,564 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "會"}
+
+
+2025-11-05 12:07:19,609 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "根"}
+
+
+2025-11-05 12:07:19,655 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "據"}
+
+
+2025-11-05 12:07:19,701 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "其中"}
+
+
+2025-11-05 12:07:19,751 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的信息"}
+
+
+2025-11-05 12:07:19,799 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "為"}
+
+
+2025-11-05 12:07:19,849 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 12:07:19,897 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "做"}
+
+
+2025-11-05 12:07:19,945 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "總"}
+
+
+2025-11-05 12:07:19,993 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "結"}
+
+
+2025-11-05 12:07:20,041 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 12:07:20,093 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "由"}
+
+
+2025-11-05 12:07:20,143 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "於"}
+
+
+2025-11-05 12:07:20,192 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "我們"}
+
+
+2025-11-05 12:07:20,240 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 12:07:20,289 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "直接"}
+
+
+2025-11-05 12:07:20,348 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "閱讀"}
+
+
+2025-11-05 12:07:20,396 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或"}
+
+
+2025-11-05 12:07:20,491 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "檢"}
+
+
+2025-11-05 12:07:20,542 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "視"}
+
+
+2025-11-05 12:07:20,637 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "複"}
+
+
+2025-11-05 12:07:20,684 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "本"}
+
+
+2025-11-05 12:07:20,746 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "時"}
+
+
+2025-11-05 12:07:20,807 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "沒有"}
+
+
+2025-11-05 12:07:20,881 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "能力"}
+
+
+2025-11-05 12:07:20,937 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，所以"}
+
+
+2025-11-05 12:07:21,007 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "一"}
+
+
+2025-11-05 12:07:21,062 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "旦"}
+
+
+2025-11-05 12:07:21,110 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 12:07:21,161 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "運"}
+
+
+2025-11-05 12:07:21,215 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "行"}
+
+
+2025-11-05 12:07:21,273 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "了"}
+
+
+2025-11-05 12:07:21,328 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "這"}
+
+
+2025-11-05 12:07:21,378 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "個"}
+
+
+2025-11-05 12:07:21,438 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "指"}
+
+
+2025-11-05 12:07:21,500 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "示"}
+
+
+2025-11-05 12:07:21,556 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，我"}
+
+
+2025-11-05 12:07:21,610 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "將"}
+
+
+2025-11-05 12:07:21,657 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "能"}
+
+
+2025-11-05 12:07:21,704 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "更"}
+
+
+2025-11-05 12:07:21,749 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "好"}
+
+
+2025-11-05 12:07:21,750 - sse_starlette.sse - DEBUG - ping: : ping - 2025-11-05 04:07:21.750459
+
+
+2025-11-05 12:07:21,803 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "地"}
+
+
+2025-11-05 12:07:21,850 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "協"}
+
+
+2025-11-05 12:07:21,896 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "助"}
+
+
+2025-11-05 12:07:21,943 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "你"}
+
+
+2025-11-05 12:07:21,989 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 12:07:22,042 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-05 12:07:22,042 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-05 12:07:22,042 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-05 12:07:22,043 - httpcore.connection - DEBUG - close.started
+2025-11-05 12:07:22,043 - httpcore.connection - DEBUG - close.complete
+2025-11-05 12:07:22,043 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 4, "phase_name": "Response Generation", "progress": 100, "message": "Answer generation complete"}
+
+
+2025-11-05 12:07:22,043 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 0, "message": "Saving chat history..."}
+
+
+2025-11-05 12:07:22,044 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: session_1762315461714_5ncah0a
+2025-11-05 12:07:22,044 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: session_1762315461714_5ncah0a
+2025-11-05 12:07:22,045 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 100, "message": "Chat history saved"}
+
+
+2025-11-05 12:07:22,045 - sse_starlette.sse - DEBUG - chunk: event: complete
+data: {"session_id": "session_1762315461714_5ncah0a", "query": "請幫我總結這份文件", "answer": "當然，我很樂意幫助你。請提供您需要摘要的文件，或者將其內容轉貼到此處，我會根據其中的信息為您做總結。由於我們在直接閱讀或檢視複本時沒有能力，所以一旦您運行了這個指示，我將能更好地協助你。", "context_count": 11, "expanded_questions": ["你能提供文件的主要主題和關鍵要點嗎？", "是否可以說明文件中提到的重要數據或統計信息。", "請列出文件中的任何重要結論或建議。"], "metadata": {"timestamp": "2025-11-05T04:07:22.045071+00:00", "language": "zh"}}

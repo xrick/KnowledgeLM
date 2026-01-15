@@ -1,0 +1,50 @@
+refData/errors/messages/deubg_streaming_01.txt
+SSE Streaming Diagnostic Test
+Test SSE Streaming Clear Log
+Event Log:
+2025-11-05T06:35:04.322Z - Page loaded. Click "Test SSE Streaming" to start test.
+2025-11-05T06:35:52.270Z - === Starting SSE Test ===
+2025-11-05T06:35:52.270Z - Sending POST request to /api/v1/chat/stream
+2025-11-05T06:35:52.279Z - Response status: 200 OK
+2025-11-05T06:35:52.280Z - Response headers:
+2025-11-05T06:35:52.280Z - access-control-allow-credentials: true
+2025-11-05T06:35:52.280Z - access-control-allow-origin: http://localhost:8000
+2025-11-05T06:35:52.280Z - cache-control: no-cache
+2025-11-05T06:35:52.280Z - connection: keep-alive
+2025-11-05T06:35:52.280Z - content-type: text/event-stream; charset=utf-8
+2025-11-05T06:35:52.280Z - date: Wed, 05 Nov 2025 06:35:51 GMT
+2025-11-05T06:35:52.280Z - server: uvicorn
+2025-11-05T06:35:52.281Z - transfer-encoding: chunked
+2025-11-05T06:35:52.281Z - vary: Origin
+2025-11-05T06:35:52.281Z - x-accel-buffering: no
+2025-11-05T06:35:52.281Z - Starting to read stream...
+2025-11-05T06:35:52.281Z - Chunk #1 received (129 bytes): event: progress data: {"phase": 1, "phase_name": "Query Understanding", "progress": 0, "message": "...
+2025-11-05T06:35:52.282Z - → Event type: progress
+2025-11-05T06:35:52.282Z - → Data: {"phase":1,"phase_name":"Query Understanding","progress":0,"message":"Analyzing user query..."}
+2025-11-05T06:35:52.282Z - ✅ Complete event #1: progress
+2025-11-05T06:35:52.302Z - Chunk #2 received (293 bytes): event: progress data: {"phase": 1, "phase_name": "Query Understanding", "progress": 100, "message":...
+2025-11-05T06:35:52.302Z - → Event type: progress
+2025-11-05T06:35:52.302Z - → Data: {"phase":1,"phase_name":"Query Understanding","progress":100,"message":"Query expanded into 1 sub-questions"}
+2025-11-05T06:35:52.302Z - ✅ Complete event #2: progress
+2025-11-05T06:35:52.302Z - → Event type: progress
+2025-11-05T06:35:52.302Z - → Data: {"phase":2,"phase_name":"Parallel Retrieval","progress":0,"message":"Retrieving relevant context from documents..."}
+2025-11-05T06:35:52.303Z - ✅ Complete event #3: progress
+2025-11-05T06:35:52.303Z - Chunk #3 received (268 bytes): event: progress data: {"phase": 2, "phase_name": "Parallel Retrieval", "progress": 100, "message": ...
+2025-11-05T06:35:52.303Z - → Event type: progress
+2025-11-05T06:35:52.303Z - → Data: {"phase":2,"phase_name":"Parallel Retrieval","progress":100,"message":"Retrieved 0 relevant chunks"}
+2025-11-05T06:35:52.303Z - ✅ Complete event #4: progress
+2025-11-05T06:35:52.303Z - → Event type: progress
+2025-11-05T06:35:52.303Z - → Data: {"phase":3,"phase_name":"Context Assembly","progress":0,"message":"Building enhanced RAG prompt..."}
+2025-11-05T06:35:52.304Z - ✅ Complete event #5: progress
+2025-11-05T06:35:52.326Z - Chunk #4 received (277 bytes): event: progress data: {"phase": 3, "phase_name": "Context Assembly", "progress": 100, "message": "P...
+2025-11-05T06:35:52.326Z - → Event type: progress
+2025-11-05T06:35:52.326Z - → Data: {"phase":3,"phase_name":"Context Assembly","progress":100,"message":"Prompt built with context and history"}
+2025-11-05T06:35:52.327Z - ✅ Complete event #6: progress
+2025-11-05T06:35:52.327Z - → Event type: progress
+2025-11-05T06:35:52.327Z - → Data: {"phase":4,"phase_name":"Response Generation","progress":0,"message":"Generating answer from LLM..."}
+2025-11-05T06:35:52.327Z - ✅ Complete event #7: progress
+2025-11-05T06:35:52.328Z - Chunk #5 received (100 bytes): event: error data: {"error": "HTTP 404", "message": "An error occurred during chat processing"}
+2025-11-05T06:35:52.329Z - → Event type: error
+2025-11-05T06:35:52.329Z - → Data: {"error":"HTTP 404","message":"An error occurred during chat processing"}
+2025-11-05T06:35:52.329Z - ✅ Complete event #8: error
+2025-11-05T06:35:52.336Z - Stream DONE. Total chunks: 5, Total events: 8

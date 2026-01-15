@@ -1,0 +1,10 @@
+refData/todo/make_notebooklm_like_ui.txt
+/sc:analyze --think --seq
+1. watch the image: refData/ui_improve/notebooklm_sidebar_example2.png
+2. in the image, all heads of documents are icons represent the file type, when the mouse move on an icon, this icon become a three-dot menu which has two commands:"rename" and "delete this item". The other point is that there is a select all check box on the upper right of all items.
+3. I wanna skill/chat page ui imitate(books or documents) this style, describe as following:
+    3.1. replace paperclip with icons which are more accurate description of the document's format
+    3.2 Slightly enlarge the space of the left sidebar for the check box placed in the end of each item row
+    3.3. These changes only affect the items of third level of the skill tree.
+    3.4. On the upper right, there is also a select all check box, for making it easier for users to select all items.
+4. Please make a plan carefully, thoroughly, and completely to make these changes successfully.

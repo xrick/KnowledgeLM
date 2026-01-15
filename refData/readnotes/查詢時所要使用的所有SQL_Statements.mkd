@@ -1,0 +1,67 @@
+📊 SQL 查詢語句說明
+以下是系統處理用戶查詢時使用的 SQL 語句：
+1️⃣ 驗證 Skill 存在 (get_documents_for_skill)
+-- 檢查 skill_id 是否有關聯的文件映射
+SELECT file_id, relevance_score, created_at
+FROM skill_document_mapping
+WHERE skill_id = ?
+ORDER BY relevance_score DESC
+用途: 確認用戶選擇的 skill 存在且有文件
+2️⃣ 獲取 Skill 詳細資訊 (get_skill)
+-- 獲取 skill 的完整 metadata
+SELECT * FROM skill_metadata 
+WHERE skill_id = ?
+用途: 取得 skill_name、source_file 等資訊
+3️⃣ 獲取 Skill Tree 結構
+-- 獲取所有 skill heads (技能分組)
+SELECT head_id, skill_name, description, category, 
+       display_order, enabled, created_at, updated_at
+FROM skill_heads
+WHERE enabled = 1
+ORDER BY display_order ASC, skill_name ASC
+
+-- 獲取每個 head 下的文件
+SELECT skill_id, skill_name, skill_description, skill_category,
+       total_chunks, source_name, parent_skill_id, head_id,
+       created_at, updated_at
+FROM skill_metadata
+WHERE head_id = ?
+ORDER BY created_at ASC
+用途: 建立前端 sidebar 的技能樹結構
+4️⃣ 獲取 Chunk 內容 (用於調試)
+-- 查看特定 skill 的 chunk 內容
+SELECT skill_id, document_name, chunk_index, 
+       substr(chunk_text, 1, 200) as preview
+FROM skill_chunk_metadata
+WHERE skill_id = ?
+ORDER BY chunk_index ASC
+LIMIT 10
+用途: 調試時檢查 chunk 內容是否正確
+5️⃣ 完整查詢流程
+用戶查詢 "strix halo"
+      │
+      ▼
+┌─────────────────────────────────────────┐
+│ 1. SQL: skill_document_mapping          │
+│    驗證 skill_id 有文件映射             │
+└─────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────────────────────────────────┐
+│ 2. SQL: skill_metadata                  │
+│    獲取 skill 的 source_name 等資訊     │
+└─────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────────────────────────────────┐
+│ 3. FAISS Vector Search                  │
+│    使用 embedding 找相似 chunks         │
+│    (不是 SQL，是向量檢索)               │
+└─────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────────────────────────────────┐
+│ 4. LLM Generation                       │
+│    將 chunks 傳給 LLM 生成回答          │
+│    ← 問題出在這裡的 prompt!             │
+└─────────────────────────────────────────┘

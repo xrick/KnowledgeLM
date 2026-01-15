@@ -1,0 +1,82 @@
+BGE-M3 Embedding 與 Chunk 設定位置說明
+📍 設定位置總覽
+設定項目	主要設定位置	實際使用位置
+BGE-M3 Model	.env + bge_embedding_provider.py	Skill 系統專用
+PAGE_BASED_CHUNK_SIZE	.env + config.py	File-Based 系統
+PAGE_BASED_CHUNK_OVERLAP	.env + config.py	File-Based 系統
+Skill Chunk Settings	skill_ingestion_service.py	Skill 系統專用
+1️⃣ BGE-M3 Embedding 設定
+環境變數 (.env:26-28):
+# BGE-M3
+EMBEDDING_MODEL_BGE_M3=BAAI/bge-m3
+EMBEDDING_DIMENSION_BGE_M3=1024
+Provider 實作 (app/Providers/bge_embedding_provider.py:23-34):
+class BGEEmbeddingProvider:
+    def __init__(self, model_name: str = "BAAI/bge-m3", device: str = None):
+        self.model_name = model_name
+        self.device = device or ('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
+        self.dimension = 1024  # BGE-M3 has 1024 dimensions
+        self.max_sequence_length = 8192  # BGE-M3 supports up to 8192 tokens
+關鍵特性:
+維度: 1024 維向量
+最大長度: 8192 tokens
+設備: 自動偵測 CUDA → MPS → CPU
+2️⃣ Page-Based Chunk 設定 (File-Based 系統)
+環境變數 (.env:60-61):
+PAGE_BASED_CHUNK_SIZE=1000 #600
+PAGE_BASED_CHUNK_OVERLAP=200 #100
+Config 預設值 (app/core/config.py:112-113):
+PAGE_BASED_CHUNK_SIZE: int = 2000      # 預設值（會被 .env 覆蓋）
+PAGE_BASED_CHUNK_OVERLAP: int = 200
+實際使用 (app/Services/input_data_handle_service.py:99-100):
+elif settings.CHUNKING_STRATEGY == "page_based":
+    self.chunker = PageBasedChunker(
+        chunk_size=settings.PAGE_BASED_CHUNK_SIZE,      # ← 使用這裡
+        overlap=settings.PAGE_BASED_CHUNK_OVERLAP,      # ← 使用這裡
+    )
+3️⃣ Skill 系統 Chunk 設定 (獨立於 File-Based)
+Skill Ingestion Service (app/SkillServices/skill_ingestion_service.py:55-64):
+# Skill-specific chunking configuration
+# Skills typically contain conceptual content, use larger chunks
+self.chunk_size = chunk_size or getattr(
+    settings,
+    'SKILL_CHUNK_SIZE',
+    1000  # ← Skill 預設 1000（比 File 的 500 大）
+)
+self.chunk_overlap = chunk_overlap or getattr(
+    settings,
+    'SKILL_CHUNK_OVERLAP',
+    200
+)
+API Endpoint 覆寫 (app/api/v1/endpoints/skills.py:140-141):
+# 在 process_pdf_for_skill 中
+ingestion_service = SkillIngestionService(
+    chunk_size=1000,     # ← 硬編碼為 1000
+    chunk_overlap=200,   # ← 硬編碼為 200
+)
+📊 設定值總結
+系統	Chunk Size	Chunk Overlap	設定來源
+File-Based (page_based)	1000	200	.env → settings
+File-Based (recursive)	500	50	.env → settings
+Skill 系統	1000	200	skill_ingestion_service.py + skills.py
+🔧 如何修改設定
+修改 Page-Based Chunk (File 系統):
+# .env
+PAGE_BASED_CHUNK_SIZE=1500     # 改為 1500
+PAGE_BASED_CHUNK_OVERLAP=300   # 改為 300
+修改 Skill Chunk:
+# app/SkillServices/skill_ingestion_service.py:57-63
+self.chunk_size = chunk_size or getattr(
+    settings,
+    'SKILL_CHUNK_SIZE',
+    1500  # ← 改這裡
+)
+self.chunk_overlap = chunk_overlap or getattr(
+    settings,
+    'SKILL_CHUNK_OVERLAP',
+    300   # ← 改這裡
+)
+或者新增環境變數:
+# .env (新增)
+SKILL_CHUNK_SIZE=1500
+SKILL_CHUNK_OVERLAP=300

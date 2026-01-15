@@ -1,0 +1,19 @@
+INFO:     Started server process [305415]
+INFO:     Waiting for application startup.
+Milvus service health check failed: <ConnectionNotExistException: (code=1, message=should create connection first.)>
+⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8081 (Press CTRL+C to quit)
+/home/mapleleaf/LCJRepos/gitprjs/DocAI/app/Providers/embedding_provider/client.py:81: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings` was deprecated in LangChain 0.2.2 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-huggingface package and should be used instead. To use it run `pip install -U :class:`~langchain-huggingface` and import as `from :class:`~langchain_huggingface import HuggingFaceEmbeddings``.
+  self._model = HuggingFaceEmbeddings(
+Single round expansion timeout, using original query
+Session not found when adding message: test_session_456
+Session not found when adding message: test_session_456
+INFO:     127.0.0.1:43820 - "POST /api/v1/chat HTTP/1.1" 200 OK
+Single round expansion timeout, using original query
+Session not found when adding message: test_session_789
+Session not found when adding message: test_session_789
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [305415]

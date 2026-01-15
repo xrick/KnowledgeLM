@@ -1,0 +1,5 @@
+refData/sovle_skill_tree_fold_and_unfold_problem.txt
+/sc:brainstorm --think --seq --c7
+1. it is very strange to use a config json file to build our skill tree strcuture, the right way is we only have one source: sqlite db
+2. I don't understand your logic about why you upload the first doc to a new skill, and we can't unfold the new built skill and see the new uploaded doc file.
+3. Just because you can add a table maybe named skill_head_metadata table to record all skills heads information. Then all documentations metadata in the skill_document_mapping table in the sqlite, we add a new column called skill_head_id, then all the problem can be solved, no more any hard-code jason file.

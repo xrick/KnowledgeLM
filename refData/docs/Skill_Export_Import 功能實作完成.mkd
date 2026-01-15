@@ -1,0 +1,48 @@
+✅ Skill Export/Import 功能實作完成
+實作摘要
+📦 Phase 1 & 2: Backend API (skills.py)
+Export Endpoint: GET /api/v1/skills/config/skills/export/{head_id}
+驗證 skill head 存在
+獲取該 head 下所有 documents
+匯出 5 個 CSV 檔案：skill_heads.csv, skill_metadata.csv, skill_chunk_metadata.csv, skill_document_mapping.csv, skill_overviews.csv
+建立 manifest.json 包含版本、來源資訊、檔案清單
+複製 FAISS 索引 (index.faiss, index.pkl)
+回傳 ZIP 檔案串流下載
+Import Endpoint: POST /api/v1/skills/config/skills/import
+驗證 ZIP 檔案
+ZIP 炸彈安全檢查 (max 100MB per file, 500MB total)
+讀取並驗證 manifest.json
+生成新的 head_id 和 skill_id（避免 ID 衝突）
+處理 skill 名稱衝突（自動加時間戳）
+交易式資料庫插入（失敗時 rollback）
+複製 FAISS 索引並驗證可載入
+回傳匯入結果
+🎨 Phase 3: Frontend UI (skill_config.html)
+Header 工具列：
+新增 Import 按鈕（隱藏 file input）
+Skill Card：
+每個 skill 卡片新增 Export 按鈕（下載圖示）
+JavaScript 函數：
+exportSkill(headId, skillName) - 下載 skill ZIP
+handleImportFile(input) - 處理檔案選擇
+showImportConfirmModal(file) - 顯示確認 Modal
+executeImport(file) - 執行匯入
+翻譯支援：
+中文：匯入、匯出技能
+英文：Import、Export Skill
+修改的檔案
+檔案	變更
+skills.py	新增 Export/Import endpoints (lines 3750-4405)
+skill_config.html	Import 按鈕、Export 按鈕、JS 函數
+ui_translations.json	新增 export_skill 翻譯
+使用流程
+匯出：
+進入 skill-config 頁面
+點擊 skill 卡片上的 ⬇️ Export 按鈕
+自動下載 {skill_name}_export.zip
+匯入：
+點擊 header 的 Import 按鈕
+選擇 ZIP 檔案
+確認 Modal 顯示檔案資訊
+點擊「確認匯入」
+自動處理並顯示結果

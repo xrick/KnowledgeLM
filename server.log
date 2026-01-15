@@ -1,0 +1,9 @@
+INFO:     Started server process [16856]
+INFO:     Waiting for application startup.
+/Users/xrickliao/WorkSpaces/Work/Projects/DocAI/docaienv/lib/python3.11/site-packages/pymilvus/client/__init__.py:6: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound, get_distribution
+Milvus service health check failed: <MilvusException: (code=2, message=Fail connecting to server on localhost:19530. Timeout)>
+⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8082 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50480 - "GET /health HTTP/1.1" 200 OK

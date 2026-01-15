@@ -1,0 +1,28 @@
+{
+  "export_version": "1.0",
+  "export_date": "2026-01-07T00:47:30.636240+00:00",
+  "source_head_id": "skill_20251128_074913_b7380bf3",
+  "skill_ids": [
+    "skill_20251216_124010_b45c5a1f_d81758"
+  ],
+  "skill_name": "投資理財",
+  "skill_description": "The skill is comprised of investment data and information",
+  "category": "Investment",
+  "total_chunks": 207,
+  "document_count": 1,
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_dimension": 1024,
+  "database_tables": [
+    "skill_heads.csv",
+    "skill_metadata.csv",
+    "skill_chunk_metadata.csv",
+    "skill_document_mapping.csv"
+  ],
+  "faiss_folders": [
+    "skill_20251216_124010_b45c5a1f_d81758"
+  ],
+  "export_metadata": {
+    "system_version": "DocAI v1.0",
+    "export_tool": "skill_export_api"
+  }
+}

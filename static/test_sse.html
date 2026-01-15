@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Streaming Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        #log { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; }
+        .event { margin: 5px 0; padding: 5px; background: #f0f0f0; }
+        .error { background: #ffcccc; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>SSE Streaming Diagnostic Test</h1>
+
+    <button onclick="testSSE()">Test SSE Streaming</button>
+    <button onclick="clearLog()">Clear Log</button>
+
+    <h2>Event Log:</h2>
+    <div id="log"></div>
+
+    <script>
+        function log(message, isError = false) {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = isError ? 'event error' : 'event';
+            entry.textContent = new Date().toISOString() + ' - ' + message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function testSSE() {
+            log('=== Starting SSE Test ===');
+            log('Sending POST request to /api/v1/chat/stream');
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                log('TIMEOUT after 60 seconds', true);
+                controller.abort();
+            }, 60000);
+
+            try {
+                const response = await fetch('/api/v1/chat/stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-ID': 'test-user'
+                    },
+                    body: JSON.stringify({
+                        query: 'test streaming',
+                        session_id: 'test_session_' + Date.now(),
+                        file_ids: [],  // Empty file list to avoid 404
+                        top_k: 1
+                    }),
+                    signal: controller.signal
+                });
+
+                log(`Response status: ${response.status} ${response.statusText}`);
+                log(`Response headers:`);
+                for (const [key, value] of response.headers.entries()) {
+                    log(`  ${key}: ${value}`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
+                let eventCount = 0;
+                let chunkCount = 0;
+
+                log('Starting to read stream...');
+
+                while (true) {
+                    const { done, value } = await reader.read();
+
+                    if (done) {
+                        log(`Stream DONE. Total chunks: ${chunkCount}, Total events: ${eventCount}`);
+                        clearTimeout(timeoutId);
+                        break;
+                    }
+
+                    chunkCount++;
+                    const chunk = decoder.decode(value, { stream: true });
+                    log(`Chunk #${chunkCount} received (${chunk.length} bytes): ${chunk.substring(0, 100)}${chunk.length > 100 ? '...' : ''}`);
+
+                    buffer += chunk;
+
+                    // Parse SSE events
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';  // Keep incomplete line
+
+                    let currentEvent = null;
+                    let currentData = null;
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+
+                        if (trimmed.startsWith('event:')) {
+                            currentEvent = trimmed.substring(6).trim();
+                            log(`  → Event type: ${currentEvent}`);
+                        }
+                        else if (trimmed.startsWith('data:')) {
+                            const dataStr = trimmed.substring(5).trim();
+                            try {
+                                currentData = JSON.parse(dataStr);
+                                log(`  → Data: ${JSON.stringify(currentData)}`);
+                            } catch (e) {
+                                log(`  → Data (raw): ${dataStr}`);
+                            }
+                        }
+                        else if (trimmed === '' && currentEvent && currentData) {
+                            eventCount++;
+                            log(`✅ Complete event #${eventCount}: ${currentEvent}`, false);
+                            currentEvent = null;
+                            currentData = null;
+                        }
+                    }
+                }
+
+            } catch (error) {
+                log(`ERROR: ${error.message}`, true);
+                log(`Error stack: ${error.stack}`, true);
+                clearTimeout(timeoutId);
+            }
+        }
+
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            log('Page loaded. Click "Test SSE Streaming" to start test.');
+        });
+    </script>
+</body>
+</html>

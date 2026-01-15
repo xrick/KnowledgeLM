@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocAI UI Preview - Redesigned Skill Tree</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .preview-container {
+            flex: 1;
+            min-width: 800px;
+        }
+
+        .preview-container h2 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .app-preview {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            width: 100%;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== FULL WIDTH TITLE BANNER ===== */
+        .title-banner {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .title-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            flex: 1;
+        }
+
+        .sidebar-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f9fafb;
+            color: #111827;
+        }
+
+        .sidebar-toggle i {
+            font-size: 1.1rem;
+        }
+
+        .title-banner .logo {
+            height: 28px;
+            width: auto;
+            flex-shrink: 0;
+            display: block;
+            object-fit: contain;
+        }
+
+        .title-banner .title-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            letter-spacing: -0.01em;
+        }
+
+        .title-banner-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 360px;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width 0.3s ease;
+            border-right: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar.collapsed .skill-name,
+        .sidebar.collapsed .skill-count-badge,
+        .sidebar.collapsed .skill-settings-btn {
+            display: none;
+        }
+
+        .sidebar.collapsed .skill-item {
+            justify-content: center;
+            padding: 0.75rem;
+            margin: 0.25rem 0.5rem;
+        }
+
+        .app-content-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Navigation Icons */
+
+        .nav-icon-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .nav-icon-item:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .nav-icon-item.active {
+            color: #374151;
+            font-weight: 500;
+            background: #e5e7eb;
+        }
+
+        .nav-icon-item i {
+            font-size: 0.875rem;
+        }
+
+        .nav-icon-item span {
+            font-weight: 500;
+        }
+
+        /* Language Selector - Top Right */
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .language-selector:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .language-selector i {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .language-selector span {
+            font-weight: 500;
+        }
+
+        /* Sidebar Content */
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.75rem 0;
+            background: #f9fafb;
+        }
+
+        /* Skill Item with Settings Button */
+        .skill-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            margin: 0.125rem 0.5rem;
+            color: #64748b;
+            position: relative;
+            gap: 0.75rem;
+            background: #ffffff;
+            border-radius: 6px;
+        }
+
+        .skill-item:hover {
+            background: #f9fafb;
+        }
+
+        .skill-item.selected {
+            background: #e5e7eb;
+            border-left-color: #9ca3af;
+            color: #1f2937;
+        }
+
+        .sidebar.collapsed .skill-item.selected {
+            border-left: none;
+            border-top: 3px solid #9ca3af;
+        }
+
+        .skill-item .skill-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            flex-shrink: 0;
+        }
+
+        .skill-item .skill-name {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Number Badge (chunk count) */
+        .skill-item .skill-count-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .skill-item.selected .skill-count-badge {
+            background: #9ca3af;
+            color: white;
+        }
+
+        /* Settings Button */
+        .skill-item .skill-settings-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            border: none;
+            background: transparent;
+            opacity: 0;
+        }
+
+        .skill-item:hover .skill-settings-btn {
+            opacity: 1;
+        }
+
+        .skill-item .skill-settings-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .skill-item .skill-settings-btn i {
+            font-size: 0.875rem;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        /* Modern Header - Removed */
+        .main-header {
+            display: none;
+        }
+
+        /* Modern Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: #ffffff;
+        }
+
+        .chat-area.empty {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #64748b;
+            max-width: 600px;
+        }
+
+        .welcome-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message h3 {
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .welcome-message p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #64748b;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+
+        .message {
+            display: flex;
+            width: 100%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+            padding-left: 2rem;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+            padding-right: 2rem;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: #f3f4f6;
+            color: #1f2937;
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+
+        .message.assistant .message-content {
+            background: #f3f4f6;
+            color: #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Modern Input Area - ChatGPT Style */
+        .input-area {
+            padding: 1rem 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 24px;
+            width: 100%;
+            margin: 0 2rem;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        }
+
+        .input-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 24px;
+        }
+
+        .input-wrapper textarea {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            color: #1f2937;
+            outline: none;
+            resize: none;
+            max-height: 200px;
+            line-height: 1.5;
+            font-family: inherit;
+            padding: 0;
+            margin: 0;
+            vertical-align: middle;
+        }
+
+        .input-wrapper textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .model-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .model-selector:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .model-selector i {
+            font-size: 0.75rem;
+        }
+
+        .audio-input-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .audio-input-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .audio-input-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .send-button {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .send-button i {
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <h2>Redesigned Skill Tree - Final Design</h2>
+        <div class="app-preview">
+            <!-- Full Width Title Banner -->
+            <div class="title-banner">
+                <div class="title-banner-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <img src="/static/mapleleaf_taiwan.svg" class="logo" alt="Maple Leaf Taiwan Logo" 
+                         onerror="this.onerror=null; this.src='../static/mapleleaf_taiwan.svg'; this.onerror=function(){this.onerror=null; this.src='../static/template/mapleleaf_taiwan.svg';};">
+                    <div class="title-text">DocAI with Skills</div>
+                </div>
+                <div class="title-banner-right">
+                    <a href="#" class="nav-icon-item active">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Skill Management</span>
+                    </a>
+                    <a href="#" class="nav-icon-item">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                    <div class="language-selector">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>English</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="app-content-wrapper">
+                <aside class="sidebar">
+                <nav class="sidebar-content">
+                    <!-- Flat list of all skills -->
+                    <div class="skill-item">
+                        <i class="fa-solid fa-gavel skill-icon"></i>
+                        <span class="skill-name">六法全書-刑法</span>
+                        <span class="skill-count-badge">272</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fa-solid fa-gavel skill-icon"></i>
+                        <span class="skill-name">六法全書-民法</span>
+                        <span class="skill-count-badge">533</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item selected">
+                        <i class="fa-solid fa-gavel skill-icon"></i>
+                        <span class="skill-name">Contract Law</span>
+                        <span class="skill-count-badge">156</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fa-solid fa-code skill-icon"></i>
+                        <span class="skill-name">LLM Research</span>
+                        <span class="skill-count-badge">883</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fa-solid fa-code skill-icon"></i>
+                        <span class="skill-name">Web Development</span>
+                        <span class="skill-count-badge">421</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fa-solid fa-chart-line skill-icon"></i>
+                        <span class="skill-name">Financial Reports</span>
+                        <span class="skill-count-badge">298</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div class="skill-item">
+                        <i class="fa-solid fa-book skill-icon"></i>
+                        <span class="skill-name">Medical Knowledge Base</span>
+                        <span class="skill-count-badge">645</span>
+                        <button class="skill-settings-btn" onclick="event.stopPropagation(); alert('Skill Settings')" title="Settings">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </nav>
+                </aside>
+                <main class="main-content">
+                <div class="chat-area empty">
+                    <div class="welcome-message">
+                        <h3>Welcome to DocAI with Skills</h3>
+                        <p>Select a skill to query its curated knowledge domain. You can also upload your personal documents and load them into skills to build your own knowledge bases. Ask questions to get intelligent answers based on the selected skill's content.</p>
+                    </div>
+                    <!-- Example chat messages -->
+                    <div class="chat-messages" style="display: block;">
+                        <div class="message user">
+                            <div class="message-content">What is contract law?</div>
+                        </div>
+                        <div class="message assistant">
+                            <div class="message-content">Contract law is a body of law that governs agreements between parties. It establishes the legal framework for creating, interpreting, and enforcing contracts...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="input-wrapper">
+                        <div class="input-main">
+                            <textarea placeholder="Select a skill to querry or Add your skills with documents" rows="1" disabled></textarea>
+                        </div>
+                        <div class="input-actions">
+                            <div class="model-selector">
+                                <i class="fa-solid fa-chevron-down"></i>
+                                <span>Model</span>
+                            </div>
+                            <button class="audio-input-btn" disabled title="Audio Input">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const icon = toggleBtn.querySelector('i');
+            
+            sidebar.classList.toggle('collapsed');
+            
+            // Update icon based on state
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // Optional: Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            
+            // Only handle on mobile/small screens if needed
+            if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
+                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                    sidebar.classList.add('collapsed');
+                    const icon = toggleBtn.querySelector('i');
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-chevron-right');
+                }
+            }
+        });
+
+        // Show icons when sidebar is collapsed
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+            sidebar.addEventListener('mouseenter', function() {
+                if (this.classList.contains('collapsed')) {
+                    // Icons are already visible in collapsed state
+                }
+            });
+        }
+    </script>
+</body>
+</html>

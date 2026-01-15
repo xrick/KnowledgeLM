@@ -1,0 +1,76 @@
+{
+  "export_version": "2.0",
+  "export_date": "2026-01-13T06:28:34.482972+00:00",
+  "head_id": "head_20260113_141642_4209c143",
+  "skill_ids": [
+    "skill_20260113_061734_4209c143_8388d1"
+  ],
+  "skill_name": "機器學習",
+  "skill_description": "",
+  "category": "AI",
+  "total_chunks": 475,
+  "document_count": 1,
+  "embedding_model": "BAAI/bge-m3",
+  "embedding_dimension": 1024,
+  "skill_heads": [
+    {
+      "head_id": "head_20260113_141642_4209c143",
+      "skill_name": "機器學習",
+      "description": "",
+      "category": "AI",
+      "display_order": 0,
+      "enabled": 1,
+      "created_at": "2026-01-13 06:16:42",
+      "updated_at": "2026-01-13 06:16:42"
+    }
+  ],
+  "skill_metadata": [
+    {
+      "skill_id": "skill_20260113_061734_4209c143_8388d1",
+      "skill_name": "機器學習",
+      "skill_description": "",
+      "skill_category": "AI",
+      "skill_level": "professional",
+      "tags": "[\"ai\"]",
+      "related_skills": null,
+      "total_chunks": 475,
+      "created_at": "2026-01-13T06:24:42.797866+00:00",
+      "updated_at": "2026-01-13T06:24:42.798247+00:00",
+      "metadata": "{\"embedding_model\": \"BAAI/bge-m3\", \"embedding_dimension\": 1024, \"source_file\": \"/home/mapleleaf/LCJRepos/gitprjs/DocAI/uploadfiles/pdf/Machine_Learning_Production_Systems_oreilly_2024.pdf\", \"is_per_pdf_child\": true, \"batch_size\": 6, \"max_retries\": 3}",
+      "embedding_model": "text-embedding-ada-002",
+      "embedding_dimension": 1536,
+      "parent_skill_id": "root",
+      "source_name": "Machine_Learning_Production_Systems_oreilly_2024",
+      "head_id": "head_20260113_141642_4209c143",
+      "processing_status": "completed",
+      "indexed_chunks": 475,
+      "last_error": null,
+      "processing_started_at": null,
+      "processing_completed_at": "2026-01-13T06:24:42.798238+00:00"
+    }
+  ],
+  "skill_document_mapping": [
+    {
+      "mapping_id": 78,
+      "skill_id": "skill_20260113_061734_4209c143_8388d1",
+      "file_id": "doc_8388d12ef0bfb8fc",
+      "relevance_score": 1.0,
+      "created_at": "2026-01-13 06:24:42",
+      "document_name": "Machine_Learning_Production_Systems_oreilly_2024",
+      "document_path": "/home/mapleleaf/LCJRepos/gitprjs/DocAI/uploadfiles/pdf/Machine_Learning_Production_Systems_oreilly_2024.pdf",
+      "total_pages": 475
+    }
+  ],
+  "skill_overviews": [],
+  "csv_files": [
+    "skill_chunk_metadata.csv"
+  ],
+  "faiss_folders": [
+    "skill_20260113_061734_4209c143_8388d1"
+  ],
+  "export_metadata": {
+    "system_version": "DocAI v2.0",
+    "export_tool": "skill_export_api",
+    "note": "v2.0: metadata integrated into manifest.json, original IDs preserved"
+  }
+}

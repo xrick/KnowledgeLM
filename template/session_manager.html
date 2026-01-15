@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Manager - DocAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --border: #e0e0e0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #dc3545;
+            --danger-hover: #c82333;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header h1 i {
+            color: var(--primary);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.sessions {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .stat-icon.messages {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .stat-icon.storage {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .stat-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .stat-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Sessions List */
+        .sessions-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .session-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .session-item:last-child {
+            border-bottom: none;
+        }
+
+        .session-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .session-info {
+            flex: 1;
+        }
+
+        .session-id {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            word-break: break-all;
+        }
+
+        .session-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .session-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-delete {
+            padding: 0.5rem 0.75rem;
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 1.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--text-primary);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        /* Confirm Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal h3 i {
+            color: var(--warning);
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        /* LocalStorage Section */
+        .storage-section {
+            margin-top: 2rem;
+        }
+
+        .storage-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .storage-item:last-child {
+            border-bottom: none;
+        }
+
+        .storage-key {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .storage-value {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fa-solid fa-database"></i>
+                Session Manager
+            </h1>
+            <a href="/skill" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i>
+                返回 Skill Chat
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon sessions">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="mongo-count">-</h3>
+                    <p>MongoDB Sessions</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon storage">
+                    <i class="fa-solid fa-hard-drive"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="local-count">-</h3>
+                    <p>LocalStorage 項目</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-primary" onclick="loadSessions()">
+                <i class="fa-solid fa-refresh"></i>
+                重新載入
+            </button>
+            <button class="btn btn-outline" onclick="clearAllLocalStorage()">
+                <i class="fa-solid fa-eraser"></i>
+                清除 LocalStorage
+            </button>
+            <button class="btn btn-danger" onclick="showClearAllModal()">
+                <i class="fa-solid fa-trash-alt"></i>
+                清除所有 Sessions
+            </button>
+        </div>
+
+        <!-- MongoDB Sessions -->
+        <div class="sessions-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fa-solid fa-database"></i>
+                    MongoDB Sessions
+                </h2>
+            </div>
+            <div class="session-list" id="session-list">
+                <div class="loading">
+                    <i class="fa-solid fa-spinner"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- LocalStorage Section -->
+        <div class="sessions-section storage-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fa-solid fa-hard-drive"></i>
+                    LocalStorage (Chat History)
+                </h2>
+            </div>
+            <div class="session-list" id="local-storage-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal">
+            <h3>
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                確認刪除
+            </h3>
+            <p id="modal-message">確定要清除所有對話記錄嗎？此操作無法復原。</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="hideModal()">取消</button>
+                <button class="btn btn-danger" id="modal-confirm-btn" onclick="confirmClearAll()">確認刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-message">操作成功</span>
+    </div>
+
+    <script>
+        // ⚠️ 必須與 skill_main.html 的 SKILL_CHAT_PREFIX 一致
+        const SKILL_CHAT_PREFIX = 'docai_skill_chat_';
+        let pendingDeleteSessionId = null;
+
+        // ===== Load Sessions =====
+        async function loadSessions() {
+            const listEl = document.getElementById('session-list');
+            listEl.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner"></i></div>';
+
+            try {
+                // Fetch MongoDB sessions (we need a list endpoint)
+                const response = await fetch('/api/v1/skills/sessions/list');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderSessions(data.sessions || []);
+                    document.getElementById('mongo-count').textContent = data.sessions?.length || 0;
+                } else if (response.status === 404) {
+                    // Endpoint doesn't exist yet, show empty state
+                    renderSessions([]);
+                    document.getElementById('mongo-count').textContent = '?';
+                } else {
+                    throw new Error('Failed to load sessions');
+                }
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-exclamation-circle"></i>
+                        <p>無法載入 Sessions（API 可能尚未實作）</p>
+                    </div>
+                `;
+                document.getElementById('mongo-count').textContent = '?';
+            }
+
+            // Load localStorage
+            loadLocalStorage();
+        }
+
+        function renderSessions(sessions) {
+            const listEl = document.getElementById('session-list');
+
+            if (sessions.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>沒有任何 Session 記錄</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = sessions.map(session => `
+                <div class="session-item" data-session-id="${session.session_id}">
+                    <div class="session-info">
+                        <div class="session-id">${session.session_id}</div>
+                        <div class="session-meta">
+                            <span><i class="fa-solid fa-message"></i> ${session.message_count || 0} 訊息</span>
+                            <span><i class="fa-solid fa-clock"></i> ${formatDate(session.updated_at)}</span>
+                        </div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteSession('${session.session_id}')">
+                        <i class="fa-solid fa-trash"></i> 刪除
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-TW');
+        }
+
+        // ===== LocalStorage =====
+        function loadLocalStorage() {
+            const listEl = document.getElementById('local-storage-list');
+            const items = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(SKILL_CHAT_PREFIX)) {
+                    const value = localStorage.getItem(key);
+                    items.push({ key, value });
+                }
+            }
+
+            document.getElementById('local-count').textContent = items.length;
+
+            if (items.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>沒有任何 LocalStorage 對話記錄</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = items.map(item => {
+                let preview = '';
+                try {
+                    const data = JSON.parse(item.value);
+                    preview = `${Array.isArray(data) ? data.length : 0} 條訊息`;
+                } catch {
+                    preview = item.value.substring(0, 50) + '...';
+                }
+
+                return `
+                    <div class="storage-item">
+                        <div>
+                            <div class="storage-key">${item.key}</div>
+                            <div class="storage-value">${preview}</div>
+                        </div>
+                        <button class="btn-delete" onclick="deleteLocalStorage('${item.key}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteLocalStorage(key) {
+            localStorage.removeItem(key);
+            showToast('已刪除 LocalStorage 項目', 'success');
+            loadLocalStorage();
+        }
+
+        function clearAllLocalStorage() {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(SKILL_CHAT_PREFIX)) {
+                    keysToRemove.push(key);
+                }
+            }
+
+            if (keysToRemove.length === 0) {
+                showToast('沒有需要清除的項目', 'info');
+                return;
+            }
+
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            showToast(`已清除 ${keysToRemove.length} 個 LocalStorage 項目`, 'success');
+            loadLocalStorage();
+        }
+
+        // ===== Delete Session =====
+        async function deleteSession(sessionId) {
+            if (!confirm(`確定要刪除此 Session 嗎？\n\n${sessionId}`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/v1/skills/sessions/${encodeURIComponent(sessionId)}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Session 已刪除', 'success');
+                    // Remove from UI
+                    const item = document.querySelector(`[data-session-id="${sessionId}"]`);
+                    if (item) item.remove();
+
+                    // Update count
+                    const countEl = document.getElementById('mongo-count');
+                    const currentCount = parseInt(countEl.textContent) || 0;
+                    countEl.textContent = Math.max(0, currentCount - 1);
+                } else {
+                    throw new Error('Delete failed');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('刪除失敗', 'error');
+            }
+        }
+
+        // ===== Clear All =====
+        function showClearAllModal() {
+            document.getElementById('confirm-modal').classList.add('show');
+        }
+
+        function hideModal() {
+            document.getElementById('confirm-modal').classList.remove('show');
+        }
+
+        async function confirmClearAll() {
+            hideModal();
+
+            try {
+                // Clear MongoDB
+                const response = await fetch('/api/v1/skills/sessions/clear-all', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+
+                    // Also clear localStorage
+                    clearAllLocalStorage();
+
+                    showToast(`已清除 ${result.deleted_count} 個 MongoDB Sessions`, 'success');
+                    loadSessions();
+                } else {
+                    throw new Error('Clear all failed');
+                }
+            } catch (error) {
+                console.error('Clear all error:', error);
+                showToast('清除失敗', 'error');
+            }
+        }
+
+        // ===== Toast =====
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            toastMessage.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== Init =====
+        document.addEventListener('DOMContentLoaded', loadSessions);
+
+        // Close modal on overlay click
+        document.getElementById('confirm-modal').addEventListener('click', function(e) {
+            if (e.target === this) hideModal();
+        });
+    </script>
+</body>
+</html>

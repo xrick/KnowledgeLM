@@ -1,0 +1,148 @@
+名稱修改.txt
+# DocAI UI 文字修改指南
+# ================================
+# 本文件列出系統中所有 UI 文字的定義位置
+# 方便快速查找和修改
+
+================================================================================
+1. 多語言翻譯檔案 (主要修改位置)
+================================================================================
+
+檔案: static/i18n/ui_translations.json
+
+結構:
+{
+  "zh": {                          // 繁體中文
+    "nav": {
+      "skill_chat": "Skill 對話"
+    },
+    "sidebar": {
+      "configuration": "系統配置",
+      "skills_pdfs": "技能與 PDF"
+    },
+    "header": {
+      "skill_config": "Skill 配置管理",
+      "refresh": "重新整理",
+      "add_skill": "新增技能"
+    },
+    "config": {
+      "stats": {
+        "skills": "技能",
+        "documents": "文件",
+        "total_chunks": "總區塊數"
+      }
+    },
+    "sources_count": "{count} 個來源"
+  },
+  "en": {                          // English
+    ...
+  }
+}
+
+================================================================================
+2. Skill Config 頁面 (skill_config.html)
+================================================================================
+
+檔案: template/skill_config.html
+
+【側邊欄】
+- Line 680: sidebar-skills-pdfs     → "Skills & PDFs"
+- Line 720: stat-pdfs               → 文件數量顯示
+- Line 726: stat-instant            → Chunk 數量顯示
+
+【統計卡片標籤】
+- Line 715: stat-label-skills       → "Skills"
+- Line 721: stat-label-pdfs         → "Documents"
+- Line 728: stat-label-instant      → "Total Chunks"
+
+【頁面標題】
+- Line 748: page-title              → "Skill Configuration"
+
+【按鈕】
+- Line 754: btn-refresh             → "Refresh"
+- Line 757: btn-add-skill           → "Add Skill"
+
+【Modal 標題】
+- Line 770: add-skill-modal         → "新增技能"
+- Line 840: add-source-modal        → "增加來源"
+- Line 910: rebuild-confirm-modal   → "重建確認"
+- Line 980: upload-progress-modal   → "上傳處理進度"
+
+【翻譯函數調用位置】
+- Lines 1124-1170: applyUITranslations() 函數
+
+================================================================================
+3. Skill Main 聊天頁面 (skill_main.html)
+================================================================================
+
+檔案: template/skill_main.html
+
+【頁面標題】
+- Line 1357: `${totalItems} 個來源 (${totalItems} 項)`
+- Line 1365: `${selectedSkills.length} 個來源`
+
+【輸入框提示】
+- Line 1374: chat.input_placeholder_multi
+
+【搜尋結果】
+- Line 1380: 搜尋了 X 個知識庫
+
+================================================================================
+4. 檔案模式頁面 (index.html)
+================================================================================
+
+檔案: template/index.html
+
+【導航】
+- "返回 Skill 模式" 按鈕
+- "切換至檔案模式" 連結
+
+================================================================================
+5. 快速修改範例
+================================================================================
+
+【範例 1: 修改 "個來源" 為 "個技能庫"】
+
+在 ui_translations.json:
+  "sources_count": "{count} 個技能庫"
+
+在 skill_main.html Line 1357:
+  pageTitle.textContent = `${totalItems} 個技能庫 (${totalItems} 項)`;
+
+【範例 2: 修改統計卡片標籤】
+
+在 ui_translations.json:
+  "config": {
+    "stats": {
+      "skills": "知識技能",
+      "documents": "PDF 文件",
+      "total_chunks": "文字區塊"
+    }
+  }
+
+================================================================================
+6. 注意事項
+================================================================================
+
+1. 優先修改 ui_translations.json - 這樣中英文都會更新
+2. 如果 ui_translations.json 沒有對應的 key，需要同時修改 HTML
+3. 修改後重新整理瀏覽器即可看到效果（不需重啟伺服器）
+4. 使用瀏覽器開發者工具 (F12) 可以快速找到元素 ID
+
+================================================================================
+7. 常用搜尋指令
+================================================================================
+
+# 搜尋特定文字
+grep -rn "個來源" template/
+grep -rn "Documents" template/
+
+# 搜尋翻譯 key
+grep -rn "t('config" template/
+
+# 搜尋元素 ID
+grep -rn "id=\"stat-" template/
+
+================================================================================
+Last Updated: 2025-12-05
+================================================================================

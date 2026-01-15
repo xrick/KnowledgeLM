@@ -1,0 +1,13 @@
+{
+    "version": "1.0",
+    "skills": [],
+    "instant_attachments": [],
+    "settings": {
+        "chunk_size": 1000,
+        "chunk_overlap": 200,
+        "embedding_model": "BAAI/bge-m3",
+        "embedding_dimension": 1024,
+        "rebuild_threshold": 5
+    },
+    "last_updated": "2025-12-06"
+}

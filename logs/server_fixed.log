@@ -1,0 +1,38 @@
+2025-11-05 15:06:44,781 - main - INFO - =� Static files mounted at /static
+2025-11-05 15:06:44,784 - main - INFO - = RESTful API v1 registered at /api/v1
+2025-11-05 15:06:44,785 - main - INFO - = Legacy upload endpoint registered at /upload-pdf
+2025-11-05 15:06:44,787 - main - INFO - 🔌 Legacy chat endpoint registered at /chat
+2025-11-05 15:06:44,788 - main - INFO - 📁 File management endpoints registered at /api/v1/files
+INFO:     Started server process [453216]
+INFO:     Waiting for application startup.
+2025-11-05 15:06:44,789 - main - INFO - =� Starting DocAI v1.0.0
+2025-11-05 15:06:44,789 - main - INFO - =� Ensured directory exists: uploadfiles
+2025-11-05 15:06:44,789 - main - INFO - =� Ensured directory exists: uploadfiles/pdf
+2025-11-05 15:06:44,789 - main - INFO - =� Ensured directory exists: data
+2025-11-05 15:06:44,789 - main - INFO - =� Ensured directory exists: logs
+2025-11-05 15:06:44,789 - main - INFO - =� Ensured directory exists: static
+2025-11-05 15:06:44,789 - app.Providers.file_metadata_provider.client - INFO - File Metadata Provider initialized: data/docai.db
+2025-11-05 15:06:44,789 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x78d5cb6d28e0>
+2025-11-05 15:06:44,789 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x78d5cb6d28e0> completed
+2025-11-05 15:06:44,789 - app.Providers.file_metadata_provider.client - DEBUG - Created new database connection
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', [])
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', []) completed
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', [])
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', []) completed
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', [])
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', []) completed
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', [])
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', []) completed
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', [])
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x78d5cb69af20>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', []) completed
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - executing functools.partial(<built-in method commit of sqlite3.Connection object at 0x78d5cb69af20>)
+2025-11-05 15:06:44,790 - aiosqlite - DEBUG - operation functools.partial(<built-in method commit of sqlite3.Connection object at 0x78d5cb69af20>) completed
+2025-11-05 15:06:44,790 - app.Providers.file_metadata_provider.client - INFO - Database tables initialized
+2025-11-05 15:06:44,790 - main - INFO - ✅ SQLite database provider initialized
+2025-11-05 15:06:45,113 - main - INFO - 🔍 Checking Milvus service at localhost:19530...
+2025-11-05 15:06:45,113 - app.Providers.vector_store_provider.milvus_client - INFO - Milvus Client initialized: localhost:19530, collection='document_embeddings', dimension=384
+2025-11-05 15:06:45,122 - app.Providers.vector_store_provider.milvus_client - WARNING - Milvus service health check failed: <ConnectionNotExistException: (code=1, message=should create connect first.)>
+2025-11-05 15:06:45,122 - main - WARNING - ⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+2025-11-05 15:06:45,122 - main - INFO -  Application startup complete
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)

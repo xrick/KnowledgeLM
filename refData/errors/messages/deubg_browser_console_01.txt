@@ -1,0 +1,2491 @@
+refData/errors/messages/deubg_browser_console_01.txt
+docai-client.js?v=1762323508:101 [DocAI] Using existing user_id: 77ef41fa-458a-4651-b264-11a4f59d52c7
+docai-client.js?v=1762323508:65 DocAI Client initialized Object
+index.js:1 content loaded
+index.js:1 content loaded
+index.4795df5a.js:533 [Gemini] Content script loaded
+index.4795df5a.js:639 [Gemini] Current domain: localhost
+index.4795df5a.js:639 [Gemini] Not on supported domain (gemini.google.com, aistudio.google.com), skipping injection
+:8000/favicon.ico:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+index.59b2ae62.js:3 Content Script: Initializing
+docai-client.js?v=1762323508:141 File uploaded successfully {file_id: 'file_1762330470_40be07de_9fedf666', filename: 'Bitnet_cpp_Efficient Edge Inference for Ternary LLMs_v1.pdf', file_size: 796130, chunk_count: 248, embedding_status: 'completed', …}
+(index):584 [DocAI Upload] Result: {file_id: 'file_1762330470_40be07de_9fedf666', filename: 'Bitnet_cpp_Efficient Edge Inference for Ternary LLMs_v1.pdf', file_size: 796130, chunk_count: 248, embedding_status: 'completed', …}
+(index):585 [DocAI Upload] File ID: file_1762330470_40be07de_9fedf666
+docai-client.js?v=1762323508:177 [DocAI] updateFileStatus called: {status: 'completed', fileId: 'file_1762330470_40be07de_9fedf666', hasSpinner: true}
+docai-client.js?v=1762323508:185 [DocAI] Checkbox created with file_id: file_1762330470_40be07de_9fedf666
+(index):590 [DocAI Upload] Upload completed: {file_id: 'file_1762330470_40be07de_9fedf666', filename: 'Bitnet_cpp_Efficient Edge Inference for Ternary LLMs_v1.pdf', file_size: 796130, chunk_count: 248, embedding_status: 'completed', …}
+docai-client.js?v=1762323508:206 [DocAI] Checked checkboxes: 1
+docai-client.js?v=1762323508:207 [DocAI] Selected file IDs: ['file_1762330470_40be07de_9fedf666']
+docai-client.js?v=1762323508:276 [DocAI] Starting SSE stream...
+docai-client.js?v=1762323508:311 [DocAI] Response received: 200 OK
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 0, "message": "...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 1, phase_name: 'Query Understanding', progress: 0, message: 'Analyzing user query...'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 100, "message":...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 1, phase_name: 'Query Understanding', progress: 100, message: 'Query expanded into 3 sub-questions'}
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 2, phase_name: 'Parallel Retrieval', progress: 0, message: 'Retrieving relevant context from documents...'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 2, "phase_name": "Parallel Retrieval", "progress": 100, "message": ...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 2, phase_name: 'Parallel Retrieval', progress: 100, message: 'Retrieved 10 relevant chunks'}
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 3, phase_name: 'Context Assembly', progress: 0, message: 'Building enhanced RAG prompt...'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 3, "phase_name": "Context Assembly", "progress": 100, "message": "P...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 3, phase_name: 'Context Assembly', progress: 100, message: 'Prompt built with context and history'}
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 4, phase_name: 'Response Generation', progress: 0, message: 'Generating answer from LLM...'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: : ping - 2025-11-05 08:15:06.066589
+
+
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: : ping - 2025-11-05 08:15:21.066674
+
+
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: : ping - 2025-11-05 08:15:36.066819
+
+
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "根"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '根'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "據"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '據'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "您"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '您'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "所"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '所'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "勾"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '勾'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "選"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '選'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "內容"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '內容'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，可以"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，可以'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "從"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '從'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "以下"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '以下'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "幫"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '幫'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "助"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '助'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "中"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '中'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "了解"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '了解'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "：\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "1"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '1'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "."}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '.'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " **"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' **'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "TL"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'TL'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "2"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '2'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " design"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' design'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "片"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '片'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "段"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '段'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " "}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' '}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "1"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '1'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "**"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '**'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "："}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "提"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '提'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "到"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '到'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的是"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的是'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "使用"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '使用'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "signed"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'signed'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "-"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '-'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "unsigned"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'unsigned'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " weight"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' weight'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " splitting"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' splitting'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "技术"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '技术'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的方法"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的方法'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "TL"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'TL'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "2"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '2'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "设计"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '设计'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "中"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '中'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "首先"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '首先'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "通过"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '通过'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "4"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '4'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "位"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '位'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "符"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '符'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "号"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '号'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "标"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '标'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "记"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '记'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "来"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '来'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "查"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '查'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "找"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '找'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "表"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '表'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "并"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '并'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "获取"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '获取'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "无"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '无'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "符"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '符'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "号"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '号'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "结果"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '结果'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "然后"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '然后'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，通过"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，通过'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "相"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '相'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "对应"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '对应'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "单"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '单'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "个"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '个'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "符"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '符'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "号"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '号'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "重量"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '重量'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "项"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '项'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "应用"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '应用'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '进行'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "取"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '取'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "向"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '向'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "操作"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '操作'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，以"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，以'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "最终"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '最终'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "确定"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '确定'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "输出"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '输出'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "2"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '2'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "."}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '.'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " **"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' **'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Bit"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Bit'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "net"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'net'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " a"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' a'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "4"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '4'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "."}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '.'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "8"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '8'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "片"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '片'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "段"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '段'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " "}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' '}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "5"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '5'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "**"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '**'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "："}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "是"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '是'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "一个"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '一个'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "研究"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '研究'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "和"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '和'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "发展"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '发展'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "用"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '用'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "以"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '以'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "实现"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '实现'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "1"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '1'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "-bit"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '-bit'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Transformers"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Transformers'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Large"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Large'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Language"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Language'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Models"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Models'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " ("}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' ('}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "LL"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'LL'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Ms"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Ms'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": ")"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ')'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " 的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' 的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "系统"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '系统'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "旨"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '旨'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "通过"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '通过'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "使用"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '使用'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "4"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '4'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "位"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '位'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Activ"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Activ'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ations"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ations'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "来"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '来'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "提高"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '提高'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "性能"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '性能'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "与"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '与'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "效率"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '效率'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "这个"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '这个'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "架"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '架'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "构"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '构'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "允许"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '允许'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "大"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '大'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "规模"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '规模'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "语言"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '语言'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "模型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '模型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "CPU"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'CPU'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "上"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '上'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '进行'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "快速"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '快速'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "且"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '且'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "无"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '无'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "损"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '损'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "失"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '失'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "推"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '推'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "理"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '理'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "3"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '3'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "."}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '.'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " **"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' **'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Bit"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Bit'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "net"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'net'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " b"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' b'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "1"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '1'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "."}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '.'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "58"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '58'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "片"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '片'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "段"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '段'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " "}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' '}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "6"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '6'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "**"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '**'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "："}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "这是"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '这是'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "一个"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '一个'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "针对"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '针对'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "CPU"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'CPU'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "上的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '上的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "高"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '高'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "效"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '效'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "、"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '、'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "无"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '无'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "损"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '损'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "失"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '失'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "下"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '下'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "层"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '层'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "结构"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '结构'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "LL"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'LL'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "M"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'M'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "版本"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '版本'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "旨"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '旨'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "实现"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '实现'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "更"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '更'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "快"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '快'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "并"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '并'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "行"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '行'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "计算"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '计算'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "和"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '和'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "加"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '加'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: : ping - 2025-11-05 08:15:51.068274
+
+
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "速"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '速'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "它"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '它'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "专"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '专'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "注"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '注'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "于"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '于'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "使"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '使'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "低"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '低'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "bit"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'bit'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " LL"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' LL'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Ms"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Ms'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "可以"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '可以'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "有效"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '有效'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "且"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '且'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "迅"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '迅'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "速"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '速'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "地"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '地'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "部署"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '部署'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "到"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '到'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Edge"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Edge'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "设备"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '设备'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "上"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '上'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "此外"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '此外'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，还有"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，还有'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "一些"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '一些'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "研究"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '研究'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "献"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '献'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "提"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '提'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "及"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '及'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "了"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '了'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "不同"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '不同'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "量"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '量'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "化"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '化'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "技术"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '技术'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "用于"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '用于'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "大"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '大'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "语言"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '语言'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "模型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '模型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，例如"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，例如'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "：\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "-"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '-'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " **"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' **'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Eff"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Eff'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "icient"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'icient'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Memory"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Memory'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Management"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Management'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " for"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' for'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Large"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Large'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Language"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Language'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Model"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Model'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Serving"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Serving'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " with"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' with'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " P"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' P'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "aged"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'aged'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Attention"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Attention'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "片"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '片'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "段"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '段'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " "}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' '}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "3"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '3'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "**"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '**'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "："}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "该"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '该'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "预"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '预'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "印"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '印'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "稿"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '稿'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "讨论"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '讨论'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "了"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '了'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "大型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '大型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "语言"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '语言'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "模型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '模型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "服务器"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '服务器'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "端"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '端'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "有效"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '有效'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "内"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '内'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "存"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '存'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "管理"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '管理'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，通过"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，通过'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "使用"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '使用'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "p"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'p'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "added"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'added'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " attention"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' attention'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "机制"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '机制'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "  \n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '  \n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "-"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '-'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " **"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' **'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "Om"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'Om'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ni"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ni'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "quant"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'quant'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": ":"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ':'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Om"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Om'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "nid"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'nid'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "irection"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'irection'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ally"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ally'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Cal"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Cal'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ibr"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ibr'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ated"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ated'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Quant"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Quant'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "ization"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'ization'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " for"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' for'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Large"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Large'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Language"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Language'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " Models"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' Models'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "（"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '（'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "檔"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '檔'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "片"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '片'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "段"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '段'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": " "}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: ' '}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "4"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '4'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "）"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '）'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "**"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '**'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "："}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '：'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "提"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '提'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "到"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '到'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的是"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的是'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "一个"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '一个'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "新"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '新'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "量"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '量'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "化"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '化'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "方法"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '方法'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "旨"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '旨'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "在"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '在'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "全面"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '全面'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "且"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '且'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "精"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '精'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "确"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '确'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "地"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '地'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '进行'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "量"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '量'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "化"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '化'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "处理"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '处理'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，以"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，以'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "优化"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '优化'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "大型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '大型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "语言"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '语言'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "模型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '模型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "性能"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '性能'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。\n\n'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "这些"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '这些'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "文"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '文'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "档"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '档'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "提供"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '提供'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "了"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '了'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "有关"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '有关'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "低"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '低'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "bit"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: 'bit'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "、"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '、'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "跨"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '跨'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "设备"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '设备'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "部署"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '部署'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "和"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '和'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "高"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '高'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "效"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '效'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "计算"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '计算'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "架"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '架'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "构"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '构'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "方面"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '方面'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "的重要"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '的重要'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "见"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '见'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "解"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '解'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "，有"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '，有'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "助"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '助'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "于"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '于'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "理解"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '理解'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "如何"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '如何'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "有效"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '有效'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "管理"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '管理'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "并"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '并'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "运行"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '运行'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "大"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '大'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "规模"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '规模'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "语言"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '语言'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "模型"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '模型'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: markdown_token
+data: {"token": "。"}
+
+
+docai-client.js?v=1762323508:352 [DocAI] Event type: markdown_token
+docai-client.js?v=1762323508:362 [DocAI] Event data: markdown_token {token: '。'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 4, "phase_name": "Response Generation", "progress": 100, "message":...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 4, phase_name: 'Response Generation', progress: 100, message: 'Answer generation complete'}
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 5, phase_name: 'Post Processing', progress: 0, message: 'Saving chat history...'}
+docai-client.js?v=1762323508:342 [DocAI] Received chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 100, "message": "Ch...
+docai-client.js?v=1762323508:352 [DocAI] Event type: progress
+docai-client.js?v=1762323508:362 [DocAI] Event data: progress {phase: 5, phase_name: 'Post Processing', progress: 100, message: 'Chat history saved'}
+docai-client.js?v=1762323508:352 [DocAI] Event type: complete
+docai-client.js?v=1762323508:362 [DocAI] Event data: complete {session_id: 'session_1762330420361_nrzfqme', query: '這份文件說了什麼', answer: '根據您所勾選的文檔內容，可以從以下幫助中了解：\n\n1. **TL2 design（文檔片段 1）**…有关低bit、跨设备部署和高效计算架构方面的重要见解，有助于理解如何有效管理并运行大规模语言模型。', context_count: 10, expanded_questions: Array(3), …}
+docai-client.js?v=1762323508:333 [DocAI] Stream completed, total events: 0

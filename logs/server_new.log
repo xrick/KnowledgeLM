@@ -1,0 +1,82 @@
+INFO:     Started server process [374811]
+INFO:     Waiting for application startup.
+Milvus service health check failed: <MilvusException: (code=2, message=Fail connecting to server on localhost:19530, illegal connection params or server unavailable)>
+⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8082 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56878 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35496 - "GET /skill/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35496 - "GET /api/v1/skills/tree HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35498 - "GET /api/v1/skills/tree HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35498 - "GET /skill/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35498 - "GET /api/v1/skills/tree HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38964 - "POST /api/v1/skills/config/skills/%E5%A4%A7%E8%AA%9E%E8%A8%80%E6%A8%A1%E5%9E%8B%E5%A4%A7%E5%85%A8/upload-source-stream HTTP/1.1" 200 OK
+/home/mapleleaf/LCJRepos/gitprjs/DocAI/app/Providers/embedding_provider/client.py:82: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings` was deprecated in LangChain 0.2.2 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-huggingface package and should be used instead. To use it run `pip install -U :class:`~langchain-huggingface` and import as `from :class:`~langchain_huggingface import HuggingFaceEmbeddings``.
+  self._model = HuggingFaceEmbeddings(
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+`embedding_function` is expected to be an Embeddings object, support for passing in a function will soon be removed.
+INFO:     127.0.0.1:59130 - "GET /api/v1/skills/tree HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59098 - "GET /api/v1/skills/tree HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [374811]

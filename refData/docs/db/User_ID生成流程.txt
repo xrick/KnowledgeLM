@@ -1,0 +1,16 @@
+✅ User ID 生成流程分析完成
+回答您的問題 (Answer to Your Question)
+問題: "how do you generate the value user_id column of docai.db, in which file" 答案:
+1️⃣ 生成位置 (Generation Location)
+檔案: static/js/docai-client.js:75-100 方法: getUserId() user_id 是在**前端（瀏覽器）**生成的，不是在後端生成。
+2️⃣ 生成方法 (Generation Method)
+使用 UUID v4 (Universally Unique Identifier version 4):
+// 優先使用 Web Crypto API (現代瀏覽器)
+userId = crypto.randomUUID();
+
+// 備用方案：手動生成 UUID v4 (舊版瀏覽器)
+userId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+});

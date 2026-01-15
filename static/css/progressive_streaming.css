@@ -1,0 +1,359 @@
+/**
+ * Progressive Streaming CSS
+ *
+ * Styles for OPMP progressive markdown rendering with phase-specific colors
+ * and completion animations.
+ *
+ * Author: Claude (SuperClaude)
+ * Date: 2025-12-06
+ * Based on: OPMP UI patterns
+ */
+
+/* ===========================
+   Progress Container
+   =========================== */
+
+.progress-container {
+    width: 100%;
+    max-width: 1200px; /* Wider container for better visibility */
+    background: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 15px 0; /* Left align - removed 'auto' */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ===========================
+   Progress Bar Base
+   =========================== */
+
+.progress-bar {
+    height: 40px; /* Increased from 30px to 40px for better visibility */
+    width: 0%; /* Start at 0% width */
+    background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+    transition: width 1.5s ease-in-out; /* Smooth 1.5-second animation for width changes */
+    animation: progressPulse 1.5s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Left align text - changed from 'center' */
+    color: white;
+    font-weight: 600; /* Increased from 500 to 600 */
+    font-size: 15px; /* Increased from 14px to 15px */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 0 0 15px; /* Left padding only - removed right padding */
+}
+
+/* ===========================
+   Phase-Specific Colors
+   =========================== */
+
+/* Phase 1: Query Understanding (Blue) */
+.progress-bar.phase-1 {
+    background: linear-gradient(90deg, #2196F3 0%, #1976D2 100%);
+}
+
+/* Phase 2: Document Retrieval (Purple) */
+.progress-bar.phase-2 {
+    background: linear-gradient(90deg, #9C27B0 0%, #7B1FA2 100%);
+}
+
+/* Phase 3: Context Assembly (Orange) */
+.progress-bar.phase-3 {
+    background: linear-gradient(90deg, #FF9800 0%, #F57C00 100%);
+}
+
+/* Phase 4: Response Generation (Green) */
+.progress-bar.phase-4 {
+    background: linear-gradient(90deg, #4CAF50 0%, #388E3C 100%);
+}
+
+/* Phase 5: Post-processing (Teal) */
+.progress-bar.phase-5 {
+    background: linear-gradient(90deg, #009688 0%, #00796B 100%);
+}
+
+/* ===========================
+   Completion State (Red)
+   =========================== */
+
+.progress-bar.complete-red {
+    background: #f44336 !important;
+    animation: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.complete-icon {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    animation: checkmarkPop 0.3s ease-out;
+}
+
+.complete-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+}
+
+/* ===========================
+   Error State
+   =========================== */
+
+.progress-bar.error {
+    background: #f44336 !important;
+    animation: errorShake 0.5s ease-in-out !important;
+}
+
+.error-message {
+    padding: 15px;
+    background: #ffebee;
+    border-left: 4px solid #f44336;
+    color: #c62828;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+/* ===========================
+   Animations
+   =========================== */
+
+/* Pulse animation for progress bar */
+@keyframes progressPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.85;
+    }
+}
+
+/* Checkmark pop animation */
+@keyframes checkmarkPop {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Error shake animation */
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* ===========================
+   Markdown Container Styles
+   =========================== */
+
+.markdown-content {
+    padding: 20px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 600px;
+    overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.markdown-content h1 {
+    font-size: 2em;
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: 0.3em;
+}
+
+.markdown-content h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: 0.3em;
+}
+
+.markdown-content h3 {
+    font-size: 1.25em;
+}
+
+.markdown-content p {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.markdown-content code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27, 31, 35, 0.05);
+    border-radius: 3px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.markdown-content pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+}
+
+.markdown-content pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+}
+
+.markdown-content table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin-top: 0;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+.markdown-content table th {
+    font-weight: 600;
+    background-color: #f6f8fa;
+}
+
+.markdown-content table tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1;
+}
+
+.markdown-content table tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.markdown-content li + li {
+    margin-top: 0.25em;
+}
+
+.markdown-content blockquote {
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #dfe2e5;
+    margin: 0 0 16px 0;
+}
+
+/* ===========================
+   Responsive Design
+   =========================== */
+
+@media (max-width: 768px) {
+    .progress-bar {
+        font-size: 13px; /* Slightly larger for mobile */
+        height: 35px; /* Increased from 25px */
+    }
+
+    .complete-icon {
+        font-size: 18px; /* Slightly larger */
+    }
+
+    .complete-text {
+        font-size: 13px; /* Slightly larger */
+    }
+
+    .markdown-content {
+        padding: 15px;
+        max-height: 400px;
+    }
+}
+
+/* ===========================
+   Dark Mode Support
+   =========================== */
+
+@media (prefers-color-scheme: dark) {
+    .progress-container {
+        background: #2d2d2d;
+    }
+
+    .markdown-content {
+        background: #1e1e1e;
+        color: #e0e0e0;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2 {
+        border-bottom-color: #404040;
+    }
+
+    .markdown-content code {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .markdown-content pre {
+        background-color: #2d2d2d;
+    }
+
+    .markdown-content table th,
+    .markdown-content table td {
+        border-color: #404040;
+    }
+
+    .markdown-content table th {
+        background-color: #2d2d2d;
+    }
+
+    .markdown-content table tr {
+        background-color: #1e1e1e;
+        border-top-color: #404040;
+    }
+
+    .markdown-content table tr:nth-child(2n) {
+        background-color: #2d2d2d;
+    }
+
+    .markdown-content blockquote {
+        color: #9e9e9e;
+        border-left-color: #404040;
+    }
+
+    .error-message {
+        background: #3d1f1f;
+        color: #ff8a80;
+    }
+}

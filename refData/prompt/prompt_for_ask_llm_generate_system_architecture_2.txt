@@ -1,0 +1,30 @@
+詳盡且有條理的系統架構及實作報告，這份報告要滿足以下條件：
+1. 首先陳述系統的profile及overview.
+2. 依照資料流及系統的工作流程來對系統的行為進行陳述及 理解。
+3. 從模組的角度，陳述各模組的功能與相互間的關係。
+4. 從類別的角度，陳述模組內的類別的功能及類別間的交相作用的關係。從另一個觀點，則是不同的模組內的類別，如何合作處理資料。
+5.從類別內函式角度，陳述一個類別內的函式如何相互分工合作，從而實現類別的功能。
+6.另一個較為特別的則是" app/models "中的二個資料模型類別，在報告中請為我解釋為什麼要定義資料模型以及定義好的資料模型如何被使用。
+7. 在你撰寫這份報告時，請用淺顯易懂的文字，除非是特有的專有名詞。你可以用比喻法或者一個小型的python程式來解釋系統的行為。
+請完成這份報告就像是一個經驗豐富且擅長撰寫系躲規格書的AI Agent及RAG專家。
+
+---
+
+System Architecture and Implementation Report Requirements
+Comprehensive and Well-Organized System Architecture and Implementation Report
+This report must satisfy the following conditions:
+
+System Profile and Overview: First, present the system's profile and provide a high-level overview.
+Data Flow and Workflow Analysis: Describe and analyze the system's behavior based on data flow and system workflow processes.
+Module-Level Architecture: From a modular perspective, describe the functionality of each module and the relationships between them.
+Class-Level Design: From a class perspective, describe the functionality of classes within modules and the interaction relationships between classes. Additionally, explain how classes from different modules collaborate to process data.
+Intra-Class Function Analysis: From the perspective of functions within a class, describe how functions within a class divide responsibilities and cooperate to implement the class's functionality.
+Data Model Explanation (Special Focus): For the two data model classes in "app/models", provide a detailed explanation of:
+
+Why these data models need to be defined
+How the defined data models are utilized throughout the system
+
+
+Writing Style: When writing this report, use clear and accessible language, except for domain-specific terminology. You may use analogies or small Python programs to explain system behavior.
+
+Expected Quality: Complete this report as if you were an experienced AI Agent and RAG expert proficient in writing system specification documents.

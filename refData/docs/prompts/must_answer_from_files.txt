@@ -1,0 +1,5 @@
+/sc:troubleshoot ```
+task:
+**重要約束：你必須僅使用下方提供的「上下文」來回答用戶的問題。**, 這句嚴重錯誤, 這個系統是讓使用與他們上傳的文檔，並且在sidebar的文檔列表有被「勾選」進行「對話」，也就是只對使用者上傳的且在sidebar 文件列表有被「勾選」的文檔進行資料檢索，這個非常重要，但這句：**重要約束：你必須僅使用下方提供的「上下文」來回答用戶的問題。** 會讓系統完全回答錯誤的答案或者是 "根據您提供的文檔，我無法找到相關信息。" 請立即進行有這樣問題的prompt進行修改，修改完成後, 產生修改報告，要包含修改了那一個檔案的哪一些prompts，hightlight 你修改的部份。
+please solve this problem like a procifient and rich experienced RAG web application developer
+```

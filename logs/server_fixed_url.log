@@ -1,0 +1,751 @@
+2025-11-05 15:12:11,684 - main - INFO - =� Static files mounted at /static
+2025-11-05 15:12:11,688 - main - INFO - = RESTful API v1 registered at /api/v1
+2025-11-05 15:12:11,689 - main - INFO - = Legacy upload endpoint registered at /upload-pdf
+2025-11-05 15:12:11,692 - main - INFO - 🔌 Legacy chat endpoint registered at /chat
+2025-11-05 15:12:11,693 - main - INFO - 📁 File management endpoints registered at /api/v1/files
+INFO:     Started server process [459619]
+INFO:     Waiting for application startup.
+2025-11-05 15:12:11,693 - main - INFO - =� Starting DocAI v1.0.0
+2025-11-05 15:12:11,693 - main - INFO - =� Ensured directory exists: uploadfiles
+2025-11-05 15:12:11,693 - main - INFO - =� Ensured directory exists: uploadfiles/pdf
+2025-11-05 15:12:11,693 - main - INFO - =� Ensured directory exists: data
+2025-11-05 15:12:11,693 - main - INFO - =� Ensured directory exists: logs
+2025-11-05 15:12:11,693 - main - INFO - =� Ensured directory exists: static
+2025-11-05 15:12:11,693 - app.Providers.file_metadata_provider.client - INFO - File Metadata Provider initialized: data/docai.db
+2025-11-05 15:12:11,693 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x7500c19d28e0>
+2025-11-05 15:12:11,694 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x7500c19d28e0> completed
+2025-11-05 15:12:11,694 - app.Providers.file_metadata_provider.client - DEBUG - Created new database connection
+2025-11-05 15:12:11,694 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', [])
+2025-11-05 15:12:11,694 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', []) completed
+2025-11-05 15:12:11,694 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', [])
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', []) completed
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', [])
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', []) completed
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', [])
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', []) completed
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', [])
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x7500c199af20>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', []) completed
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - executing functools.partial(<built-in method commit of sqlite3.Connection object at 0x7500c199af20>)
+2025-11-05 15:12:11,695 - aiosqlite - DEBUG - operation functools.partial(<built-in method commit of sqlite3.Connection object at 0x7500c199af20>) completed
+2025-11-05 15:12:11,695 - app.Providers.file_metadata_provider.client - INFO - Database tables initialized
+2025-11-05 15:12:11,695 - main - INFO - ✅ SQLite database provider initialized
+2025-11-05 15:12:12,014 - main - INFO - 🔍 Checking Milvus service at localhost:19530...
+2025-11-05 15:12:12,014 - app.Providers.vector_store_provider.milvus_client - INFO - Milvus Client initialized: localhost:19530, collection='document_embeddings', dimension=384
+2025-11-05 15:12:12,024 - app.Providers.vector_store_provider.milvus_client - WARNING - Milvus service health check failed: <ConnectionNotExistException: (code=1, message=should create connect first.)>
+2025-11-05 15:12:12,024 - main - WARNING - ⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+2025-11-05 15:12:12,024 - main - INFO -  Application startup complete
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-11-05 15:17:26,286 - app.Providers.llm_provider.client - WARNING - Auto-corrected base_url to include /v1 suffix: http://localhost:11434/v1
+2025-11-05 15:17:26,286 - app.Providers.llm_provider.client - INFO - LLM Provider initialized with base_url: http://localhost:11434/v1
+2025-11-05 15:17:26,286 - app.Providers.embedding_provider.client - INFO - Embedding Provider configured with model: sentence-transformers/all-MiniLM-L6-v2
+2025-11-05 15:17:26,286 - app.Providers.vector_store_provider.client - INFO - Vector Store Provider initialized with backend: faiss
+2025-11-05 15:17:26,286 - app.Services.retrieval_service - INFO - Retrieval Service initialized
+2025-11-05 15:17:26,286 - app.Services.prompt_service - INFO - Prompt Service initialized with language: zh
+2025-11-05 15:17:26,286 - app.Providers.chat_history_provider.client - INFO - Chat History Provider initialized: db=docai, collection=chat_sessions
+2025-11-05 15:17:26,286 - app.Providers.cache_provider.client - INFO - Cache Provider initialized: redis://localhost:6379/0
+2025-11-05 15:17:26,286 - app.Providers.llm_provider.client - WARNING - Auto-corrected base_url to include /v1 suffix: http://localhost:11434/v1
+2025-11-05 15:17:26,286 - app.Providers.llm_provider.client - INFO - LLM Provider initialized with base_url: http://localhost:11434/v1
+2025-11-05 15:17:26,287 - app.Services.query_enhancement_service - INFO - Query Enhancement Service initialized (expansion_count=3, temp=0.3)
+INFO:     127.0.0.1:40748 - "POST /api/v1/chat/stream HTTP/1.1" 200 OK
+2025-11-05 15:17:26,287 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 0, "message": "Analyzing user query..."}
+
+
+2025-11-05 15:17:26,287 - app.Providers.cache_provider.client - INFO - Redis client connected
+2025-11-05 15:17:26,288 - app.Providers.cache_provider.client - DEBUG - Query expansion cache miss: qexp:73e592d2e5c665b2
+2025-11-05 15:17:26,288 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-11-05 15:17:26,289 - httpx - DEBUG - load_verify_locations cafile='/home/mapleleaf/LCJRepos/gitprjs/DocAI/docaienv/lib/python3.11/site-packages/certifi/cacert.pem'
+2025-11-05 15:17:26,301 - httpcore.connection - DEBUG - connect_tcp.started host='localhost' port=11434 local_address=None timeout=60.0 socket_options=None
+2025-11-05 15:17:26,302 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7500c010bf90>
+2025-11-05 15:17:26,302 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-05 15:17:26,302 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-05 15:17:26,302 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-05 15:17:26,302 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-05 15:17:26,302 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-05 15:17:37,166 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'application/json'), (b'Date', b'Wed, 05 Nov 2025 07:17:37 GMT'), (b'Content-Length', b'893')])
+2025-11-05 15:17:37,167 - httpx - INFO - HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-05 15:17:37,167 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-05 15:17:37,167 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-05 15:17:37,167 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-05 15:17:37,167 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-05 15:17:37,167 - httpcore.connection - DEBUG - close.started
+2025-11-05 15:17:37,167 - httpcore.connection - DEBUG - close.complete
+2025-11-05 15:17:37,167 - app.Services.query_enhancement_service - INFO - Query expansion complete: test streaming... -> 3 questions
+2025-11-05 15:17:37,168 - app.Providers.cache_provider.client - DEBUG - Cached query expansion: qexp:73e592d2e5c665b2 (TTL: 3600s)
+2025-11-05 15:17:37,168 - app.api.v1.endpoints.chat - INFO - Query expanded into 3 sub-questions
+2025-11-05 15:17:37,168 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 1, "phase_name": "Query Understanding", "progress": 100, "message": "Query expanded into 3 sub-questions"}
+
+
+2025-11-05 15:17:37,168 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 2, "phase_name": "Parallel Retrieval", "progress": 0, "message": "Retrieving relevant context from documents..."}
+
+
+2025-11-05 15:17:37,168 - app.Services.retrieval_service - INFO - Retrieved 0 context chunks for query from 0 files
+2025-11-05 15:17:37,168 - app.Services.retrieval_service - INFO - Retrieved 0 context chunks for query from 0 files
+2025-11-05 15:17:37,168 - app.Services.retrieval_service - INFO - Retrieved 0 context chunks for query from 0 files
+2025-11-05 15:17:37,168 - app.api.v1.endpoints.chat - INFO - Retrieved 0 unique context chunks
+2025-11-05 15:17:37,168 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 2, "phase_name": "Parallel Retrieval", "progress": 100, "message": "Retrieved 0 relevant chunks"}
+
+
+2025-11-05 15:17:37,168 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 3, "phase_name": "Context Assembly", "progress": 0, "message": "Building enhanced RAG prompt..."}
+
+
+2025-11-05 15:17:37,172 - app.Providers.chat_history_provider.client - INFO - MongoDB chat_sessions collection initialized
+2025-11-05 15:17:37,174 - app.Providers.chat_history_provider.client - DEBUG - Session not found: test_verify_21275
+2025-11-05 15:17:37,174 - app.Services.prompt_service - INFO - Built RAG prompt with 0 context chunks and 2 messages
+2025-11-05 15:17:37,174 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 3, "phase_name": "Context Assembly", "progress": 100, "message": "Prompt built with context and history"}
+
+
+2025-11-05 15:17:37,174 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 4, "phase_name": "Response Generation", "progress": 0, "message": "Generating answer from LLM..."}
+
+
+2025-11-05 15:17:37,174 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2025-11-05 15:17:37,175 - httpx - DEBUG - load_verify_locations cafile='/home/mapleleaf/LCJRepos/gitprjs/DocAI/docaienv/lib/python3.11/site-packages/certifi/cacert.pem'
+2025-11-05 15:17:37,188 - httpcore.connection - DEBUG - connect_tcp.started host='localhost' port=11434 local_address=None timeout=60.0 socket_options=None
+2025-11-05 15:17:37,188 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7500b4dbb750>
+2025-11-05 15:17:37,189 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-05 15:17:37,189 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-05 15:17:37,189 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-05 15:17:37,189 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-05 15:17:37,189 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-05 15:17:41,287 - sse_starlette.sse - DEBUG - ping: : ping - 2025-11-05 07:17:41.287858
+
+
+2025-11-05 15:17:42,026 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Content-Type', b'text/event-stream'), (b'Date', b'Wed, 05 Nov 2025 07:17:42 GMT'), (b'Transfer-Encoding', b'chunked')])
+2025-11-05 15:17:42,027 - httpx - INFO - HTTP Request: POST http://localhost:11434/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-05 15:17:42,027 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-05 15:17:42,028 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "在"}
+
+
+2025-11-05 15:17:42,076 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 15:17:42,126 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提"}
+
+
+2025-11-05 15:17:42,176 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "到"}
+
+
+2025-11-05 15:17:42,228 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "「"}
+
+
+2025-11-05 15:17:42,279 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "stream"}
+
+
+2025-11-05 15:17:42,328 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "ing"}
+
+
+2025-11-05 15:17:42,377 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "」"}
+
+
+2025-11-05 15:17:42,425 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "这个"}
+
+
+2025-11-05 15:17:42,473 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "话"}
+
+
+2025-11-05 15:17:42,520 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "题"}
+
+
+2025-11-05 15:17:42,569 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "时"}
+
+
+2025-11-05 15:17:42,617 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，没有"}
+
+
+2025-11-05 15:17:42,667 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "具体"}
+
+
+2025-11-05 15:17:42,718 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 15:17:42,767 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 15:17:42,816 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "档"}
+
+
+2025-11-05 15:17:42,865 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或"}
+
+
+2025-11-05 15:17:42,913 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "上下"}
+
+
+2025-11-05 15:17:42,963 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "文"}
+
+
+2025-11-05 15:17:43,011 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "信息"}
+
+
+2025-11-05 15:17:43,060 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，我"}
+
+
+2025-11-05 15:17:43,109 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "只能"}
+
+
+2025-11-05 15:17:43,157 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "依"}
+
+
+2025-11-05 15:17:43,205 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "靠"}
+
+
+2025-11-05 15:17:43,253 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "一般"}
+
+
+2025-11-05 15:17:43,301 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "性的"}
+
+
+2025-11-05 15:17:43,350 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "知识"}
+
+
+2025-11-05 15:17:43,398 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+2025-11-05 15:17:43,447 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 15:17:43,495 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "基本"}
+
+
+2025-11-05 15:17:43,544 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "解释"}
+
+
+2025-11-05 15:17:43,593 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 15:17:43,641 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**\n"}
+
+
+2025-11-05 15:17:43,690 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "-"}
+
+
+2025-11-05 15:17:43,737 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " **"}
+
+
+2025-11-05 15:17:43,786 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "流"}
+
+
+2025-11-05 15:17:43,834 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "媒体"}
+
+
+2025-11-05 15:17:43,882 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "（"}
+
+
+2025-11-05 15:17:43,930 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Streaming"}
+
+
+2025-11-05 15:17:43,978 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "）"}
+
+
+2025-11-05 15:17:44,027 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "**"}
+
+
+2025-11-05 15:17:44,077 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 是"}
+
+
+2025-11-05 15:17:44,124 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "指"}
+
+
+2025-11-05 15:17:44,173 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "实时"}
+
+
+2025-11-05 15:17:44,222 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "传"}
+
+
+2025-11-05 15:17:44,272 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "输"}
+
+
+2025-11-05 15:17:44,320 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "数据"}
+
+
+2025-11-05 15:17:44,369 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "以"}
+
+
+2025-11-05 15:17:44,417 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "便"}
+
+
+2025-11-05 15:17:44,466 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "用户"}
+
+
+2025-11-05 15:17:44,516 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "对"}
+
+
+2025-11-05 15:17:44,564 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "这些"}
+
+
+2025-11-05 15:17:44,612 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "数据"}
+
+
+2025-11-05 15:17:44,661 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+2025-11-05 15:17:44,710 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "查看"}
+
+
+2025-11-05 15:17:44,761 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "而"}
+
+
+2025-11-05 15:17:44,809 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "无需"}
+
+
+2025-11-05 15:17:44,859 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "先"}
+
+
+2025-11-05 15:17:44,907 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "下载"}
+
+
+2025-11-05 15:17:44,956 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "所有"}
+
+
+2025-11-05 15:17:45,006 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "内容"}
+
+
+2025-11-05 15:17:45,054 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。\n"}
+
+
+2025-11-05 15:17:45,103 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " "}
+
+
+2025-11-05 15:17:45,152 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " -"}
+
+
+2025-11-05 15:17:45,201 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": " 示例"}
+
+
+2025-11-05 15:17:45,250 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "："}
+
+
+2025-11-05 15:17:45,299 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Netflix"}
+
+
+2025-11-05 15:17:45,347 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "、"}
+
+
+2025-11-05 15:17:45,395 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "Spotify"}
+
+
+2025-11-05 15:17:45,444 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "等"}
+
+
+2025-11-05 15:17:45,493 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "服务"}
+
+
+2025-11-05 15:17:45,542 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提供"}
+
+
+2025-11-05 15:17:45,592 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "流"}
+
+
+2025-11-05 15:17:45,642 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "媒体"}
+
+
+2025-11-05 15:17:45,692 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "音"}
+
+
+2025-11-05 15:17:45,741 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "频"}
+
+
+2025-11-05 15:17:45,792 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "和"}
+
+
+2025-11-05 15:17:45,841 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "视频"}
+
+
+2025-11-05 15:17:45,891 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "播放"}
+
+
+2025-11-05 15:17:45,940 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。\n\n"}
+
+
+2025-11-05 15:17:45,991 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "如果"}
+
+
+2025-11-05 15:17:46,041 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "您"}
+
+
+2025-11-05 15:17:46,090 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "能"}
+
+
+2025-11-05 15:17:46,139 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "提供"}
+
+
+2025-11-05 15:17:46,188 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "具体"}
+
+
+2025-11-05 15:17:46,238 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的问题"}
+
+
+2025-11-05 15:17:46,288 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或"}
+
+
+2025-11-05 15:17:46,337 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "需要"}
+
+
+2025-11-05 15:17:46,387 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "有关"}
+
+
+2025-11-05 15:17:46,438 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "特"}
+
+
+2025-11-05 15:17:46,490 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "定"}
+
+
+2025-11-05 15:17:46,541 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "方面"}
+
+
+2025-11-05 15:17:46,590 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 15:17:46,640 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "帮助"}
+
+
+2025-11-05 15:17:46,689 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，"}
+
+
+2025-11-05 15:17:46,737 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "能够"}
+
+
+2025-11-05 15:17:46,786 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "更"}
+
+
+2025-11-05 15:17:46,835 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "准确"}
+
+
+2025-11-05 15:17:46,884 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "地"}
+
+
+2025-11-05 15:17:46,934 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "回答"}
+
+
+2025-11-05 15:17:46,982 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 15:17:47,032 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "比如"}
+
+
+2025-11-05 15:17:47,082 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "关于"}
+
+
+2025-11-05 15:17:47,131 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "技术"}
+
+
+2025-11-05 15:17:47,180 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "实现"}
+
+
+2025-11-05 15:17:47,229 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "、"}
+
+
+2025-11-05 15:17:47,279 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "商业"}
+
+
+2025-11-05 15:17:47,327 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "模式"}
+
+
+2025-11-05 15:17:47,377 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "、"}
+
+
+2025-11-05 15:17:47,425 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "法律"}
+
+
+2025-11-05 15:17:47,475 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "问题"}
+
+
+2025-11-05 15:17:47,523 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或者"}
+
+
+2025-11-05 15:17:47,572 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "流"}
+
+
+2025-11-05 15:17:47,621 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "媒体"}
+
+
+2025-11-05 15:17:47,670 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "平台"}
+
+
+2025-11-05 15:17:47,719 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的"}
+
+
+2025-11-05 15:17:47,769 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "功能"}
+
+
+2025-11-05 15:17:47,817 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，我"}
+
+
+2025-11-05 15:17:47,867 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "会"}
+
+
+2025-11-05 15:17:47,915 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "更加"}
+
+
+2025-11-05 15:17:47,965 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "有"}
+
+
+2025-11-05 15:17:48,015 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "针对"}
+
+
+2025-11-05 15:17:48,064 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "性"}
+
+
+2025-11-05 15:17:48,114 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "地"}
+
+
+2025-11-05 15:17:48,164 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "进行"}
+
+
+2025-11-05 15:17:48,212 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "解"}
+
+
+2025-11-05 15:17:48,261 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "答"}
+
+
+2025-11-05 15:17:48,309 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。如果"}
+
+
+2025-11-05 15:17:48,360 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "还有"}
+
+
+2025-11-05 15:17:48,409 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "其他"}
+
+
+2025-11-05 15:17:48,458 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "内容"}
+
+
+2025-11-05 15:17:48,507 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "或"}
+
+
+2025-11-05 15:17:48,555 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "背景"}
+
+
+2025-11-05 15:17:48,606 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "信息"}
+
+
+2025-11-05 15:17:48,655 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，请"}
+
+
+2025-11-05 15:17:48,703 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "补"}
+
+
+2025-11-05 15:17:48,752 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "充"}
+
+
+2025-11-05 15:17:48,801 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "详细"}
+
+
+2025-11-05 15:17:48,852 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "说明"}
+
+
+2025-11-05 15:17:48,901 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "，以"}
+
+
+2025-11-05 15:17:48,950 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "便"}
+
+
+2025-11-05 15:17:48,999 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "我"}
+
+
+2025-11-05 15:17:49,049 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "能"}
+
+
+2025-11-05 15:17:49,099 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "给"}
+
+
+2025-11-05 15:17:49,147 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "出"}
+
+
+2025-11-05 15:17:49,198 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "最"}
+
+
+2025-11-05 15:17:49,246 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "合"}
+
+
+2025-11-05 15:17:49,295 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "适"}
+
+
+2025-11-05 15:17:49,345 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "的信息"}
+
+
+2025-11-05 15:17:49,394 - sse_starlette.sse - DEBUG - chunk: event: markdown_token
+data: {"token": "。"}
+
+
+2025-11-05 15:17:49,444 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-05 15:17:49,444 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-05 15:17:49,444 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-05 15:17:49,444 - httpcore.connection - DEBUG - close.started
+2025-11-05 15:17:49,444 - httpcore.connection - DEBUG - close.complete
+2025-11-05 15:17:49,444 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 4, "phase_name": "Response Generation", "progress": 100, "message": "Answer generation complete"}
+
+
+2025-11-05 15:17:49,444 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 0, "message": "Saving chat history..."}
+
+
+2025-11-05 15:17:49,445 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: test_verify_21275
+2025-11-05 15:17:49,446 - app.Providers.chat_history_provider.client - WARNING - Session not found when adding message: test_verify_21275
+2025-11-05 15:17:49,446 - sse_starlette.sse - DEBUG - chunk: event: progress
+data: {"phase": 5, "phase_name": "Post Processing", "progress": 100, "message": "Chat history saved"}
+
+
+2025-11-05 15:17:49,446 - sse_starlette.sse - DEBUG - chunk: event: complete
+data: {"session_id": "test_verify_21275", "query": "test streaming", "answer": "在您提到「streaming」这个话题时，没有具体的文档或上下文信息，我只能依靠一般性的知识。\n\n**基本解释：**\n- **流媒体（Streaming）** 是指实时传输数据以便用户对这些数据进行查看而无需先下载所有内容。\n  - 示例：Netflix、Spotify等服务提供流媒体音频和视频播放。\n\n如果您能提供具体的问题或需要有关特定方面的帮助，能够更准确地回答。比如关于技术实现、商业模式、法律问题或者流媒体平台的功能，我会更加有针对性地进行解答。如果还有其他内容或背景信息，请补充详细说明，以便我能给出最合适的信息。", "context_count": 0, "expanded_questions": ["你想了解哪些流媒体服務？", "你對試用或購買的流媒体服務有什麼疑問？", "你在尋找特定語言或平台上的流媒体服務，還是一般性的探索？"], "metadata": {"timestamp": "2025-11-05T07:17:49.446079+00:00", "language": "zh"}}
+
+
+2025-11-05 15:17:49,446 - app.api.v1.endpoints.chat - INFO - Chat streaming completed for session: test_verify_21275
+2025-11-05 15:17:49,446 - sse_starlette.sse - DEBUG - Got event: http.disconnect. Stop streaming.

@@ -1,0 +1,93 @@
+Skill/Chat 頁面勾選與查詢流程
+1. 前端數據結構
+當你勾選一個文件時，前端會收集以下資訊到 selectedSkills array：
+selectedSkills = [{
+    id: "skill_20251212_053934_2a43e5ac_9ed582",  // 文件的 skill_id
+    name: "Build_a_Large_Language_Model_From_Scratch_manning_2024",  // source_name
+    chunks: 370,  // total_chunks
+    category: "大語言模型大全"  // 所屬技能名稱
+}]
+2. 勾選行為邏輯
+用戶勾選 checkbox
+       ↓
+handleCheckboxClick(event)
+       ↓
+checkedItems.add(skill_id)  // Set 結構儲存已勾選的 ID
+       ↓
+updateSelectedFromCheckboxes()
+       ↓
+遍歷 checkedItems → 建立 selectedSkills array
+3. 送出查詢時
+位置: skill_main.html:2449-2452
+// 組裝 request body
+const skillIds = selectedSkills.map(s => s.id);
+
+const requestBody = skillIds.length > 1
+    ? { skill_ids: skillIds, query: query, top_k: 10 }  // 多選
+    : { skill_id: skillIds[0], query: query, top_k: 10 }; // 單選
+
+// 送到後端
+fetch('/api/v1/skills/demo/query', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestBody)
+});
+4. 實際送出的 JSON
+單選一個文件:
+{
+    "skill_id": "skill_20251212_053934_2a43e5ac_9ed582",
+    "query": "什麼是大語言模型",
+    "top_k": 10
+}
+多選多個文件:
+{
+    "skill_ids": [
+        "skill_20251212_053934_2a43e5ac_9ed582",
+        "skill_20251211_102030_2a43e5ac_94c0e5"
+    ],
+    "query": "什麼是大語言模型",
+    "top_k": 10
+}
+5. 後端 Endpoint
+URL: POST /api/v1/skills/demo/query 位置: app/api/v1/endpoints/skills.py
+
+---
+
+top_k: 10 的用途
+定義
+top_k 指定 FAISS 向量檢索要返回的最相似 chunk 數量。
+流程示意
+用戶問題: "什麼是大語言模型"
+         ↓
+    轉換為 embedding vector (1024 維)
+         ↓
+    FAISS 搜尋 370 個 vectors
+         ↓
+    按相似度排序，返回 top 10 個最相似的 chunks
+         ↓
+    組裝成 context 給 LLM 回答
+實際效果
+top_k	效果
+10	返回 10 個最相關的頁面內容
+5	較少 context，回答可能不完整
+20	較多 context，但可能包含不相關內容
+在後端的使用
+# FAISS 向量檢索
+results = faiss_index.search(query_embedding, k=top_k)
+# → 返回 top_k 個最相似的 chunk indices
+
+# 取得 chunk 文字
+for chunk_index in results:
+    chunk_text = get_chunk_from_database(skill_id, chunk_index)
+    contexts.append(chunk_text)
+
+# 組裝給 LLM
+prompt = f"""
+根據以下文檔內容回答問題：
+
+{contexts}  ← 最多 10 個 chunks 的內容
+
+問題：{query}
+"""
+總結
+top_k = 10 表示：從所有 chunks 中找出語義最相似的 10 個，作為 LLM 回答的參考資料。

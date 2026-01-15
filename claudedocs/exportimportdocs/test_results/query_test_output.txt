@@ -1,0 +1,28 @@
+開始測試匯入的 Skill: 投資理財
+Skill ID: head_20260107_012025_b45c5a1f
+測試問題數: 5
+================================================================================
+
+[1/5] 問題: 什麼是股票？
+❌ 錯誤: HTTP 404
+詳情: {"detail":"No documents found for specified skills"}
+
+[2/5] 問題: 如何開始投資？
+❌ 錯誤: HTTP 404
+詳情: {"detail":"No documents found for specified skills"}
+
+[3/5] 問題: 債券和股票有什麼不同？
+❌ 錯誤: HTTP 404
+詳情: {"detail":"No documents found for specified skills"}
+
+[4/5] 問題: 什麼是分散投資？
+❌ 錯誤: HTTP 404
+詳情: {"detail":"No documents found for specified skills"}
+
+[5/5] 問題: 如何評估投資風險？
+❌ 錯誤: HTTP 404
+詳情: {"detail":"No documents found for specified skills"}
+
+================================================================================
+測試完成
+成功: 0/5

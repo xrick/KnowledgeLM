@@ -1,0 +1,773 @@
+<!-- template/skill_demo.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocAI Skill-Based RAG Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="/static/js/marked.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --background: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border: #e0e0e0;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Mode Selector */
+        .mode-selector {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+        }
+
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mode-option:hover {
+            background: var(--background);
+        }
+
+        .mode-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mode-option label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .mode-option.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .mode-option.active label {
+            color: white;
+        }
+
+        .new-badge {
+            background: #ff5252;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        /* Skill Cards Container */
+        .skill-container {
+            display: none;
+        }
+
+        .skill-container.active {
+            display: block;
+        }
+
+        .skill-selector {
+            margin-bottom: 2rem;
+        }
+
+        .skill-selector h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .skill-card.selected {
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .skill-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        .skill-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .skill-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .skill-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .skill-status.ready {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .skill-status.not_loaded {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Query Section */
+        .query-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .query-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .query-input-wrapper {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .query-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .query-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .query-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .query-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .query-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .query-button.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .query-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .results-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .result-answer {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .result-chunks {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .result-chunk {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .result-chunk:hover {
+            border-left-color: #667eea;
+            background: white;
+        }
+
+        .chunk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .chunk-score {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .chunk-content {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .search-info {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .search-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .search-info-item .label {
+            font-weight: 600;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 20px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-card {
+            height: 150px;
+            border-radius: 16px;
+        }
+
+        /* File Mode Message */
+        .file-mode-message {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .file-mode-message.active {
+            display: block;
+        }
+
+        .file-mode-message h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-mode-message p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 DocAI Skill-Based RAG System Demo</h1>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <div class="mode-option" onclick="setMode('file')">
+                <input type="radio" id="mode-file" name="mode" value="file">
+                <label for="mode-file">📁 檔案模式 (File Mode)</label>
+            </div>
+            <div class="mode-option active" onclick="setMode('skill')">
+                <input type="radio" id="mode-skill" name="mode" value="skill" checked>
+                <label for="mode-skill">🎯 技能模式 (Skill Mode)</label>
+                <span class="new-badge">NEW</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- File Mode Message -->
+        <div id="file-mode-container" class="file-mode-message">
+            <h2>📁 檔案模式 (File Mode)</h2>
+            <p>請切換到技能模式來體驗新的 Skill-Based RAG 系統</p>
+        </div>
+
+        <!-- Skill Mode Container -->
+        <div id="skill-mode-container" class="skill-container active">
+            <!-- Skill Selector -->
+            <div class="skill-selector">
+                <h2>選擇技能 (Select Skill):</h2>
+                <div id="skill-cards" class="skill-cards">
+                    <!-- Skills will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Query Section -->
+            <div id="query-section" class="query-section" style="display: none;">
+                <h3 id="query-title">查詢技能</h3>
+                <div class="query-input-wrapper">
+                    <input type="text" id="query-input" class="query-input" placeholder="輸入您的問題..." />
+                    <button id="query-button" class="query-button" onclick="executeQuery()">
+                        搜尋
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="results-section" style="display: none;">
+                <h3>搜尋結果</h3>
+
+                <div id="search-info" class="search-info" style="display: none;"></div>
+
+                <div id="result-answer" class="result-answer" style="display: none;"></div>
+
+                <div id="result-chunks" class="result-chunks"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSkill = null;
+        let currentMode = 'skill';
+        let isLoading = false;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDemoSkills();
+        });
+
+        // Set mode (file or skill)
+        function setMode(mode) {
+            currentMode = mode;
+
+            // Update UI
+            document.querySelectorAll('.mode-option').forEach(option => {
+                option.classList.remove('active');
+            });
+
+            document.querySelectorAll('.mode-option input').forEach(input => {
+                if (input.value === mode) {
+                    input.checked = true;
+                    input.closest('.mode-option').classList.add('active');
+                }
+            });
+
+            // Toggle containers
+            if (mode === 'file') {
+                document.getElementById('file-mode-container').classList.add('active');
+                document.getElementById('skill-mode-container').classList.remove('active');
+            } else {
+                document.getElementById('file-mode-container').classList.remove('active');
+                document.getElementById('skill-mode-container').classList.add('active');
+            }
+        }
+
+        // Load demo skills
+        async function loadDemoSkills() {
+            try {
+                const response = await fetch('/api/v1/skills/demo');
+                const skills = await response.json();
+
+                const container = document.getElementById('skill-cards');
+                container.innerHTML = '';
+
+                skills.forEach(skill => {
+                    const card = createSkillCard(skill);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Failed to load demo skills:', error);
+                // Show fallback skills
+                showFallbackSkills();
+            }
+        }
+
+        // Create skill card element
+        function createSkillCard(skill) {
+            const card = document.createElement('div');
+            card.className = 'skill-card';
+            card.onclick = () => selectSkill(skill);
+
+            card.innerHTML = `
+                <div class="skill-status ${skill.status}">${skill.status === 'ready' ? '就緒' : '未載入'}</div>
+                <div class="skill-icon">${skill.icon}</div>
+                <div class="skill-name">${skill.name}</div>
+                <div class="skill-description">${skill.description}</div>
+                <div class="skill-meta">
+                    <div class="skill-meta-item">
+                        <i class="fas fa-file"></i>
+                        <span>${skill.fileCount} 檔案</span>
+                    </div>
+                    <div class="skill-meta-item">
+                        <i class="fas fa-cube"></i>
+                        <span>${skill.chunkCount} 片段</span>
+                    </div>
+                    <div class="skill-meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>${skill.tag}</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Show fallback skills if API fails
+        function showFallbackSkills() {
+            const fallbackSkills = [
+                {
+                    id: 'skill_ai_research_2024',
+                    name: 'AI研究論文集',
+                    description: '2024年最新的人工智慧研究論文',
+                    icon: '🤖',
+                    tag: 'AI Research',
+                    fileCount: 3,
+                    chunkCount: 15,
+                    status: 'ready'
+                },
+                {
+                    id: 'skill_python_dev_2024',
+                    name: 'Python開發文檔',
+                    description: 'Python框架和工具的最新文檔',
+                    icon: '🐍',
+                    tag: 'Programming',
+                    fileCount: 3,
+                    chunkCount: 15,
+                    status: 'ready'
+                },
+                {
+                    id: 'skill_business_analysis_2024',
+                    name: '商業分析報告',
+                    description: '2024年市場分析和商業策略',
+                    icon: '📊',
+                    tag: 'Business',
+                    fileCount: 3,
+                    chunkCount: 15,
+                    status: 'ready'
+                }
+            ];
+
+            const container = document.getElementById('skill-cards');
+            container.innerHTML = '';
+
+            fallbackSkills.forEach(skill => {
+                const card = createSkillCard(skill);
+                container.appendChild(card);
+            });
+        }
+
+        // Select a skill
+        function selectSkill(skill) {
+            if (skill.status === 'not_loaded') {
+                alert('此技能尚未載入，請先執行 load_demo_skills.py');
+                return;
+            }
+
+            selectedSkill = skill;
+
+            // Update UI
+            document.querySelectorAll('.skill-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Show query section
+            const querySection = document.getElementById('query-section');
+            querySection.style.display = 'block';
+            document.getElementById('query-title').textContent = `查詢 ${skill.name}:`;
+
+            // Focus on input
+            document.getElementById('query-input').focus();
+
+            // Hide previous results
+            document.getElementById('results-section').style.display = 'none';
+        }
+
+        // Execute query
+        async function executeQuery() {
+            if (!selectedSkill || isLoading) return;
+
+            const queryInput = document.getElementById('query-input');
+            const query = queryInput.value.trim();
+
+            if (!query) {
+                alert('請輸入查詢內容');
+                return;
+            }
+
+            isLoading = true;
+            const button = document.getElementById('query-button');
+            button.classList.add('loading');
+            button.disabled = true;
+
+            try {
+                const response = await fetch('/api/v1/skills/demo/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        skill_id: selectedSkill.id,
+                        query: query,
+                        top_k: 10
+                    })
+                });
+
+                const result = await response.json();
+                displayResults(result);
+
+            } catch (error) {
+                console.error('Query failed:', error);
+                alert('查詢失敗，請稍後再試');
+            } finally {
+                isLoading = false;
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        // Display query results
+        function displayResults(result) {
+            const resultsSection = document.getElementById('results-section');
+            resultsSection.style.display = 'block';
+
+            // Display search info
+            const searchInfo = document.getElementById('search-info');
+            searchInfo.style.display = 'flex';
+            searchInfo.innerHTML = `
+                <div class="search-info-item">
+                    <span class="label">搜尋模式:</span>
+                    <span>${result.search_mode === 'parallel' ? '並行搜尋' : '單一搜尋'}</span>
+                </div>
+                <div class="search-info-item">
+                    <span class="label">搜尋文檔:</span>
+                    <span>${result.documents_searched} 個</span>
+                </div>
+                <div class="search-info-item">
+                    <span class="label">找到結果:</span>
+                    <span>${result.results.length} 個</span>
+                </div>
+            `;
+
+            // Display answer
+            const answerDiv = document.getElementById('result-answer');
+            answerDiv.style.display = 'block';
+            answerDiv.innerHTML = marked.parse(result.answer || '正在生成回答...');
+
+            // Display chunks
+            const chunksDiv = document.getElementById('result-chunks');
+            chunksDiv.innerHTML = '';
+
+            result.results.forEach((chunk, index) => {
+                const chunkElement = document.createElement('div');
+                chunkElement.className = 'result-chunk';
+
+                const score = (1 - chunk.score).toFixed(3); // Convert distance to similarity
+
+                chunkElement.innerHTML = `
+                    <div class="chunk-header">
+                        <span>來源: ${chunk.metadata.filename || 'Unknown'}</span>
+                        <span class="chunk-score">相關度: ${score}</span>
+                    </div>
+                    <div class="chunk-content">${chunk.content}</div>
+                `;
+
+                chunksDiv.appendChild(chunkElement);
+            });
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Handle Enter key in query input
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement.id === 'query-input') {
+                executeQuery();
+            }
+        });
+    </script>
+</body>
+</html>

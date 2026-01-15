@@ -1,0 +1,5 @@
+refData/errors/messages/error_message.txt
+HTTP error from LLM provider: 404 - 404 page not found
+Error in query expansion: Client error '404 Not Found' for url 'http://localhost:11434/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Error in chat streaming: Attempted to access streaming response content, without having called `read()`.

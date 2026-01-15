@@ -1,0 +1,154 @@
+{
+    "$schema": "./skill_config.schema.json",
+    "version": "1.0",
+    "description": "DocAI Skill Configuration - 定義 Skills 及其 PDF 來源",
+    "last_updated": "2025-12-03",
+    "skills": [
+        {
+            "skill_name": "大語言模型大全",
+            "description": "Large Language Model 基礎知識與實作",
+            "category": "Technology",
+            "enabled": true,
+            "display_order": 0,
+            "sources": [
+                {
+                    "path": "refData/rawdata/LLM/Build_a_Large_Language_Model_From_Scratch_manning_2024.pdf",
+                    "enabled": true,
+                    "description": "從零開始建構 LLM"
+                },
+                {
+                    "path": "refData/rawdata/LLM/Decoding_Large_Language_Models_packt_2024.pdf",
+                    "enabled": true,
+                    "description": "解碼大型語言模型"
+                },
+                {
+                    "path": "refData/rawdata/LLM/Hands_On_Large_Language_Models_oreilly_2024.pdf",
+                    "enabled": true,
+                    "description": "動手實作 LLM"
+                },
+                {
+                    "path": "refData/rawdata/LLM/Large_Language_Models_Projects_apress_2024.pdf",
+                    "enabled": true,
+                    "description": "LLM 專案實戰"
+                },
+                {
+                    "path": "refData/rawdata/LLM/LLM_Engineers_Handbook_packt_2024.pdf",
+                    "enabled": true,
+                    "description": "LLM 工程師手冊"
+                },
+                {
+                    "path": "uploadfiles/pdf/Large_Language_Models_Bridging_Theory_and_Practice_springer_2024.pdf",
+                    "enabled": true,
+                    "description": "Large_Language_Models_Bridging_Theory_and_Practice_springer_2024.pdf"
+                },
+                {
+                    "path": "uploadfiles/pdf/Decoding_Large_Language_Models_packt_2024.pdf",
+                    "enabled": true,
+                    "description": "Test upload with processing"
+                },
+                {
+                    "path": "uploadfiles/pdf/CSS揭秘.pdf",
+                    "enabled": true,
+                    "description": "CSS揭秘.pdf"
+                },
+                {
+                    "path": "uploadfiles/pdf/LLM_Prompt_Engineering_For_Developers.pdf",
+                    "enabled": true,
+                    "description": "LLM_Prompt_Engineering_For_Developers.pdf"
+                }
+            ]
+        },
+        {
+            "skill_name": "六法全書-刑法",
+            "description": "刑法及刑事訴訟法相關法規",
+            "category": "Legal",
+            "enabled": true,
+            "display_order": 3,
+            "sources": [
+                {
+                    "path": "refData/rawdata/law/刑法/刑法.pdf",
+                    "enabled": true,
+                    "description": "中華民國刑法"
+                },
+                {
+                    "path": "uploadfiles/pdf/刑事訴訟法.pdf",
+                    "enabled": true,
+                    "description": "law"
+                }
+            ]
+        },
+        {
+            "skill_name": "六法全書-民法",
+            "description": "民法及相關訴訟程序法規",
+            "category": "Legal",
+            "enabled": true,
+            "display_order": 4,
+            "sources": [
+                {
+                    "path": "refData/rawdata/law/民法/民法.pdf",
+                    "enabled": true,
+                    "description": "中華民國民法"
+                },
+                {
+                    "path": "refData/rawdata/law/民法/強制執行法.pdf",
+                    "enabled": true,
+                    "description": "強制執行法"
+                },
+                {
+                    "path": "refData/rawdata/law/民法/家事事件法.pdf",
+                    "enabled": true,
+                    "description": "家事事件法"
+                },
+                {
+                    "path": "refData/rawdata/law/民法/消費者保護法.pdf",
+                    "enabled": true,
+                    "description": "消費者保護法"
+                },
+                {
+                    "path": "uploadfiles/pdf/民事訴訟法.pdf",
+                    "enabled": true,
+                    "description": "民事訴訟法.pdf"
+                }
+            ]
+        },
+        {
+            "skill_name": "投資理財",
+            "description": "The skill is comprised of investment data and information",
+            "category": "Investment",
+            "enabled": true,
+            "display_order": 2,
+            "sources": [
+                {
+                    "path": "uploadfiles/pdf/投资最重要的事.pdf",
+                    "enabled": true,
+                    "description": "make you rich"
+                }
+            ]
+        },
+        {
+            "skill_name": "ML",
+            "description": "Machine Learning",
+            "category": "AI",
+            "enabled": true,
+            "sources": [
+                {
+                    "path": "uploadfiles/pdf/Machine_Learning_Production_Systems_oreilly_2024.pdf",
+                    "enabled": true,
+                    "description": "Machine_Learning_Production_Systems_oreilly_2024.pdf"
+                }
+            ]
+        }
+    ],
+    "instant_attachments": [],
+    "settings": {
+        "chunk_size": 1000,
+        "chunk_overlap": 200,
+        "embedding_model": "BAAI/bge-m3",
+        "embedding_dimension": 1024,
+        "rebuild_threshold": 5
+    },
+    "_comments": {
+        "instant_attachments": "臨時加入的 PDF 清單，累積到 rebuild_threshold 後應執行完整 rebuild",
+        "rebuild_threshold": "當 instant_attachments 達到此數量時，建議執行完整 rebuild 以避免資料碎片化"
+    }
+}

@@ -1,0 +1,112 @@
+{
+  "test_date": "2026-01-07T09:32:36.589163",
+  "skill_id": "head_20260107_012025_b45c5a1f",
+  "skill_name": "投資理財",
+  "total_questions": 20,
+  "results": [
+    {
+      "question": "什麼是股票？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何開始投資？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "債券和股票有什麼不同？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是分散投資？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何評估投資風險？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是複利？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "定期定額投資的優點是什麼？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是ETF？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何設定投資目標？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "長期投資和短期投資的差異？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是資產配置？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "通貨膨脹如何影響投資？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是報酬率？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何選擇適合的投資工具？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "投資前需要準備什麼？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是被動收入？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何開始理財規劃？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "投資組合應該包含哪些元素？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "什麼是價值投資？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    },
+    {
+      "question": "如何控制投資成本？",
+      "status": "error",
+      "error": "HTTP 404: {\"detail\":\"No documents found for specified skills\"}"
+    }
+  ],
+  "summary": {
+    "success": 0,
+    "errors": 20
+  }
+}

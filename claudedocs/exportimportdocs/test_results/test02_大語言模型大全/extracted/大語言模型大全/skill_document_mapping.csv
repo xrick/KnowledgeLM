@@ -1,0 +1,2 @@
+mapping_id,skill_id,file_id,relevance_score,created_at,document_name,document_path,total_pages
+75,skill_20251216_043501_2a43e5ac_9ed582,doc_9ed5822532194654,1.0,2025-12-16 12:36:52,Build_a_Large_Language_Model_From_Scratch_manning_2024,/Users/xrickliao/WorkSpaces/Work/Projects/DocAI/uploadfiles/pdf/Build_a_Large_Language_Model_From_Scratch_manning_2024.pdf,370

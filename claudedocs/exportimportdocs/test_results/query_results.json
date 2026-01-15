@@ -1,0 +1,37 @@
+{
+  "test_date": "2026-01-07T09:36:44.887465",
+  "skill_id": "head_20260107_012025_b45c5a1f",
+  "skill_name": "投資理財",
+  "results": [
+    {
+      "question": "什麼是股票？",
+      "status": "error",
+      "error": "HTTP 404"
+    },
+    {
+      "question": "如何開始投資？",
+      "status": "error",
+      "error": "HTTP 404"
+    },
+    {
+      "question": "債券和股票有什麼不同？",
+      "status": "error",
+      "error": "HTTP 404"
+    },
+    {
+      "question": "什麼是分散投資？",
+      "status": "error",
+      "error": "HTTP 404"
+    },
+    {
+      "question": "如何評估投資風險？",
+      "status": "error",
+      "error": "HTTP 404"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "success": 0,
+    "failed": 5
+  }
+}

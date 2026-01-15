@@ -1,0 +1,22 @@
+模型可用性確認
+已驗證所有選單模型都已下載：
+✅ gpt-oss:20b (13 GB)
+✅ deepseek-r1:7b (4.7 GB)
+✅ phi4-mini:3.8b (2.5 GB)
+運行時驗證建議
+由於服務器目前未運行，我建議您：
+啟動服務器:
+
+./start_system.sh
+開啟監控終端:
+
+watch -n 1 'ollama ps'
+執行切換測試:
+開啟瀏覽器 → http://localhost:10087/skill
+點擊模型選擇器
+選擇 deepseek-r1:7b
+觀察 ollama ps 應該顯示 deepseek-r1:7b 正在運行
+發送查詢驗證:
+問：「你是什麼模型？」
+DeepSeek-R1 應該自我介紹
+完整分析報告已儲存至：claudedocs/model_switching_analysis_20251225.md
