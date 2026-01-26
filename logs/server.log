@@ -1234,3 +1234,49 @@ INFO:     127.0.0.1:55878 - "GET /.well-known/appspecific/com.chrome.devtools.js
 2026-01-26 10:46:58,718 - app.Providers.chat_history_provider.client - DEBUG - Added user message to session: skill_5a19a0da-7485-4656-8641-41402fef4049_skill_20251216_094115_f333015b_a258f6
 2026-01-26 10:46:58,718 - app.Providers.chat_history_provider.client - DEBUG - Added assistant message to session: skill_5a19a0da-7485-4656-8641-41402fef4049_skill_20251216_094115_f333015b_a258f6
 2026-01-26 10:46:58,719 - app.api.v1.endpoints.skills - INFO - ✅ Saved conversation to session: skill_5a19a0da-7485-4656-8641-41402fef4049_skill_20251216_094115_f333015b_a258f6 (response: 775 chars)
+2026-01-26 11:40:13,662 - app.Providers.skill_metadata_provider.client - INFO - Skill Metadata Provider initialized: data/skill_metadata.db
+2026-01-26 11:40:13,662 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x73eae49be020>
+2026-01-26 11:40:13,662 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x73eae49be020> completed
+2026-01-26 11:40:13,662 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae5ca53f0>, 'PRAGMA journal_mode=WAL', [])
+2026-01-26 11:40:13,663 - aiosqlite - DEBUG - returning exception file is not a database
+2026-01-26 11:40:13,663 - app.SkillServices.background_integrity_checker - ERROR - Background integrity checker failed: file is not a database
+2026-01-26 12:40:13,663 - app.Providers.skill_metadata_provider.client - INFO - Skill Metadata Provider initialized: data/skill_metadata.db
+2026-01-26 12:40:13,663 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x73eae49be700>
+2026-01-26 12:40:13,664 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x73eae49be700> completed
+2026-01-26 12:40:13,664 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA journal_mode=WAL', [])
+2026-01-26 12:40:13,664 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA journal_mode=WAL', []) completed
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA synchronous=NORMAL', [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA synchronous=NORMAL', []) completed
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA cache_size=10000', [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA cache_size=10000', []) completed
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA temp_store=MEMORY', [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA temp_store=MEMORY', []) completed
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA busy_timeout=5000', [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA busy_timeout=5000', []) completed
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA wal_autocheckpoint=1000', [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, 'PRAGMA wal_autocheckpoint=1000', []) completed
+2026-01-26 12:40:13,665 - app.Providers.skill_metadata_provider.client - INFO - Created singleton skill database connection with WAL mode
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eae46833d0>, "\n                SELECT skill_id, skill_name, total_chunks, indexed_chunks,\n                       processing_status, last_error, created_at, processing_started_at\n                FROM skill_metadata\n                WHERE (processing_status != 'completed'\n                   OR indexed_chunks < total_chunks)\n                  AND parent_skill_id = 'root'\n                ORDER BY created_at DESC\n            ", [])
+2026-01-26 12:40:13,665 - aiosqlite - DEBUG - returning exception no such table: skill_metadata
+2026-01-26 12:40:13,666 - app.Providers.skill_metadata_provider.client - ERROR - Failed to get incomplete skills: no such table: skill_metadata
+2026-01-26 12:40:13,666 - app.SkillServices.background_integrity_checker - ERROR - Background integrity checker failed: no such table: skill_metadata
+2026-01-26 13:40:13,665 - app.Providers.skill_metadata_provider.client - INFO - Skill Metadata Provider initialized: data/skill_metadata.db
+2026-01-26 13:40:13,666 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x73eae5c9eca0>
+2026-01-26 13:40:13,666 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x73eae5c9eca0> completed
+2026-01-26 13:40:13,666 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA journal_mode=WAL', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA journal_mode=WAL', []) completed
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA synchronous=NORMAL', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA synchronous=NORMAL', []) completed
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA cache_size=10000', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA cache_size=10000', []) completed
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA temp_store=MEMORY', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA temp_store=MEMORY', []) completed
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA busy_timeout=5000', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA busy_timeout=5000', []) completed
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA wal_autocheckpoint=1000', [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, 'PRAGMA wal_autocheckpoint=1000', []) completed
+2026-01-26 13:40:13,667 - app.Providers.skill_metadata_provider.client - INFO - Created singleton skill database connection with WAL mode
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe8040>, "\n                SELECT skill_id, skill_name, total_chunks, indexed_chunks,\n                       processing_status, last_error, created_at, processing_started_at\n                FROM skill_metadata\n                WHERE (processing_status != 'completed'\n                   OR indexed_chunks < total_chunks)\n                  AND parent_skill_id = 'root'\n                ORDER BY created_at DESC\n            ", [])
+2026-01-26 13:40:13,667 - aiosqlite - DEBUG - returning exception no such table: skill_metadata
+2026-01-26 13:40:13,667 - app.Providers.skill_metadata_provider.client - ERROR - Failed to get incomplete skills: no such table: skill_metadata
+2026-01-26 13:40:13,667 - app.SkillServices.background_integrity_checker - ERROR - Background integrity checker failed: no such table: skill_metadata
