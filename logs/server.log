@@ -1280,3 +1280,23 @@ INFO:     127.0.0.1:55878 - "GET /.well-known/appspecific/com.chrome.devtools.js
 2026-01-26 13:40:13,667 - aiosqlite - DEBUG - returning exception no such table: skill_metadata
 2026-01-26 13:40:13,667 - app.Providers.skill_metadata_provider.client - ERROR - Failed to get incomplete skills: no such table: skill_metadata
 2026-01-26 13:40:13,667 - app.SkillServices.background_integrity_checker - ERROR - Background integrity checker failed: no such table: skill_metadata
+2026-01-26 14:40:13,667 - app.Providers.skill_metadata_provider.client - INFO - Skill Metadata Provider initialized: data/skill_metadata.db
+2026-01-26 14:40:13,668 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x73eae4687060>
+2026-01-26 14:40:13,668 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x73eae4687060> completed
+2026-01-26 14:40:13,668 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA journal_mode=WAL', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA journal_mode=WAL', []) completed
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA synchronous=NORMAL', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA synchronous=NORMAL', []) completed
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA cache_size=10000', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA cache_size=10000', []) completed
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA temp_store=MEMORY', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA temp_store=MEMORY', []) completed
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA busy_timeout=5000', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA busy_timeout=5000', []) completed
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA wal_autocheckpoint=1000', [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, 'PRAGMA wal_autocheckpoint=1000', []) completed
+2026-01-26 14:40:13,669 - app.Providers.skill_metadata_provider.client - INFO - Created singleton skill database connection with WAL mode
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x73eac3fe89a0>, "\n                SELECT skill_id, skill_name, total_chunks, indexed_chunks,\n                       processing_status, last_error, created_at, processing_started_at\n                FROM skill_metadata\n                WHERE (processing_status != 'completed'\n                   OR indexed_chunks < total_chunks)\n                  AND parent_skill_id = 'root'\n                ORDER BY created_at DESC\n            ", [])
+2026-01-26 14:40:13,669 - aiosqlite - DEBUG - returning exception no such table: skill_metadata
+2026-01-26 14:40:13,669 - app.Providers.skill_metadata_provider.client - ERROR - Failed to get incomplete skills: no such table: skill_metadata
+2026-01-26 14:40:13,669 - app.SkillServices.background_integrity_checker - ERROR - Background integrity checker failed: no such table: skill_metadata
