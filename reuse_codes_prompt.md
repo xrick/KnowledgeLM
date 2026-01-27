@@ -30,8 +30,8 @@ RULES (violating ANY invalidates your response):
 ✅ Provide migration strategies
 
 ```
-/sc:improve --type maintainability
-直接進行方案B
+/sc:improve --focus quality
+請逐步進行程式碼的修改與重構
 ```
 
 FINAL REMINDER: If you suggest creating new files, explain why existing files cannot be extended. If you recommend rewrites, justify why refactoring won't work.
