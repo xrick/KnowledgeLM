@@ -1,677 +1,1164 @@
 <!-- template/index.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocAI 應用程式原型</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>DocAI 應用程式原型</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
 
-    <!-- Markdown Rendering -->
-    <script src="/static/js/marked.min.js?v=1762316126"></script>
+        <!-- Markdown Rendering -->
+        <script src="/static/js/marked.min.js?v=1762316126"></script>
 
-    <style>
-        /* CSS 變數：便於管理顏色和尺寸 */
-        :root {
-            --color-primary: #007aff;
-            --color-bg-light: #f9f9f9;
-            --color-bg-dark: #ffffff;
-            --color-border: #e0e0e0;
-            --color-text-primary: #1c1c1e;
-            --color-text-secondary: #636366;
-            --color-white: #ffffff;
-            --font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            --sidebar-width: 300px;
-        }
+        <style>
+            /* CSS 變數：便於管理顏色和尺寸 */
+            :root {
+                --color-primary: #007aff;
+                --color-bg-light: #f9f9f9;
+                --color-bg-dark: #ffffff;
+                --color-border: #e0e0e0;
+                --color-text-primary: #1c1c1e;
+                --color-text-secondary: #636366;
+                --color-white: #ffffff;
+                --font-family: "Inter", "Noto Sans TC", sans-serif;
+                --sidebar-width: 300px;
+            }
 
-        /* 1. 全局和重置樣式 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+            /* 1. 全局和重置樣式 */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-        html, body {
-            height: 100%;
-            font-family: var(--font-family);
-            background-color: var(--color-bg-light);
-            color: var(--color-text-primary);
-            overflow: hidden; /* 防止滾動 */
-        }
+            html,
+            body {
+                height: 100%;
+                font-family: var(--font-family);
+                background-color: var(--color-bg-light);
+                color: var(--color-text-primary);
+                overflow: hidden; /* 防止滾動 */
+            }
 
-        /* 2. 應用程式主佈局 (CSS Grid) */
-        .app-container {
-            display: grid;
-            grid-template-columns: var(--sidebar-width) 1fr; /* 側邊欄 | 主內容 */
-            grid-template-rows: 100vh;
-            height: 100vh;
-        }
+            /* 2. 應用程式主佈局 (CSS Grid) */
+            .app-container {
+                display: grid;
+                grid-template-columns: var(--sidebar-width) 1fr; /* 側邊欄 | 主內容 */
+                grid-template-rows: 100vh;
+                height: 100vh;
+            }
 
-        /* 3. 側邊欄 (A區) - 上傳和上下文控制 */
-        .sidebar {
-            background-color: var(--color-bg-dark);
-            border-right: 1px solid var(--color-border);
-            display: flex;
-            flex-direction: column;
-            padding: 1.25rem;
-            gap: 1.25rem;
-        }
+            /* 3. 側邊欄 (A區) - 上傳和上下文控制 */
+            .sidebar {
+                background-color: var(--color-bg-dark);
+                border-right: 1px solid var(--color-border);
+                display: flex;
+                flex-direction: column;
+                padding: 1.25rem;
+                gap: 1.25rem;
+            }
 
-        .add-source-btn {
-            font-size: 1rem;
-            font-weight: 500;
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .add-source-btn:hover {
-            background-color: #005bb5;
-        }
-
-        .source-list-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            padding: 0 0.5rem;
-        }
-
-        .debug-mode-label {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--color-text-secondary);
-            cursor: pointer;
-            text-transform: none;
-        }
-
-        .debug-mode-label input[type="checkbox"] {
-            width: 14px;
-            height: 14px;
-            cursor: pointer;
-        }
-
-        .source-list {
-            list-style: none;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        .source-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.6rem 0.5rem;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .source-item:hover {
-            background-color: var(--color-bg-light);
-        }
-        .source-item .file-icon {
-            color: var(--color-text-secondary);
-            width: 1.25rem; /* 確保對齊 */
-            text-align: center;
-        }
-        .source-item .file-name {
-            flex-grow: 1;
-            /* 防止長檔名破壞佈局 */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        /* 實現您 `uploading_file.png` 中的旋轉圓圈 */
-        .spinner {
-            width: 1rem;
-            height: 1rem;
-            border: 2px solid var(--color-border);
-            border-top-color: var(--color-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* 4. 主工作區 (B區) */
-        .main-workspace {
-            display: flex;
-            flex-direction: column;
-            background-color: var(--color-white);
-        }
-
-        /* 4.1 標籤導航 */
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid var(--color-border);
-            padding: 0 1.5rem;
-        }
-        .tab-link {
-            font-family: var(--font-family);
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--color-text-secondary);
-            background: none;
-            border: none;
-            padding: 1rem 0;
-            margin-right: 1.5rem;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
-        .tab-link.active {
-            color: var(--color-primary);
-            border-bottom-color: var(--color-primary);
-        }
-
-        /* 4.2 標籤內容 */
-        .tab-content {
-            flex-grow: 1;
-            overflow: hidden; /* 確保內容區滾動 */
-            display: none; /* 預設隱藏 */
-        }
-        .tab-content.active {
-            display: flex; /* 顯示選中的標籤頁 */
-            flex-direction: column;
-        }
-
-        /* 4.3 聊天標籤頁 */
-        #chat {
-            height: 100%;
-        }
-        .chat-display-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        /* 聊天氣泡 */
-        .chat-bubble {
-            padding: 0.75rem 1.25rem;
-            border-radius: 18px;
-            max-width: 70%;
-            line-height: 1.6;
-        }
-        .chat-bubble.user {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            border-bottom-right-radius: 4px;
-            align-self: flex-end;
-        }
-        .chat-bubble.ai {
-            background-color: var(--color-bg-light);
-            color: var(--color-text-primary);
-            border-bottom-left-radius: 4px;
-            align-self: flex-start;
-        }
-
-        /* 4.4 使用者輸入區域 (C區) */
-        .user-input-region {
-            border-top: 1px solid var(--color-border);
-            padding: 1rem 1.5rem;
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-        .user-input-region textarea {
-            flex-grow: 1;
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: 0.75rem;
-            font-family: var(--font-family);
-            font-size: 1rem;
-            resize: none;
-            height: 50px; /* 可隨內容增高 */
-        }
-        .user-input-region button {
-            background: var(--color-primary);
-            border: none;
-            border-radius: 8px;
-            color: var(--color-white);
-            width: 48px;
-            height: 48px;
-            font-size: 1.25rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .user-input-region button:hover {
-            background-color: #005bb5;
-        }
-
-        /* 4.5 資料管理標籤頁 */
-        #management {
-            padding: 2rem;
-        }
-
-        /* 5. 上傳模態框 (Modal) - 專業清晰設計 */
-        .upload-modal {
-            border: none;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 580px;
-            width: 90%;
-            /* 確保對話框完美置中 */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            margin: 0;
-        }
-
-        /* 模態框標題區 */
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-        .modal-header i {
-            font-size: 1.5rem;
-            color: var(--color-text-primary);
-        }
-        .modal-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--color-text-primary);
-            margin: 0;
-        }
-
-        /* 模態框副標題 */
-        .modal-subtitle {
-            font-size: 0.95rem;
-            color: var(--color-text-secondary);
-            margin-bottom: 2rem;
-            padding-left: 2.25rem; /* 對齊標題文字 */
-        }
-
-        /* 隱藏原生檔案輸入 */
-        .upload-modal input[type="file"] {
-            display: none;
-        }
-
-        /* 拖放區域 */
-        .upload-area {
-            border: 2px dashed #d0d0d0;
-            border-radius: 8px;
-            padding: 3rem 2rem;
-            text-align: center;
-            background-color: #fafafa;
-            cursor: pointer;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .upload-area:hover {
-            border-color: var(--color-primary);
-            background-color: var(--color-white);
-        }
-
-        .upload-area-text {
-            font-size: 0.95rem;
-            color: #8a8a8a;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* When file is selected, change text color */
-        .upload-area-text.file-selected {
-            color: var(--color-text-primary);
-            font-weight: 500;
-        }
-
-        .upload-area-divider {
-            font-size: 0.875rem;
-            color: #b0b0b0;
-            margin: 0.25rem 0;
-        }
-
-        /* 瀏覽按鈕 */
-        .browse-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background-color: var(--color-white);
-            color: var(--color-text-primary);
-            border: 1.5px solid #d0d0d0;
-            border-radius: 6px;
-            padding: 0.6rem 1.5rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .browse-btn:hover {
-            border-color: var(--color-text-primary);
-            background-color: #f5f5f5;
-        }
-        .browse-btn i {
-            font-size: 1rem;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #f0f0f0;
-        }
-        .modal-actions button {
-            font-size: 0.95rem;
-            font-weight: 500;
-            padding: 0.65rem 1.75rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .modal-actions .btn-secondary {
-            background: #f5f5f5;
-            color: var(--color-text-primary);
-            border: 1px solid #e0e0e0;
-        }
-        .modal-actions .btn-secondary:hover {
-            background: #e8e8e8;
-            border-color: #d0d0d0;
-        }
-        .modal-actions .btn-primary {
-            background: var(--color-text-primary);
-            color: var(--color-white);
-        }
-        .modal-actions .btn-primary:hover {
-            background: #000000;
-        }
-
-        /* 模態框背景 */
-        dialog::backdrop {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(3px);
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-
-        <aside class="sidebar">
-            <!-- Back to Skill Mode Button -->
-            <button onclick="window.location.href='/skill'" style="
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
+            .add-source-btn {
+                font-size: 1rem;
+                font-weight: 500;
+                background-color: var(--color-primary);
+                color: var(--color-white);
                 border: none;
                 border-radius: 8px;
-                padding: 0.875rem 1rem;
-                font-size: 0.95rem;
-                font-weight: 600;
+                padding: 0.75rem 1rem;
                 cursor: pointer;
+                transition: background-color 0.2s ease;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 gap: 0.5rem;
+            }
+            .add-source-btn:hover {
+                background-color: #005bb5;
+            }
+
+            .source-list-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 0.875rem;
+                font-weight: 700;
+                color: var(--color-text-secondary);
+                text-transform: uppercase;
+                padding: 0 0.5rem;
+            }
+
+            .debug-mode-label {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                font-size: 0.7rem;
+                font-weight: 500;
+                color: var(--color-text-secondary);
+                cursor: pointer;
+                text-transform: none;
+            }
+
+            .debug-mode-label input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+                cursor: pointer;
+            }
+
+            .source-list {
+                list-style: none;
+                overflow-y: auto;
+                flex-grow: 1;
+            }
+
+            .source-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.6rem 0.5rem;
+                border-radius: 6px;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
+            .source-item:hover {
+                background-color: var(--color-bg-light);
+            }
+            .source-item .file-icon {
+                color: var(--color-text-secondary);
+                width: 1.25rem; /* 確保對齊 */
+                text-align: center;
+            }
+            .source-item .file-name {
+                flex-grow: 1;
+                /* 防止長檔名破壞佈局 */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* 實現您 `uploading_file.png` 中的旋轉圓圈 */
+            .spinner {
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid var(--color-border);
+                border-top-color: var(--color-primary);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* 4. 主工作區 (B區) */
+            .main-workspace {
+                display: flex;
+                flex-direction: column;
+                background-color: var(--color-white);
+            }
+
+            /* 4.1 標籤導航 */
+            .tabs {
+                display: flex;
+                border-bottom: 1px solid var(--color-border);
+                padding: 0 1.5rem;
+            }
+            .tab-link {
+                font-family: var(--font-family);
+                font-size: 1rem;
+                font-weight: 500;
+                color: var(--color-text-secondary);
+                background: none;
+                border: none;
+                padding: 1rem 0;
+                margin-right: 1.5rem;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition:
+                    color 0.2s ease,
+                    border-color 0.2s ease;
+            }
+            .tab-link.active {
+                color: var(--color-primary);
+                border-bottom-color: var(--color-primary);
+            }
+
+            /* 4.2 標籤內容 */
+            .tab-content {
+                flex-grow: 1;
+                overflow: hidden; /* 確保內容區滾動 */
+                display: none; /* 預設隱藏 */
+            }
+            .tab-content.active {
+                display: flex; /* 顯示選中的標籤頁 */
+                flex-direction: column;
+            }
+
+            /* 4.3 聊天標籤頁 */
+            #chat {
+                height: 100%;
+            }
+            .chat-display-area {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            /* 聊天氣泡 */
+            .chat-bubble {
+                padding: 0.75rem 1.25rem;
+                border-radius: 18px;
+                max-width: 70%;
+                line-height: 1.6;
+            }
+            .chat-bubble.user {
+                background-color: var(--color-primary);
+                color: var(--color-white);
+                border-bottom-right-radius: 4px;
+                align-self: flex-end;
+            }
+            .chat-bubble.ai {
+                background-color: var(--color-bg-light);
+                color: var(--color-text-primary);
+                border-bottom-left-radius: 4px;
+                align-self: flex-start;
+            }
+
+            /* 4.4 使用者輸入區域 (C區) */
+            .user-input-region {
+                border-top: 1px solid var(--color-border);
+                padding: 1rem 1.5rem;
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+            }
+            .user-input-region textarea {
+                flex-grow: 1;
+                border: 1px solid var(--color-border);
+                border-radius: 8px;
+                padding: 0.75rem;
+                font-family: var(--font-family);
+                font-size: 1rem;
+                resize: none;
+                height: 50px; /* 可隨內容增高 */
+            }
+            .user-input-region button {
+                background: var(--color-primary);
+                border: none;
+                border-radius: 8px;
+                color: var(--color-white);
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
+            .user-input-region button:hover {
+                background-color: #005bb5;
+            }
+
+            /* 4.5 資料管理標籤頁 */
+            #management {
+                padding: 2rem;
+            }
+
+            /* 5. 上傳模態框 (Modal) - 專業清晰設計 */
+            .upload-modal {
+                border: none;
+                border-radius: 12px;
+                padding: 2.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                max-width: 580px;
+                width: 90%;
+                /* 確保對話框完美置中 */
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin: 0;
+            }
+
+            /* 模態框標題區 */
+            .modal-header {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .modal-header i {
+                font-size: 1.5rem;
+                color: var(--color-text-primary);
+            }
+            .modal-header h2 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--color-text-primary);
+                margin: 0;
+            }
+
+            /* 模態框副標題 */
+            .modal-subtitle {
+                font-size: 0.95rem;
+                color: var(--color-text-secondary);
+                margin-bottom: 2rem;
+                padding-left: 2.25rem; /* 對齊標題文字 */
+            }
+
+            /* 隱藏原生檔案輸入 */
+            .upload-modal input[type="file"] {
+                display: none;
+            }
+
+            /* 拖放區域 */
+            .upload-area {
+                border: 2px dashed #d0d0d0;
+                border-radius: 8px;
+                padding: 3rem 2rem;
+                text-align: center;
+                background-color: #fafafa;
+                cursor: pointer;
+                transition:
+                    border-color 0.2s ease,
+                    background-color 0.2s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .upload-area:hover {
+                border-color: var(--color-primary);
+                background-color: var(--color-white);
+            }
+
+            .upload-area-text {
+                font-size: 0.95rem;
+                color: #8a8a8a;
+                font-weight: 400;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* When file is selected, change text color */
+            .upload-area-text.file-selected {
+                color: var(--color-text-primary);
+                font-weight: 500;
+            }
+
+            .upload-area-divider {
+                font-size: 0.875rem;
+                color: #b0b0b0;
+                margin: 0.25rem 0;
+            }
+
+            /* 瀏覽按鈕 */
+            .browse-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                background-color: var(--color-white);
+                color: var(--color-text-primary);
+                border: 1.5px solid #d0d0d0;
+                border-radius: 6px;
+                padding: 0.6rem 1.5rem;
+                font-size: 0.95rem;
+                font-weight: 500;
+                cursor: pointer;
                 transition: all 0.2s ease;
-                width: 100%;"
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.35)'"
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
-                title="返回 Skill 模式">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>返回 Skill 模式</span>
-            </button>
+            }
+            .browse-btn:hover {
+                border-color: var(--color-text-primary);
+                background-color: #f5f5f5;
+            }
+            .browse-btn i {
+                font-size: 1rem;
+            }
 
-            <hr style="border: none; border-top: 1px solid var(--color-border); margin: 0.75rem 0;">
+            .modal-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.75rem;
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #f0f0f0;
+            }
+            .modal-actions button {
+                font-size: 0.95rem;
+                font-weight: 500;
+                padding: 0.65rem 1.75rem;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .modal-actions .btn-secondary {
+                background: #f5f5f5;
+                color: var(--color-text-primary);
+                border: 1px solid #e0e0e0;
+            }
+            .modal-actions .btn-secondary:hover {
+                background: #e8e8e8;
+                border-color: #d0d0d0;
+            }
+            .modal-actions .btn-primary {
+                background: var(--color-text-primary);
+                color: var(--color-white);
+            }
+            .modal-actions .btn-primary:hover {
+                background: #000000;
+            }
 
-            <button id="addSourceBtn" class="add-source-btn">
-                <i class="fa-solid fa-plus"></i> 新增來源
-            </button>
-            
-            <div class="source-list-header">
-                <label class="debug-mode-label">
-                    <input type="checkbox" id="debugModeCheckbox">
-                    <span>Debug Mode</span>
-                </label>
-                <span>您的資料來源</span>
-            </div>
+            /* 模態框背景 */
+            dialog::backdrop {
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(3px);
+            }
 
-            <ul id="sourceList" class="source-list">
-                <!-- Files will be added dynamically after upload -->
-            </ul>
-        </aside>
-
-        <main class="main-workspace">
-            
-            <nav class="tabs">
-                <button class="tab-link active" data-tab="chat">
-                    <i class="fa-solid fa-comments"></i> 聊天
+            /* 6. 上傳進度 Modal */
+            .upload-progress-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(3px);
+                z-index: 10000;
+                justify-content: center;
+                align-items: center;
+            }
+            .upload-progress-overlay.active {
+                display: flex;
+            }
+            .upload-progress-modal {
+                background: var(--color-bg-dark);
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                max-width: 700px;
+                width: 90%;
+                max-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            .upload-progress-modal .prog-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid var(--color-border);
+            }
+            .upload-progress-modal .prog-header .prog-title {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 600;
+                font-size: 1rem;
+            }
+            .upload-progress-modal .prog-close {
+                background: none;
+                border: none;
+                font-size: 1.25rem;
+                cursor: pointer;
+                color: var(--color-text-secondary);
+            }
+            .upload-progress-modal .prog-close:hover {
+                color: var(--color-text-primary);
+            }
+            .prog-file-info {
+                background: rgba(0, 122, 255, 0.05);
+                border-left: 3px solid var(--color-primary);
+                padding: 0.75rem 1rem;
+                margin: 1rem 1.25rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .prog-file-info .prog-filename {
+                font-weight: 600;
+            }
+            .prog-file-info .prog-filesize {
+                font-size: 0.8rem;
+                color: var(--color-text-secondary);
+                margin-left: 0.5rem;
+            }
+            .prog-status-badge {
+                padding: 0.25rem 0.75rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                background: rgba(251, 191, 36, 0.1);
+                color: #f59e0b;
+            }
+            .prog-status-badge.completed {
+                background: rgba(34, 197, 94, 0.1);
+                color: #22c55e;
+            }
+            .prog-status-badge.error {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+            .prog-bar-section {
+                padding: 0 1.25rem;
+            }
+            .prog-bar-labels {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.8rem;
+                color: var(--color-text-secondary);
+                margin-bottom: 0.25rem;
+            }
+            .prog-bar-track {
+                height: 8px;
+                background: var(--color-bg-light);
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .prog-bar-fill {
+                height: 100%;
+                width: 0%;
+                background: linear-gradient(
+                    90deg,
+                    var(--color-primary),
+                    #60a5fa
+                );
+                transition: width 0.3s ease;
+                border-radius: 4px;
+            }
+            .prog-logs-section {
+                flex: 1;
+                padding: 1rem 1.25rem;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            .prog-logs-label {
+                font-size: 0.8rem;
+                color: var(--color-text-secondary);
+                margin-bottom: 0.5rem;
+            }
+            .prog-logs {
+                background: #1e293b;
+                color: #e2e8f0;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                font-size: 0.75rem;
+                font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+                white-space: pre-wrap;
+                flex: 1;
+                overflow-y: auto;
+                margin: 0;
+                line-height: 1.6;
+                min-height: 120px;
+                max-height: 200px;
+            }
+            .prog-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1.25rem;
+                border-top: 1px solid var(--color-border);
+            }
+            .prog-elapsed {
+                font-size: 0.8rem;
+                color: var(--color-text-secondary);
+            }
+            .prog-footer .btn-secondary {
+                background: #f5f5f5;
+                color: var(--color-text-primary);
+                border: 1px solid #e0e0e0;
+                padding: 0.5rem 1.25rem;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                font-weight: 500;
+            }
+            .prog-footer .btn-secondary:hover {
+                background: #e8e8e8;
+            }
+            .prog-footer .btn-primary {
+                background: var(--color-text-primary);
+                color: var(--color-white);
+                border: none;
+                padding: 0.5rem 1.25rem;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                font-weight: 500;
+                display: none;
+            }
+            .prog-footer .btn-primary:hover {
+                background: #000000;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app-container">
+            <aside class="sidebar">
+                <!-- Back to Skill Mode Button -->
+                <button
+                    onclick="window.location.href = '/skill'"
+                    style="
+                        background: linear-gradient(
+                            135deg,
+                            #667eea 0%,
+                            #764ba2 100%
+                        );
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 0.875rem 1rem;
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.5rem;
+                        transition: all 0.2s ease;
+                        width: 100%;
+                    "
+                    onmouseover="
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.boxShadow =
+                            '0 4px 12px rgba(102, 126, 234, 0.35)';
+                    "
+                    onmouseout="
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = 'none';
+                    "
+                    title="返回 Skill 模式"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>返回 Skill 模式</span>
                 </button>
-                <button class="tab-link" data-tab="management">
-                    <i class="fa-solid fa-folder"></i> 資料來源管理
-                </button>
-            </nav>
 
-            <div id="chat" class="tab-content active">
-                <div class="chat-display-area">
-                    <div class="chat-bubble ai">
-                        您好！我是您的 DocAI 助手。請在上傳文件後開始提問。
+                <hr
+                    style="
+                        border: none;
+                        border-top: 1px solid var(--color-border);
+                        margin: 0.75rem 0;
+                    "
+                />
+
+                <button id="addSourceBtn" class="add-source-btn">
+                    <i class="fa-solid fa-plus"></i> 新增來源
+                </button>
+
+                <div class="source-list-header">
+                    <label class="debug-mode-label">
+                        <input type="checkbox" id="debugModeCheckbox" />
+                        <span>Debug Mode</span>
+                    </label>
+                    <span>您的資料來源</span>
+                </div>
+
+                <ul id="sourceList" class="source-list">
+                    <!-- Files will be added dynamically after upload -->
+                </ul>
+            </aside>
+
+            <main class="main-workspace">
+                <nav class="tabs">
+                    <button class="tab-link active" data-tab="chat">
+                        <i class="fa-solid fa-comments"></i> 聊天
+                    </button>
+                    <button class="tab-link" data-tab="management">
+                        <i class="fa-solid fa-folder"></i> 資料來源管理
+                    </button>
+                </nav>
+
+                <div id="chat" class="tab-content active">
+                    <div class="chat-display-area">
+                        <div class="chat-bubble ai">
+                            您好！我是您的 DocAI 助手。請在上傳文件後開始提問。
+                        </div>
+                        <div class="chat-bubble user">
+                            請總結一下 RAG_Survey_2024.pdf 的主要觀點。
+                        </div>
+                        <div class="chat-bubble ai">
+                            根據文件 `RAG_Survey_2024.pdf` [1]，主要觀點是...
+                            (這是一個模擬的流式 Markdown 回應)
+                        </div>
                     </div>
-                    <div class="chat-bubble user">
-                        請總結一下 RAG_Survey_2024.pdf 的主要觀點。
-                    </div>
-                    <div class="chat-bubble ai">
-                        根據文件 `RAG_Survey_2024.pdf` [1]，主要觀點是... (這是一個模擬的流式 Markdown 回應)
+
+                    <div class="user-input-region">
+                        <textarea
+                            placeholder="根據您選擇的資料來源提問..."
+                        ></textarea>
+                        <button>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="user-input-region">
-                    <textarea placeholder="根據您選擇的資料來源提問..."></textarea>
-                    <button>
-                        <i class="fa-solid fa-paper-plane"></i>
+                <div id="management" class="tab-content">
+                    <h2>資料來源管理</h2>
+                    <p>
+                        您上傳的所有文件將會顯示在這裡，您可以在此管理和刪除它們。
+                    </p>
+                </div>
+            </main>
+        </div>
+
+        <dialog id="uploadModal" class="upload-modal">
+            <div class="modal-header">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <h2>上傳文件</h2>
+            </div>
+
+            <p class="modal-subtitle">指定要上傳的文件檔案</p>
+
+            <input
+                type="file"
+                id="fileInput"
+                multiple
+                accept=".pdf,.docx,.pptx,.txt,.md"
+            />
+
+            <label for="fileInput" class="upload-area" id="uploadArea">
+                <span class="upload-area-text" id="uploadAreaText"
+                    >Drag & Drop File</span
+                >
+                <span class="upload-area-divider" id="uploadAreaDivider"
+                    >Or</span
+                >
+                <div class="browse-btn">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>BROWSE</span>
+                </div>
+            </label>
+
+            <div class="modal-actions">
+                <button id="cancelUploadBtn" class="btn-secondary">
+                    Cancel
+                </button>
+                <button id="confirmUploadBtn" class="btn-primary">上傳</button>
+            </div>
+        </dialog>
+
+        <!-- Upload Progress Modal -->
+        <div class="upload-progress-overlay" id="uploadProgressOverlay">
+            <div class="upload-progress-modal">
+                <div class="prog-header">
+                    <div class="prog-title">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>上傳處理進度</span>
+                    </div>
+                    <button class="prog-close" id="progCloseBtn">
+                        &times;
                     </button>
                 </div>
+                <div class="prog-file-info">
+                    <div>
+                        <span class="prog-filename" id="progFilename">-</span>
+                        <span class="prog-filesize" id="progFilesize">-</span>
+                    </div>
+                    <div class="prog-status-badge" id="progStatusBadge">
+                        處理中...
+                    </div>
+                </div>
+                <div class="prog-bar-section">
+                    <div class="prog-bar-labels">
+                        <span id="progPhase">準備中...</span>
+                        <span id="progPercent">0%</span>
+                    </div>
+                    <div class="prog-bar-track">
+                        <div class="prog-bar-fill" id="progBarFill"></div>
+                    </div>
+                </div>
+                <div class="prog-logs-section">
+                    <div class="prog-logs-label">
+                        <i class="fa-solid fa-terminal"></i> 處理日誌
+                    </div>
+                    <pre class="prog-logs" id="progLogs">等待上傳開始...</pre>
+                </div>
+                <div class="prog-footer">
+                    <span class="prog-elapsed" id="progElapsed">
+                        <i class="fa-solid fa-clock"></i> 經過時間: 0s
+                    </span>
+                    <div>
+                        <button class="btn-secondary" id="progCancelBtn">
+                            <i class="fa-solid fa-stop"></i> 取消
+                        </button>
+                        <button class="btn-primary" id="progDoneBtn">
+                            <i class="fa-solid fa-check"></i> 完成
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            <div id="management" class="tab-content">
-                <h2>資料來源管理</h2>
-                <p>您上傳的所有文件將會顯示在這裡，您可以在此管理和刪除它們。</p>
-            </div>
-        </main>
-    </div>
-
-    <dialog id="uploadModal" class="upload-modal">
-        <div class="modal-header">
-            <i class="fa-solid fa-file-arrow-up"></i>
-            <h2>上傳文件</h2>
         </div>
 
-        <p class="modal-subtitle">指定要上傳的 PDF 檔案</p>
+        <!-- DocAI Client Library -->
+        <script src="/static/js/docai-client.js?v=1762323508"></script>
 
-        <input type="file" id="fileInput" multiple>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // --- 1. 獲取所有 DOM 元素 ---
+                const addSourceBtn = document.getElementById("addSourceBtn");
+                const uploadModal = document.getElementById("uploadModal");
+                const cancelUploadBtn =
+                    document.getElementById("cancelUploadBtn");
+                const confirmUploadBtn =
+                    document.getElementById("confirmUploadBtn");
+                const uploadArea = document.getElementById("uploadArea");
+                const uploadAreaText =
+                    document.getElementById("uploadAreaText");
+                const uploadAreaDivider =
+                    document.getElementById("uploadAreaDivider");
+                const fileInput = document.getElementById("fileInput");
+                const sourceList = document.getElementById("sourceList");
+                const tabs = document.querySelectorAll(".tab-link");
+                const tabContents = document.querySelectorAll(".tab-content");
 
-        <label for="fileInput" class="upload-area" id="uploadArea">
-            <span class="upload-area-text" id="uploadAreaText">Drag & Drop File</span>
-            <span class="upload-area-divider" id="uploadAreaDivider">Or</span>
-            <div class="browse-btn">
-                <i class="fa-solid fa-folder-open"></i>
-                <span>BROWSE</span>
-            </div>
-        </label>
+                // --- 2. 標籤頁 (TABS) 邏輯 ---
+                // 實現 Tab 1 和 Tab 2 的切換
+                tabs.forEach((tab) => {
+                    tab.addEventListener("click", () => {
+                        // 移除所有標籤的 active 狀態
+                        tabs.forEach((t) => t.classList.remove("active"));
+                        tabContents.forEach((c) =>
+                            c.classList.remove("active"),
+                        );
 
-        <div class="modal-actions">
-            <button id="cancelUploadBtn" class="btn-secondary">Cancel</button>
-            <button id="confirmUploadBtn" class="btn-primary">上傳</button>
-        </div>
-    </dialog>
+                        // 添加 active 狀態到被點擊的標籤
+                        tab.classList.add("active");
+                        const targetContent = document.getElementById(
+                            tab.dataset.tab,
+                        );
+                        targetContent.classList.add("active");
+                    });
+                });
 
-    <!-- DocAI Client Library -->
-    <script src="/static/js/docai-client.js?v=1762323508"></script>
+                // --- 3. 模態框 (MODAL) 邏輯 ---
+                // 3.1 打開模態框
+                addSourceBtn.addEventListener("click", () => {
+                    // FIX: Reset session to clear chat history and start fresh conversation
+                    window.docaiClient.resetSession();
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+                    // Reset upload area text when opening modal
+                    uploadAreaText.textContent = "Drag & Drop File";
+                    uploadAreaText.classList.remove("file-selected");
+                    uploadAreaDivider.style.display = "block";
+                    fileInput.value = ""; // Clear file input
+                    uploadModal.showModal(); // 使用 HTML <dialog> 元素的原生方法
+                });
 
-            // --- 1. 獲取所有 DOM 元素 ---
-            const addSourceBtn = document.getElementById('addSourceBtn');
-            const uploadModal = document.getElementById('uploadModal');
-            const cancelUploadBtn = document.getElementById('cancelUploadBtn');
-            const confirmUploadBtn = document.getElementById('confirmUploadBtn');
-            const uploadArea = document.getElementById('uploadArea');
-            const uploadAreaText = document.getElementById('uploadAreaText');
-            const uploadAreaDivider = document.getElementById('uploadAreaDivider');
-            const fileInput = document.getElementById('fileInput');
-            const sourceList = document.getElementById('sourceList');
-            const tabs = document.querySelectorAll('.tab-link');
-            const tabContents = document.querySelectorAll('.tab-content');
+                // 3.2 關閉模態框
+                cancelUploadBtn.addEventListener("click", () => {
+                    uploadModal.close(); // 使用 HTML <dialog> 元素的原生方法
+                });
 
-            // --- 2. 標籤頁 (TABS) 邏輯 ---
-            // 實現 Tab 1 和 Tab 2 的切換
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // 移除所有標籤的 active 狀態
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.remove('active'));
+                // 3.3 監聽文件選擇變化 - 顯示選中的文件名
+                fileInput.addEventListener("change", (e) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                        // 當用戶選擇文件後，顯示文件名而不是 "Drag & Drop File"
+                        const file = files[0];
+                        uploadAreaText.innerHTML = `<i class="fa-solid fa-file-lines" style="color: var(--color-primary); margin-right: 0.5rem;"></i>${file.name}`;
+                        uploadAreaText.classList.add("file-selected");
+                        uploadAreaDivider.style.display = "none"; // 隱藏 "Or" 分隔線
+                    } else {
+                        // 如果沒有文件被選中，恢復原始狀態
+                        uploadAreaText.textContent = "Drag & Drop File";
+                        uploadAreaText.classList.remove("file-selected");
+                        uploadAreaDivider.style.display = "block";
+                    }
+                });
 
-                    // 添加 active 狀態到被點擊的標籤
-                    tab.classList.add('active');
-                    const targetContent = document.getElementById(tab.dataset.tab);
-                    targetContent.classList.add('active');
+                // 點擊模態框背景時也關閉 (可選)
+                uploadModal.addEventListener("click", (e) => {
+                    const dialogDimensions =
+                        uploadModal.getBoundingClientRect();
+                    if (
+                        e.clientX < dialogDimensions.left ||
+                        e.clientX > dialogDimensions.right ||
+                        e.clientY < dialogDimensions.top ||
+                        e.clientY > dialogDimensions.bottom
+                    ) {
+                        uploadModal.close();
+                    }
+                });
+
+                // --- 4. 核心：上傳和即時反饋流程 (SSE Streaming) ---
+
+                // Progress modal elements
+                const progOverlay = document.getElementById(
+                    "uploadProgressOverlay",
+                );
+                const progFilename = document.getElementById("progFilename");
+                const progFilesize = document.getElementById("progFilesize");
+                const progStatusBadge =
+                    document.getElementById("progStatusBadge");
+                const progPhase = document.getElementById("progPhase");
+                const progPercent = document.getElementById("progPercent");
+                const progBarFill = document.getElementById("progBarFill");
+                const progLogs = document.getElementById("progLogs");
+                const progElapsed = document.getElementById("progElapsed");
+                const progCloseBtn = document.getElementById("progCloseBtn");
+                const progCancelBtn = document.getElementById("progCancelBtn");
+                const progDoneBtn = document.getElementById("progDoneBtn");
+
+                let uploadElapsedTimer = null;
+                let uploadStartTime = null;
+                let uploadAbortController = null;
+
+                function formatFileSize(bytes) {
+                    if (bytes < 1024) return bytes + " B";
+                    if (bytes < 1024 * 1024)
+                        return (bytes / 1024).toFixed(1) + " KB";
+                    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+                }
+
+                function showProgressModal(fileName, fileSize) {
+                    progFilename.textContent = fileName;
+                    progFilesize.textContent = formatFileSize(fileSize);
+                    progStatusBadge.textContent = "處理中...";
+                    progStatusBadge.className = "prog-status-badge";
+                    progPhase.textContent = "準備中...";
+                    progPercent.textContent = "0%";
+                    progBarFill.style.width = "0%";
+                    progLogs.textContent = "等待上傳開始...\n";
+                    progCancelBtn.style.display = "";
+                    progDoneBtn.style.display = "none";
+                    progOverlay.classList.add("active");
+
+                    uploadStartTime = Date.now();
+                    uploadElapsedTimer = setInterval(() => {
+                        const elapsed = Math.floor(
+                            (Date.now() - uploadStartTime) / 1000,
+                        );
+                        const mins = Math.floor(elapsed / 60);
+                        const secs = elapsed % 60;
+                        progElapsed.innerHTML = `<i class="fa-solid fa-clock"></i> 經過時間: ${mins > 0 ? mins + "m " : ""}${secs}s`;
+                    }, 1000);
+                }
+
+                function hideProgressModal() {
+                    progOverlay.classList.remove("active");
+                    if (uploadElapsedTimer) {
+                        clearInterval(uploadElapsedTimer);
+                        uploadElapsedTimer = null;
+                    }
+                }
+
+                function appendLog(msg) {
+                    const ts = new Date().toLocaleTimeString("zh-TW", {
+                        hour12: false,
+                    });
+                    progLogs.textContent += `[${ts}] ${msg}\n`;
+                    progLogs.scrollTop = progLogs.scrollHeight;
+                }
+
+                function updateProgress(percent, phase) {
+                    progBarFill.style.width = percent + "%";
+                    progPercent.textContent = percent + "%";
+                    if (phase) progPhase.textContent = phase;
+                }
+
+                // Phase display label mapping (key = data.phase from backend)
+                const phaseLabels = {
+                    validation: "檔案驗證通過",
+                    extraction: "正在提取文字...",
+                    extraction_complete: "文字提取完成",
+                    chunking: "正在分割文字...",
+                    chunking_complete: "文字分塊完成",
+                    metadata: "儲存檔案元資料...",
+                    embedding: "正在生成向量嵌入...",
+                    embedding_complete: "向量嵌入完成",
+                    saving: "儲存檔案到磁碟...",
+                    overview: "生成文件摘要...",
+                };
+
+                /**
+                 * Handle SSE events from upload.py backend.
+                 * Backend event types: start, progress, checkpoint, complete, error, warning
+                 * For progress/checkpoint, the actual phase is in data.phase
+                 * and the percent is in data.percent.
+                 */
+                function handleSSEEvent(eventType, data) {
+                    if (eventType === "error") {
+                        progStatusBadge.textContent = "失敗";
+                        progStatusBadge.className = "prog-status-badge error";
+                        updateProgress(0, "處理失敗");
+                        appendLog(
+                            `❌ 錯誤: ${data.message || data.error || "未知錯誤"}`,
+                        );
+                        progCancelBtn.style.display = "none";
+                        progDoneBtn.style.display = "";
+                        progDoneBtn.textContent = "關閉";
+                        return;
+                    }
+
+                    if (eventType === "complete") {
+                        progStatusBadge.textContent = "完成";
+                        progStatusBadge.className =
+                            "prog-status-badge completed";
+                        updateProgress(100, "處理完成！");
+                        appendLog(`✅ ${data.message || "處理完成"}`);
+                        if (data.total_chunks) {
+                            appendLog(`   chunks: ${data.total_chunks}`);
+                        }
+                        if (data.file_id) {
+                            appendLog(`   file_id: ${data.file_id}`);
+                        }
+                        if (data.total_time) {
+                            appendLog(`   耗時: ${data.total_time}`);
+                        }
+                        progCancelBtn.style.display = "none";
+                        progDoneBtn.style.display = "";
+                        if (uploadElapsedTimer) {
+                            clearInterval(uploadElapsedTimer);
+                            uploadElapsedTimer = null;
+                        }
+                        return;
+                    }
+
+                    if (eventType === "warning") {
+                        appendLog(`⚠️ ${data.message || "警告"}`);
+                        return;
+                    }
+
+                    if (eventType === "start") {
+                        updateProgress(2, "開始處理...");
+                        appendLog(`▶ ${data.message || "開始處理"}`);
+                        return;
+                    }
+
+                    if (eventType === "file_saved") {
+                        updateProgress(5, "檔案已接收");
+                        appendLog(`📁 ${data.message || "檔案已接收"}`);
+                        return;
+                    }
+
+                    // For progress/checkpoint: use data.percent and data.phase
+                    if (
+                        eventType === "progress" ||
+                        eventType === "checkpoint"
+                    ) {
+                        const pct = data.percent || 0;
+                        const phase = data.phase || "";
+                        const label =
+                            phaseLabels[phase] || data.message || phase;
+
+                        updateProgress(pct, label);
+                        appendLog(`▶ ${data.message || label}`);
+
+                        // Log extra details from data
+                        if (data.pages) appendLog(`   頁數: ${data.pages}`);
+                        if (data.characters)
+                            appendLog(`   字元數: ${data.characters}`);
+                        if (data.total_chunks)
+                            appendLog(`   chunks: ${data.total_chunks}`);
+                        return;
+                    }
+
+                    // Fallback for unknown event types
+                    appendLog(
+                        `[${eventType}] ${data.message || JSON.stringify(data)}`,
+                    );
+                }
+
+                // Close / Cancel handlers
+                progCloseBtn.addEventListener("click", () => {
+                    hideProgressModal();
+                });
+                progDoneBtn.addEventListener("click", () => {
+                    hideProgressModal();
+                });
+                progCancelBtn.addEventListener("click", () => {
+                    if (uploadAbortController) {
+                        uploadAbortController.abort();
+                        uploadAbortController = null;
+                    }
+                    hideProgressModal();
+                });
+
+                confirmUploadBtn.addEventListener("click", async () => {
+                    const files = fileInput.files;
+                    if (!files || files.length === 0) {
+                        alert("請選擇一個檔案");
+                        return;
+                    }
+
+                    const file = files[0];
+
+                    // Close file-selection modal, open progress modal
+                    uploadModal.close();
+                    showProgressModal(file.name, file.size);
+
+                    // Add spinner item to sidebar
+                    const newItem = window.docaiClient.addFileToUI(file.name);
+
+                    try {
+                        // Use SSE streaming upload
+                        const result =
+                            await window.docaiClient.uploadFileStream(
+                                file,
+                                (eventType, data) => {
+                                    handleSSEEvent(eventType, data);
+                                },
+                            );
+
+                        console.log("[DocAI Upload SSE] Complete:", result);
+
+                        // Update sidebar: spinner → checkbox
+                        window.docaiClient.updateFileStatus(
+                            newItem,
+                            "completed",
+                            result.file_id,
+                        );
+                    } catch (error) {
+                        console.error("[DocAI Upload SSE] Failed:", error);
+                        newItem.remove();
+
+                        // Show error in progress modal if still open
+                        if (progOverlay.classList.contains("active")) {
+                            handleSSEEvent("error", {
+                                message: error.message || String(error),
+                            });
+                        } else {
+                            const errorMsg =
+                                typeof error === "string"
+                                    ? error
+                                    : error.message || "未知錯誤";
+                            alert("上傳失敗：" + errorMsg);
+                        }
+                    }
+
+                    fileInput.value = "";
+                });
+
+                // 處理拖放 (可選的加分項)
+                uploadArea.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = "var(--color-primary)";
+                });
+                uploadArea.addEventListener("dragleave", (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = "var(--color-border)";
+                });
+                uploadArea.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = "var(--color-border)";
+                    // (在這裡可以添加處理拖放檔案的邏輯)
+                    // fileInput.files = e.dataTransfer.files;
                 });
             });
-
-
-            // --- 3. 模態框 (MODAL) 邏輯 ---
-            // 3.1 打開模態框
-            addSourceBtn.addEventListener('click', () => {
-                // FIX: Reset session to clear chat history and start fresh conversation
-                window.docaiClient.resetSession();
-
-                // Reset upload area text when opening modal
-                uploadAreaText.textContent = 'Drag & Drop File';
-                uploadAreaText.classList.remove('file-selected');
-                uploadAreaDivider.style.display = 'block';
-                fileInput.value = ''; // Clear file input
-                uploadModal.showModal(); // 使用 HTML <dialog> 元素的原生方法
-            });
-
-            // 3.2 關閉模態框
-            cancelUploadBtn.addEventListener('click', () => {
-                uploadModal.close(); // 使用 HTML <dialog> 元素的原生方法
-            });
-
-            // 3.3 監聽文件選擇變化 - 顯示選中的文件名
-            fileInput.addEventListener('change', (e) => {
-                const files = e.target.files;
-                if (files && files.length > 0) {
-                    // 當用戶選擇文件後，顯示文件名而不是 "Drag & Drop File"
-                    const file = files[0];
-                    uploadAreaText.innerHTML = `<i class="fa-solid fa-file-pdf" style="color: var(--color-primary); margin-right: 0.5rem;"></i>${file.name}`;
-                    uploadAreaText.classList.add('file-selected');
-                    uploadAreaDivider.style.display = 'none'; // 隱藏 "Or" 分隔線
-                } else {
-                    // 如果沒有文件被選中，恢復原始狀態
-                    uploadAreaText.textContent = 'Drag & Drop File';
-                    uploadAreaText.classList.remove('file-selected');
-                    uploadAreaDivider.style.display = 'block';
-                }
-            });
-            
-            // 點擊模態框背景時也關閉 (可選)
-            uploadModal.addEventListener("click", e => {
-                const dialogDimensions = uploadModal.getBoundingClientRect();
-                if (
-                    e.clientX < dialogDimensions.left ||
-                    e.clientX > dialogDimensions.right ||
-                    e.clientY < dialogDimensions.top ||
-                    e.clientY > dialogDimensions.bottom
-                ) {
-                    uploadModal.close();
-                }
-            });
-
-            // --- 4. 核心：上傳和即時反饋流程 ---
-            // 實現您描述的第 3、4、5 步
-            
-            confirmUploadBtn.addEventListener('click', async () => {
-                // Get selected file
-                const files = fileInput.files;
-                if (!files || files.length === 0) {
-                    alert('請選擇一個 PDF 檔案');
-                    return;
-                }
-
-                const file = files[0];
-
-                // **第 3 步: 立即關閉模態框**
-                uploadModal.close();
-
-                // **第 4 步: 立即在側邊欄添加帶有 "spinner" 的項目**
-                const newItem = window.docaiClient.addFileToUI(file.name);
-
-                // **第 5 步: 真實後端處理**
-                try {
-                    const result = await window.docaiClient.uploadFile(file);
-
-                    // Debug: Check if file_id exists
-                    console.log('[DocAI Upload] Result:', result);
-                    console.log('[DocAI Upload] File ID:', result.file_id);
-
-                    // 上傳成功，將 spinner 替換為 checkbox
-                    window.docaiClient.updateFileStatus(newItem, 'completed', result.file_id);
-
-                    console.log('[DocAI Upload] Upload completed:', result);
-                } catch (error) {
-                    // 上傳失敗，移除 UI 元素並顯示錯誤
-                    newItem.remove();  // Remove the file item from sidebar on upload failure
-                    console.error('Upload failed:', error);
-                    // Ensure error.message is a string, not object
-                    const errorMsg = typeof error === 'string' ? error : (error.message || '未知錯誤');
-                    alert('上傳失敗：' + errorMsg);
-                }
-
-                // 清空 file input
-                fileInput.value = '';
-            });
-            
-            // 處理拖放 (可選的加分項)
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.style.borderColor = 'var(--color-primary)';
-            });
-            uploadArea.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                uploadArea.style.borderColor = 'var(--color-border)';
-            });
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.style.borderColor = 'var(--color-border)';
-                // (在這裡可以添加處理拖放檔案的邏輯)
-                // fileInput.files = e.dataTransfer.files;
-            });
-            
-        });
-    </script>
-</body>
+        </script>
+    </body>
 </html>

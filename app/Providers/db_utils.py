@@ -12,8 +12,7 @@ Reference: refData/Codes/Sqlite/issues.md
 
 import asyncio
 import logging
-from typing import List, Optional, Tuple
-
+from typing import List, Tuple, Optional
 import aiosqlite
 
 logger = logging.getLogger(__name__)
@@ -24,7 +23,7 @@ async def batch_insert(
     table: str,
     columns: List[str],
     rows: List[Tuple],
-    batch_size: int = 1000,
+    batch_size: int = 1000
 ) -> int:
     """
     Batch insert rows using executemany for better performance.
@@ -44,14 +43,14 @@ async def batch_insert(
 
     Example:
         >>> rows = [
-        ...     ("doc_001", 0, "chunk text 1"),
-        ...     ("doc_001", 1, "chunk text 2"),
+        ...     ("skill_001", 0, "chunk text 1"),
+        ...     ("skill_001", 1, "chunk text 2"),
         ...     # ... more rows
         ... ]
         >>> count = await batch_insert(
         ...     conn,
-        ...     "knowledge_chunk_metadata",
-        ...     ["doc_id", "chunk_index", "chunk_text"],
+        ...     "skill_chunk_metadata",
+        ...     ["skill_id", "chunk_index", "chunk_text"],
         ...     rows,
         ...     batch_size=500
         ... )
@@ -64,31 +63,27 @@ async def batch_insert(
     if not columns:
         raise ValueError("columns list cannot be empty")
 
-    placeholders = ",".join(["?" for _ in columns])
-    column_names = ",".join(columns)
+    placeholders = ','.join(['?' for _ in columns])
+    column_names = ','.join(columns)
     sql = f"INSERT INTO {table} ({column_names}) VALUES ({placeholders})"
 
     total_inserted = 0
     total_batches = (len(rows) + batch_size - 1) // batch_size
 
     for i in range(0, len(rows), batch_size):
-        batch = rows[i : i + batch_size]
+        batch = rows[i:i + batch_size]
         batch_num = (i // batch_size) + 1
 
         try:
             await conn.executemany(sql, batch)
             await conn.commit()
             total_inserted += len(batch)
-            logger.debug(
-                f"Batch {batch_num}/{total_batches}: inserted {len(batch)} rows into {table}"
-            )
+            logger.debug(f"Batch {batch_num}/{total_batches}: inserted {len(batch)} rows into {table}")
         except Exception as e:
             logger.error(f"Batch {batch_num}/{total_batches} failed: {str(e)}")
             raise
 
-    logger.info(
-        f"batch_insert complete: {total_inserted} rows into {table} in {total_batches} batches"
-    )
+    logger.info(f"batch_insert complete: {total_inserted} rows into {table} in {total_batches} batches")
     return total_inserted
 
 
@@ -97,7 +92,7 @@ async def execute_with_retry(
     sql: str,
     params: Tuple = (),
     max_retries: int = 5,
-    base_delay: float = 0.1,
+    base_delay: float = 0.1
 ) -> None:
     """
     Execute SQL with exponential backoff retry on lock errors.
@@ -118,8 +113,8 @@ async def execute_with_retry(
     Example:
         >>> await execute_with_retry(
         ...     conn,
-        ...     "UPDATE knowledge_metadata SET total_chunks = ? WHERE doc_id = ?",
-        ...     (150, "doc_abc123")
+        ...     "UPDATE skill_metadata SET total_chunks = ? WHERE skill_id = ?",
+        ...     (150, "skill_abc123")
         ... )
     """
     last_error: Optional[Exception] = None
@@ -134,7 +129,7 @@ async def execute_with_retry(
         except aiosqlite.OperationalError as e:
             error_str = str(e).lower()
             if "locked" in error_str and attempt < max_retries - 1:
-                wait_time = (2**attempt) * base_delay  # 0.1, 0.2, 0.4, 0.8, 1.6s
+                wait_time = (2 ** attempt) * base_delay  # 0.1, 0.2, 0.4, 0.8, 1.6s
                 logger.warning(
                     f"Database locked, retry {attempt + 1}/{max_retries} in {wait_time:.1f}s"
                 )
@@ -196,7 +191,7 @@ async def checkpoint_wal(conn: aiosqlite.Connection, mode: str = "PASSIVE") -> d
             "mode": mode,
             "busy": row[0] if row else -1,
             "log": row[1] if row else -1,
-            "checkpointed": row[2] if row else -1,
+            "checkpointed": row[2] if row else -1
         }
 
         if result["busy"] == 0:
@@ -254,7 +249,7 @@ async def get_wal_stats(conn: aiosqlite.Connection) -> dict:
         return {
             "journal_mode": journal_mode,
             "wal_autocheckpoint": autocheckpoint,
-            "page_size": page_size,
+            "page_size": page_size
         }
 
     except Exception as e:

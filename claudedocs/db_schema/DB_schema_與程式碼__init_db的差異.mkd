@@ -1,0 +1,25 @@
+但這裡有個重要問題 — **這兩個 DB 的 schema 與程式碼中 `_init_db()` 的定義不同**：
+
+| 差異點 | DB 實際 schema | 程式碼 `_init_db()` |
+|--------|---------------|-------------------|
+| `skill_metadata` 主要 chunk 欄位 | `chunk_count` | `total_chunks` |
+| `skill_metadata` 索引路徑 | `index_path` | 無此欄位 |
+| `skill_metadata` 描述 | `description` | 無（有 `source_type`, `file_path`, `chunk_size`, `chunk_overlap`, `config_json`） |
+| `skill_heads` 狀態 | `status` | `is_active` (INTEGER) |
+| `skill_heads` UNIQUE | `skill_name UNIQUE` | 無 UNIQUE 約束 |
+| `skill_chunk_metadata` PK | `chunk_id TEXT` | `id INTEGER AUTOINCREMENT` |
+
+這表示 **DB 檔案是由舊版程式碼建立的，與當前分支的 `_init_db()` 不匹配**。
+
+你接下來想做什麼？我可以：
+1. **深入比對**：逐欄位對照 DB schema vs 程式碼中所有 SQL 查詢（23 個檔案），找出所有不相容點
+2. **設計修復方案**：制定 migration plan 讓 DB schema 與當前程式碼對齊
+3. **確認空白範本可用性**：驗證直接用 DB2 空白範本是否能讓系統正常啟動
+
+---
+skill_head  
+skill_metadata
+skill_document_mapping
+skill_chunk_metadata
+processing_jobs
+

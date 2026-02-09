@@ -59,6 +59,7 @@ from app.Providers.skill_metadata_provider.client import (
     get_skill_metadata_provider,
 )
 from app.Providers.vector_store_provider.client import VectorStoreProvider
+from app.Services.input_data_handle_service import InputDataHandleService
 from app.Services.prompt_service import PromptService, get_prompt_service
 from app.SkillServices.index_integrity import (
     diagnose_incomplete_index,
@@ -101,13 +102,13 @@ class SkillCreateRequest(BaseModel):
 class SkillResponse(BaseModel):
     """Response model for skill details"""
 
-    doc_id: str
-    knowledge_name: str
-    knowledge_description: Optional[str]
-    knowledge_type: Optional[str]
+    skill_id: str
+    skill_name: str
+    skill_description: Optional[str]
+    skill_category: Optional[str]
     total_chunks: int
     created_at: str
-    parent_knowledge_id: Optional[str] = "root"  # For 3-level tree hierarchy
+    parent_skill_id: Optional[str] = "root"  # For 3-level tree hierarchy
     source_name: Optional[str] = ""  # Document name for instant attachments
 
 
@@ -115,9 +116,7 @@ class SkillChatRequest(BaseModel):
     """Request model for chatting with skills"""
 
     query: str = Field(..., min_length=1)
-    doc_ids: List[str] = Field(
-        ..., min_items=1, description="List of active knowledge documents"
-    )
+    skill_ids: List[str] = Field(..., min_items=1, description="List of active skills")
     temperature: float = Field(0.7, ge=0.0, le=1.0)
 
 
@@ -145,7 +144,7 @@ class PDFSourceModel(BaseModel):
 class SkillConfigModel(BaseModel):
     """Model for skill configuration"""
 
-    knowledge_name: str
+    skill_name: str
     description: str = ""
     category: str = "General"
     enabled: bool = True
@@ -155,14 +154,14 @@ class SkillConfigModel(BaseModel):
 class AddSourceRequest(BaseModel):
     """Request to add a PDF source to a skill"""
 
-    knowledge_name: str
+    skill_name: str
     source: PDFSourceModel
 
 
 class InstantAttachmentRequest(BaseModel):
     """Request to add an instant attachment"""
 
-    knowledge_name: str
+    skill_name: str
     path: str
     description: Optional[str] = ""
 
@@ -170,8 +169,8 @@ class InstantAttachmentRequest(BaseModel):
 class RebuildRequest(BaseModel):
     """Request to rebuild skills"""
 
-    knowledge_name: Optional[str] = Field(
-        None, description="Optional: only rebuild this knowledge"
+    skill_name: Optional[str] = Field(
+        None, description="Optional: only rebuild this skill"
     )
     clean_first: bool = Field(True, description="Clean existing data before rebuild")
     use_smart_strategy: bool = Field(
@@ -267,11 +266,11 @@ async def create_skill(
         existing_main_skills = [
             s
             for s in existing_skills
-            if s.get("parent_knowledge_id") == "root" and s.get("doc_id") != "root"
+            if s.get("parent_skill_id") == "root" and s.get("skill_id") != "root"
         ]
 
         for skill in existing_main_skills:
-            if skill.get("knowledge_name") == request.name:
+            if skill.get("skill_name") == request.name:
                 raise HTTPException(
                     status_code=409,  # Conflict - duplicate resource
                     detail=f"Skill name '{request.name}' already exists. Please use a different name.",
@@ -279,16 +278,16 @@ async def create_skill(
 
         # 1. Process and Chunk
         processed_skill = await ingestion_service.process_skill(
-            knowledge_name=request.name,
+            skill_name=request.name,
             skill_content=request.content,
-            knowledge_description=request.description,
-            knowledge_type=request.category,
-            knowledge_level=request.level,
+            skill_description=request.description,
+            skill_category=request.category,
+            skill_level=request.level,
             tags=request.tags,
             skill_metadata_provider=metadata_provider,
         )
 
-        doc_id = processed_skill["doc_id"]
+        skill_id = processed_skill["skill_id"]
         chunks_data = processed_skill["chunks"]
 
         # Extract just text list for vector store
@@ -298,25 +297,25 @@ async def create_skill(
         # 2. Store Vectors (FAISS)
         # Note: This creates the 'skill' store type folder
         await retrieval_service.add_content(
-            content_id=doc_id, chunks=chunk_texts, metadata=chunk_metadatas
+            content_id=skill_id, chunks=chunk_texts, metadata=chunk_metadatas
         )
 
         # 3. Store Metadata (SQLite)
         await metadata_provider.create_skill(
-            doc_id=doc_id,
-            knowledge_name=request.name,
-            knowledge_description=request.description,
-            knowledge_type=request.category,
-            knowledge_level=request.level,
+            skill_id=skill_id,
+            skill_name=request.name,
+            skill_description=request.description,
+            skill_category=request.category,
+            skill_level=request.level,
             tags=request.tags,
             total_chunks=processed_skill["chunk_count"],
         )
 
         return SkillResponse(
-            doc_id=doc_id,
-            knowledge_name=processed_skill["knowledge_name"],
-            knowledge_description=processed_skill["knowledge_description"],
-            knowledge_type=processed_skill["knowledge_type"],
+            skill_id=skill_id,
+            skill_name=processed_skill["skill_name"],
+            skill_description=processed_skill["skill_description"],
+            skill_category=processed_skill["skill_category"],
             total_chunks=processed_skill["chunk_count"],
             created_at=datetime.now(timezone.utc).isoformat(),
         )
@@ -351,10 +350,10 @@ async def get_demo_skills(
         "Technology": "🔬",
     }
 
-    def get_icon(knowledge_name: str, category: str) -> str:
-        """Auto-assign icon based on knowledge name or category"""
+    def get_icon(skill_name: str, category: str) -> str:
+        """Auto-assign icon based on skill name or category"""
         for keyword, icon in ICON_MAPPING.items():
-            if keyword in knowledge_name or keyword in (category or ""):
+            if keyword in skill_name or keyword in (category or ""):
                 return icon
         return "📁"  # Default icon
 
@@ -363,53 +362,53 @@ async def get_demo_skills(
         skills = await provider.list_skills()
         demo_skills = []
 
-        # Load display_order from knowledge_info table (SQLite - Single Source of Truth)
+        # Load display_order from skill_heads table (SQLite - Single Source of Truth)
         # No longer depends on skill_config.json
         skill_heads = await provider.list_skill_heads(enabled_only=False)
-        # Build a map of knowledge_name -> display_order from knowledge_info
+        # Build a map of skill_name -> display_order from skill_heads
         display_order_map = {
-            h["knowledge_name"]: h.get("display_order", 999) for h in skill_heads
+            h["skill_name"]: h.get("display_order", 999) for h in skill_heads
         }
 
         for skill in skills:
-            doc_id = skill.get("doc_id")
-            knowledge_name = skill.get("knowledge_name", "Unknown")
-            knowledge_type = skill.get("knowledge_type", "General")
-            parent_knowledge_id = skill.get("parent_knowledge_id", "root")
+            skill_id = skill.get("skill_id")
+            skill_name = skill.get("skill_name", "Unknown")
+            skill_category = skill.get("skill_category", "General")
+            parent_skill_id = skill.get("parent_skill_id", "root")
 
             # Skip system root record
-            if doc_id == "root":
+            if skill_id == "root":
                 continue
 
-            # Get display_order: main skills get from knowledge_info, attachments inherit from parent
-            if parent_knowledge_id == "root":
-                # Main skill - get order from knowledge_info table
-                display_order = display_order_map.get(knowledge_name, 999)
+            # Get display_order: main skills get from skill_heads, attachments inherit from parent
+            if parent_skill_id == "root":
+                # Main skill - get order from skill_heads table
+                display_order = display_order_map.get(skill_name, 999)
             else:
                 # Instant attachment - inherit parent's display_order + 0.1 to stay grouped
                 parent_skill = next(
-                    (s for s in skills if s.get("doc_id") == parent_knowledge_id), None
+                    (s for s in skills if s.get("skill_id") == parent_skill_id), None
                 )
                 if parent_skill:
-                    parent_name = parent_skill.get("knowledge_name", "")
+                    parent_name = parent_skill.get("skill_name", "")
                     display_order = display_order_map.get(parent_name, 999) + 0.1
                 else:
                     display_order = 999
 
             demo_skill = {
-                "id": doc_id,
-                "doc_id": doc_id,  # Include both formats for compatibility
-                "name": knowledge_name,
-                "knowledge_name": knowledge_name,
-                "description": skill.get("knowledge_description", ""),
-                "icon": get_icon(knowledge_name, knowledge_type),
-                "tag": knowledge_type,
-                "knowledge_type": knowledge_type,
+                "id": skill_id,
+                "skill_id": skill_id,  # Include both formats for compatibility
+                "name": skill_name,
+                "skill_name": skill_name,
+                "description": skill.get("skill_description", ""),
+                "icon": get_icon(skill_name, skill_category),
+                "tag": skill_category,
+                "skill_category": skill_category,
                 "fileCount": skill.get("file_count", 0),
                 "chunkCount": skill.get("total_chunks", 0),
                 "total_chunks": skill.get("total_chunks", 0),
                 "status": "ready",
-                "parent_knowledge_id": parent_knowledge_id,
+                "parent_skill_id": parent_skill_id,
                 "source_name": skill.get(
                     "source_name", ""
                 ),  # Document name for instant attachments
@@ -432,8 +431,8 @@ async def get_demo_skills(
 
 @router.post("/demo/query")
 async def query_demo_skill(
-    doc_id: str = Body(None, embed=False),  # Single doc (backward compat)
-    doc_ids: List[str] = Body(None, embed=False),  # Multi-doc support
+    skill_id: str = Body(None, embed=False),  # Single skill (backward compat)
+    skill_ids: List[str] = Body(None, embed=False),  # Multi-skill support
     query: str = Body(..., embed=False),
     top_k: int = Body(10, embed=False),
     # Memory 參數
@@ -450,64 +449,60 @@ async def query_demo_skill(
 ):
     """
     Demo-optimized skill query endpoint with parallel search.
-    Supports single doc_id (backward compat) or multiple doc_ids (multi-select).
+    Supports single skill_id (backward compat) or multiple skill_ids (multi-select).
     """
     try:
         # Build skill list - support both single and multi-skill queries
-        if doc_ids:
-            target_doc_ids = doc_ids
-        elif doc_id:
-            target_doc_ids = [doc_id]
+        if skill_ids:
+            target_skill_ids = skill_ids
+        elif skill_id:
+            target_skill_ids = [skill_id]
         else:
-            raise HTTPException(status_code=400, detail="doc_id or doc_ids required")
+            raise HTTPException(
+                status_code=400, detail="skill_id or skill_ids required"
+            )
 
-        # ✅ FIX: Support both doc_id and knowledge_id
-        # Frontend may send knowledge_id when clicking skill header without expanding
-        valid_doc_ids = []
-        knowledge_names = {}  # Cache knowledge names for citation
+        # ✅ FIX: Support both skill_id and head_id
+        # Frontend may send head_id when clicking skill header without expanding
+        valid_skill_ids = []
+        skill_names = {}  # Cache skill names for citation
 
-        for sid in target_doc_ids:
-            # Check if this is a knowledge_id (starts with 'knowledge_')
-            if sid.startswith("knowledge_"):
-                # Get all doc_ids under this knowledge head
+        for sid in target_skill_ids:
+            # Check if this is a head_id (starts with 'head_')
+            if sid.startswith("head_"):
+                # Get all skill_ids under this head
                 head_skills = await metadata_provider.list_skills(limit=1000)
-                matching_skills = [
-                    s for s in head_skills if s.get("knowledge_id") == sid
-                ]
+                matching_skills = [s for s in head_skills if s.get("head_id") == sid]
 
                 for skill in matching_skills:
-                    cur_doc_id = skill.get("doc_id")
-                    if cur_doc_id:
+                    skill_id = skill.get("skill_id")
+                    if skill_id:
                         mappings = await metadata_provider.get_documents_for_skill(
-                            cur_doc_id
+                            skill_id
                         )
                         if mappings:
-                            valid_doc_ids.append(cur_doc_id)
-                            # Cache knowledge name
-                            knowledge_names[cur_doc_id] = skill.get(
-                                "knowledge_name", cur_doc_id
-                            )
+                            valid_skill_ids.append(skill_id)
+                            # Cache skill name
+                            skill_names[skill_id] = skill.get("skill_name", skill_id)
                             source_name = skill.get("source_name", "")
                             if source_name:
-                                knowledge_names[cur_doc_id] = source_name
+                                skill_names[skill_id] = source_name
             else:
-                # Regular doc_id processing
+                # Regular skill_id processing
                 mappings = await metadata_provider.get_documents_for_skill(sid)
                 if mappings:
-                    valid_doc_ids.append(sid)
-                    # Get knowledge name for citation
+                    valid_skill_ids.append(sid)
+                    # Get skill name for citation
                     skill_info = await metadata_provider.get_skill(sid)
                     if skill_info:
-                        knowledge_names[sid] = skill_info.get("knowledge_name", sid)
+                        skill_names[sid] = skill_info.get("skill_name", sid)
                         # Also get source_name for instant attachments
                         metadata = skill_info.get("metadata", {})
                         if metadata and metadata.get("source_file"):
                             source_file = metadata["source_file"]
-                            knowledge_names[sid] = source_file.split("/")[-1].replace(
-                                ".pdf", ""
-                            )
+                            skill_names[sid] = Path(source_file.split("/")[-1]).stem
 
-        if not valid_doc_ids:
+        if not valid_skill_ids:
             raise HTTPException(
                 status_code=404, detail=f"No documents found for specified skills"
             )
@@ -515,11 +510,11 @@ async def query_demo_skill(
         # =========================================================================
         # Session Management - Memory 功能
         # =========================================================================
-        # Session ID 格式: skill_{user_id}_{primary_doc_id}
+        # Session ID 格式: skill_{user_id}_{primary_skill_id}
         effective_user_id = user_id or settings.DEFAULT_USER_ID
-        primary_doc_id = doc_id or (valid_doc_ids[0] if valid_doc_ids else None)
+        primary_skill_id = skill_id or (valid_skill_ids[0] if valid_skill_ids else None)
         effective_session_id = (
-            session_id or f"skill_{effective_user_id}_{primary_doc_id}"
+            session_id or f"skill_{effective_user_id}_{primary_skill_id}"
         )
 
         # 確保 Session 存在
@@ -527,8 +522,8 @@ async def query_demo_skill(
             await chat_history_provider.create_session(
                 session_id=effective_session_id,
                 user_id=effective_user_id,
-                file_ids=[primary_doc_id] if primary_doc_id else [],
-                metadata={"type": "skill_chat", "doc_id": primary_doc_id},
+                file_ids=[primary_skill_id] if primary_skill_id else [],
+                metadata={"type": "skill_chat", "skill_id": primary_skill_id},
             )
             logger.info(f"Created new session: {effective_session_id}")
 
@@ -540,9 +535,9 @@ async def query_demo_skill(
             )
             logger.debug(f"Loaded {len(chat_history)} messages from history")
 
-        # IMPORTANT: Use doc_id directly as content_id for FAISS search
-        # The FAISS store is indexed by doc_id, not individual document IDs
-        content_ids = valid_doc_ids  # Multi-skill search
+        # IMPORTANT: Use skill_id directly as content_id for FAISS search
+        # The FAISS store is indexed by skill_id, not individual document IDs
+        content_ids = valid_skill_ids  # Multi-skill search
 
         # Level 1 並行搜尋優化 - Parallel search across skills
         if len(content_ids) > 1:
@@ -582,16 +577,16 @@ async def query_demo_skill(
             # Try to find skills that might contain this query
             suggestions = []
             for skill in all_skills:
-                cur_doc_id = skill.get("doc_id")
-                knowledge_name = skill.get("knowledge_name", "")
+                skill_id = skill.get("skill_id")
+                skill_name = skill.get("skill_name", "")
                 source_name = skill.get("source_name", "")
 
                 # Skip currently selected skills
-                if cur_doc_id in valid_doc_ids:
+                if skill_id in valid_skill_ids:
                     continue
 
-                # Simple keyword matching in knowledge/source names
-                search_text = f"{knowledge_name} {source_name}".lower()
+                # Simple keyword matching in skill/source names
+                search_text = f"{skill_name} {source_name}".lower()
                 query_keywords = query.lower().split()
 
                 # If any query keyword matches, suggest this skill
@@ -602,26 +597,24 @@ async def query_demo_skill(
                 ):
                     suggestions.append(
                         {
-                            "knowledge_name": knowledge_name,
+                            "skill_name": skill_name,
                             "source_name": source_name,
-                            "doc_id": cur_doc_id,
+                            "skill_id": skill_id,
                             "chunks": skill.get("total_chunks", 0),
                         }
                     )
 
             # Build helpful response
-            selected_names = [knowledge_names.get(sid, sid) for sid in valid_doc_ids]
+            selected_names = [skill_names.get(sid, sid) for sid in valid_skill_ids]
             answer = f"抱歉，我在您選擇的文檔「{', '.join(selected_names)}」中沒有找到與「{query}」相關的資訊。"
 
             if suggestions[:3]:  # Show top 3 suggestions
                 answer += "\n\n💡 建議：以下文檔可能包含相關內容：\n"
                 for sug in suggestions[:3]:
                     display_name = (
-                        sug["source_name"]
-                        if sug["source_name"]
-                        else sug["knowledge_name"]
+                        sug["source_name"] if sug["source_name"] else sug["skill_name"]
                     )
-                    answer += f"  • 📁 {sug['knowledge_name']} - {display_name} ({sug['chunks']} chunks)\n"
+                    answer += f"  • 📁 {sug['skill_name']} - {display_name} ({sug['chunks']} chunks)\n"
                 answer += "\n請在左側技能樹中選擇相應的文檔重新搜尋。"
 
             # Save conversation even for no-result queries
@@ -629,7 +622,7 @@ async def query_demo_skill(
                 session_id=effective_session_id,
                 role="user",
                 content=query,
-                metadata={"doc_id": primary_doc_id, "no_results": True},
+                metadata={"skill_id": primary_skill_id, "no_results": True},
             )
             await chat_history_provider.add_message(
                 session_id=effective_session_id,
@@ -645,7 +638,7 @@ async def query_demo_skill(
                 "answer": answer,
                 "results": [],
                 "query": query,
-                "documents_searched": len(valid_doc_ids),
+                "documents_searched": len(valid_skill_ids),
                 "suggestions": suggestions[:3] if suggestions else [],
                 "session_id": effective_session_id,
             }
@@ -666,7 +659,7 @@ async def query_demo_skill(
             doc_name = metadata.get("document_name")
             if not doc_name or doc_name == "Unknown":
                 content_id = metadata.get("content_id", "")
-                doc_name = knowledge_names.get(content_id, content_id or "Unknown")
+                doc_name = skill_names.get(content_id, content_id or "Unknown")
             page_num = metadata.get("page_number", 0)
 
             # Add citation reference
@@ -710,7 +703,7 @@ async def query_demo_skill(
             session_id=effective_session_id,
             role="user",
             content=query,
-            metadata={"doc_id": primary_doc_id, "doc_ids": valid_doc_ids},
+            metadata={"skill_id": primary_skill_id, "skill_ids": valid_skill_ids},
         )
         await chat_history_provider.add_message(
             session_id=effective_session_id,
@@ -728,7 +721,7 @@ async def query_demo_skill(
         for r in context_results[:5]:
             meta = r.get("metadata", {})
             content_id = meta.get("content_id", "")
-            r_doc_name = meta.get("document_name") or knowledge_names.get(
+            r_doc_name = meta.get("document_name") or skill_names.get(
                 content_id, content_id or "Unknown"
             )
             r_page = meta.get("page_number", 0)
@@ -744,8 +737,8 @@ async def query_demo_skill(
             )
 
         return {
-            "doc_id": doc_id or (valid_doc_ids[0] if valid_doc_ids else None),
-            "doc_ids": valid_doc_ids,  # All searched docs
+            "skill_id": skill_id or (valid_skill_ids[0] if valid_skill_ids else None),
+            "skill_ids": valid_skill_ids,  # All searched skills
             "query": query,
             "answer": answer,
             "results": results,
@@ -783,7 +776,7 @@ async def chat_with_skills(
 
         context_results = await retrieval_service.retrieve_context(
             query=request.query,
-            content_ids=request.doc_ids,
+            content_ids=request.skill_ids,
             top_k=5,  # Total chunks
             include_scores=True,
         )
@@ -811,7 +804,7 @@ async def chat_with_skills(
             context_used=[
                 {
                     "content": c.get("content")[:50] + "...",
-                    "doc_id": c.get("metadata", {}).get("doc_id"),
+                    "skill_id": c.get("metadata", {}).get("skill_id"),
                 }
                 for c in context_results
             ],
@@ -840,7 +833,7 @@ async def get_skill_config(
 
     Get the current skill configuration.
     Returns all skills with their PDF sources.
-    Also queries database for instant attachments (docs with parent_knowledge_id != 'root').
+    Also queries database for instant attachments (skills with parent_skill_id != 'root').
 
     NOTE: This endpoint still reads from skill_config.json for backward compatibility.
     New code should use /tree and /heads endpoints which use SQLite as single source of truth.
@@ -855,21 +848,21 @@ async def get_skill_config(
             if source_path.exists():
                 source["size_mb"] = round(source_path.stat().st_size / (1024 * 1024), 2)
 
-    # Query database for instant attachments (docs with parent_knowledge_id != 'root')
+    # Query database for instant attachments (skills with parent_skill_id != 'root')
     try:
         all_skills = await provider.list_skills()
         db_instant_attachments = [
             {
-                "doc_id": s["doc_id"],
-                "knowledge_name": s["knowledge_name"],
+                "skill_id": s["skill_id"],
+                "skill_name": s["skill_name"],
                 "source_name": s.get("source_name", ""),
-                "parent_knowledge_id": s.get("parent_knowledge_id", "root"),
+                "parent_skill_id": s.get("parent_skill_id", "root"),
                 "total_chunks": s.get("total_chunks", 0),
-                "category": s.get("knowledge_type", "General"),
+                "category": s.get("skill_category", "General"),
             }
             for s in all_skills
-            if s.get("parent_knowledge_id", "root") != "root"
-            and s.get("doc_id") != "root"
+            if s.get("parent_skill_id", "root") != "root"
+            and s.get("skill_id") != "root"
         ]
         # Use database count instead of config file
         instant_count = len(db_instant_attachments)
@@ -924,7 +917,7 @@ async def get_config_skills():
 
         skills.append(
             {
-                "knowledge_name": skill.get("knowledge_name"),
+                "skill_name": skill.get("skill_name"),
                 "description": skill.get("description", ""),
                 "category": skill.get("category", "General"),
                 "enabled": skill.get("enabled", True),
@@ -949,15 +942,15 @@ async def add_skill_to_config(skill: SkillConfigModel):
 
     # Check if skill already exists
     for existing in skills:
-        if existing.get("knowledge_name") == skill.knowledge_name:
+        if existing.get("skill_name") == skill.skill_name:
             raise HTTPException(
                 status_code=409,
-                detail=f"Skill name '{skill.knowledge_name}' already exists. Please use a different name.",
+                detail=f"Skill name '{skill.skill_name}' already exists. Please use a different name.",
             )
 
     # Add new skill
     new_skill = {
-        "knowledge_name": skill.knowledge_name,
+        "skill_name": skill.skill_name,
         "description": skill.description,
         "category": skill.category,
         "enabled": skill.enabled,
@@ -969,13 +962,13 @@ async def add_skill_to_config(skill: SkillConfigModel):
     save_skill_config(config)
 
     return {
-        "message": f"Skill '{skill.knowledge_name}' added successfully",
+        "message": f"Skill '{skill.skill_name}' added successfully",
         "skill": new_skill,
     }
 
 
-@router.post("/config/skills/{knowledge_name}/sources")
-async def add_source_to_skill(knowledge_name: str, source: PDFSourceModel):
+@router.post("/config/skills/{skill_name}/sources")
+async def add_source_to_skill(skill_name: str, source: PDFSourceModel):
     """
     Add a PDF source to an existing skill.
     """
@@ -985,7 +978,7 @@ async def add_source_to_skill(knowledge_name: str, source: PDFSourceModel):
     # Find skill
     skill_found = False
     for skill in skills:
-        if skill.get("knowledge_name") == knowledge_name:
+        if skill.get("skill_name") == skill_name:
             skill_found = True
             sources = skill.get("sources", [])
 
@@ -1010,16 +1003,11 @@ async def add_source_to_skill(knowledge_name: str, source: PDFSourceModel):
             break
 
     if not skill_found:
-        raise HTTPException(
-            status_code=404, detail=f"Skill '{knowledge_name}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
 
     save_skill_config(config)
 
-    return {
-        "message": f"Source added to skill '{knowledge_name}'",
-        "source": source.dict(),
-    }
+    return {"message": f"Source added to skill '{skill_name}'", "source": source.dict()}
 
 
 # =============================================================================
@@ -1029,28 +1017,28 @@ async def add_source_to_skill(knowledge_name: str, source: PDFSourceModel):
 
 async def process_pdf_for_skill(
     pdf_path: Path,
-    knowledge_name: str,
-    knowledge_description: str,
-    knowledge_type: str = "General",
-    parent_knowledge_id: str = "root",
-    knowledge_id: str = None,
+    skill_name: str,
+    skill_description: str,
+    skill_category: str = "General",
+    parent_skill_id: str = "root",
+    head_id: str = None,
 ) -> Dict[str, Any]:
     """
     Process a PDF file: extract text, generate embeddings, store in FAISS and SQLite.
 
     Args:
         pdf_path: Path to the PDF file
-        knowledge_name: Name of the knowledge this PDF belongs to
-        knowledge_description: Description of the knowledge
-        knowledge_type: Type/category of the knowledge
-        parent_knowledge_id: Parent knowledge ID for hierarchy ('root' for main,
-                         existing doc_id for instant attachments)
-        knowledge_id: Reference to knowledge_info table (new architecture)
+        skill_name: Name of the skill this PDF belongs to
+        skill_description: Description of the skill
+        skill_category: Category of the skill
+        parent_skill_id: Parent skill ID for hierarchy ('root' for main skills,
+                         existing skill_id for instant attachments)
+        head_id: Reference to skill_heads table (new architecture)
 
     Returns:
         Dictionary with processing results
     """
-    logger.info(f"Processing PDF for skill '{knowledge_name}': {pdf_path}")
+    logger.info(f"Processing PDF for skill '{skill_name}': {pdf_path}")
 
     # Initialize providers
     embedding_provider = get_bge_embedding_provider()
@@ -1059,23 +1047,23 @@ async def process_pdf_for_skill(
 
     embedding_dimension = 1024  # BGE-M3 dimension
 
-    # Generate doc ID - FIXED: Include file hash to prevent collision
+    # Generate skill ID - FIXED: Include file hash to prevent collision
     # When multiple files uploaded to same skill in same second, they need unique IDs
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    name_hash = hashlib.md5(knowledge_name.encode("utf-8")).hexdigest()[:8]
+    name_hash = hashlib.md5(skill_name.encode("utf-8")).hexdigest()[:8]
     file_hash = hashlib.md5(pdf_path.name.encode("utf-8")).hexdigest()[
         :6
     ]  # Add file-specific hash
-    doc_id = f"doc_{timestamp}_{name_hash}_{file_hash}"
+    skill_id = f"skill_{timestamp}_{name_hash}_{file_hash}"
 
-    logger.info(f"Generated doc_id: {doc_id} for file: {pdf_path.name}")
+    logger.info(f"Generated skill_id: {skill_id} for file: {pdf_path.name}")
 
     # ========== PHASE 1: Initialize Processing Status ==========
     try:
         await metadata_provider.update_processing_status(
-            doc_id=doc_id, status="processing", indexed_chunks=0
+            skill_id=skill_id, status="processing", indexed_chunks=0
         )
-        logger.info(f"Set processing status to 'processing' for {doc_id}")
+        logger.info(f"Set processing status to 'processing' for {skill_id}")
     except Exception as e:
         logger.warning(f"Failed to initialize processing status: {e}")
 
@@ -1115,16 +1103,16 @@ async def process_pdf_for_skill(
     all_chunks = []
     all_embeddings = []
 
-    document_hash_id = f"docfile_{hashlib.md5(str(pdf_path).encode()).hexdigest()[:8]}"
+    doc_id = f"doc_{hashlib.md5(str(pdf_path).encode()).hexdigest()[:8]}"
 
     # ========== PHASE 4: Create Chunks (WITHOUT embeddings yet) ==========
     for page_num, page_text in enumerate(pages, 1):
-        chunk_id = f"{doc_id}_{document_hash_id}_p{page_num}"
+        chunk_id = f"{skill_id}_{doc_id}_p{page_num}"
 
         chunk_metadata = {
             "chunk_id": chunk_id,
-            "doc_id": doc_id,
-            "document_id": document_hash_id,
+            "skill_id": skill_id,
+            "document_id": doc_id,
             "document_name": pdf_path.stem,
             "page_number": page_num,
             "chunk_index": len(all_chunks),
@@ -1189,7 +1177,7 @@ async def process_pdf_for_skill(
                 if retry_count >= MAX_RETRIES:
                     # Final retry failed - mark as failed and raise
                     await metadata_provider.update_processing_status(
-                        doc_id=doc_id,
+                        skill_id=skill_id,
                         status="failed",
                         indexed_chunks=len(
                             all_embeddings
@@ -1211,7 +1199,7 @@ async def process_pdf_for_skill(
 
         # Update progress in database
         await metadata_provider.update_processing_status(
-            doc_id=doc_id, status="processing", indexed_chunks=len(all_embeddings)
+            skill_id=skill_id, status="processing", indexed_chunks=len(all_embeddings)
         )
         logger.info(
             f"📊 Progress: {len(all_embeddings)}/{len(all_chunks)} embeddings generated"
@@ -1237,7 +1225,7 @@ async def process_pdf_for_skill(
             texts=texts,
             embeddings=EmbeddingWrapper(embedding_provider),
             metadatas=metadata_list,
-            file_id=doc_id,
+            file_id=skill_id,
             store_type="skill",
             precomputed_embeddings=all_embeddings,
         )
@@ -1247,7 +1235,7 @@ async def process_pdf_for_skill(
     except Exception as e:
         logger.error(f"Error storing embeddings: {e}")
         await metadata_provider.update_processing_status(
-            doc_id=doc_id, status="failed", error=f"FAISS storage failed: {str(e)}"
+            skill_id=skill_id, status="failed", error=f"FAISS storage failed: {str(e)}"
         )
         raise HTTPException(
             status_code=500, detail=f"Failed to store embeddings: {str(e)}"
@@ -1256,13 +1244,13 @@ async def process_pdf_for_skill(
     # ========== PHASE 5: VERIFY INDEX INTEGRITY ==========
     try:
         is_valid, actual_vectors, error = await verify_index_integrity(
-            doc_id=doc_id, expected_chunks=len(all_chunks)
+            skill_id=skill_id, expected_chunks=len(all_chunks)
         )
 
         if not is_valid:
             # Integrity check failed - mark as failed
             await metadata_provider.update_processing_status(
-                doc_id=doc_id,
+                skill_id=skill_id,
                 status="failed",
                 indexed_chunks=actual_vectors,
                 error=error,
@@ -1270,14 +1258,14 @@ async def process_pdf_for_skill(
 
             # Get diagnostic information
             diagnosis = await diagnose_incomplete_index(
-                doc_id=doc_id, expected_chunks=len(all_chunks)
+                skill_id=skill_id, expected_chunks=len(all_chunks)
             )
 
             logger.error(f"Index integrity verification failed: {diagnosis}")
 
             raise HTTPException(
                 status_code=500,
-                detail=f"FAISS index verification failed for {doc_id}. "
+                detail=f"FAISS index verification failed for {skill_id}. "
                 f"Expected {len(all_chunks)} vectors, got {actual_vectors}. "
                 f"Diagnosis: {diagnosis.get('recommendations', [])}",
             )
@@ -1291,7 +1279,7 @@ async def process_pdf_for_skill(
     except Exception as e:
         logger.error(f"Index verification error: {e}")
         await metadata_provider.update_processing_status(
-            doc_id=doc_id,
+            skill_id=skill_id,
             status="failed",
             error=f"Index verification failed: {str(e)}",
         )
@@ -1303,17 +1291,17 @@ async def process_pdf_for_skill(
     # Per-PDF Architecture: source_name should be the PDF filename (stem)
     source_name = pdf_path.stem  # e.g., "民法", "刑法"
     logger.info(
-        f"Setting source_name='{source_name}' for doc_id={doc_id} (from pdf_path.stem)"
+        f"Setting source_name='{source_name}' for skill_id={skill_id} (from pdf_path.stem)"
     )
 
     try:
         await metadata_provider.create_skill(
-            doc_id=doc_id,
-            knowledge_name=knowledge_name,
-            knowledge_description=knowledge_description,
-            knowledge_type=knowledge_type,
-            knowledge_level="professional",
-            tags=[knowledge_type.lower()],
+            skill_id=skill_id,
+            skill_name=skill_name,
+            skill_description=skill_description,
+            skill_category=skill_category,
+            skill_level="professional",
+            tags=[skill_category.lower()],
             total_chunks=len(all_chunks),
             metadata={
                 "embedding_model": "BAAI/bge-m3",
@@ -1321,9 +1309,9 @@ async def process_pdf_for_skill(
                 "source_file": str(pdf_path),
                 "is_per_pdf_child": True,  # Mark as Per-PDF child
             },
-            parent_knowledge_id=parent_knowledge_id,
+            parent_skill_id=parent_skill_id,
             source_name=source_name,  # ✅ Per-PDF: Set the PDF filename
-            knowledge_id=knowledge_id,  # ✅ Link to knowledge_info table (new architecture)
+            head_id=head_id,  # ✅ Link to skill_heads table (new architecture)
         )
 
         # Store document mapping and chunk metadata
@@ -1334,11 +1322,11 @@ async def process_pdf_for_skill(
         # Insert document mapping
         cursor.execute(
             """
-            INSERT INTO knowledge_document_mapping
-            (doc_id, file_id, document_name, document_path, total_pages, relevance_score)
+            INSERT INTO skill_document_mapping
+            (skill_id, file_id, document_name, document_path, total_pages, relevance_score)
             VALUES (?, ?, ?, ?, ?, ?)
         """,
-            (doc_id, document_hash_id, pdf_path.stem, str(pdf_path), len(pages), 1.0),
+            (skill_id, doc_id, pdf_path.stem, str(pdf_path), len(pages), 1.0),
         )
 
         # Insert chunk metadata
@@ -1346,14 +1334,14 @@ async def process_pdf_for_skill(
             metadata = chunk["metadata"]
             cursor.execute(
                 """
-                INSERT INTO knowledge_chunk_metadata
-                (chunk_id, doc_id, document_id, document_name, page_number,
+                INSERT INTO skill_chunk_metadata
+                (chunk_id, skill_id, document_id, document_name, page_number,
                  chunk_index, chunk_text, embedding_model, embedding_dimension, metadata)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     metadata["chunk_id"],
-                    doc_id,
+                    skill_id,
                     metadata["document_id"],
                     metadata["document_name"],
                     metadata["page_number"],
@@ -1368,12 +1356,12 @@ async def process_pdf_for_skill(
         conn.commit()
         conn.close()
 
-        logger.info(f"Stored metadata in SQLite for doc {doc_id}")
+        logger.info(f"Stored metadata in SQLite for skill {skill_id}")
 
     except Exception as e:
         logger.error(f"Error storing metadata: {e}")
         await metadata_provider.update_processing_status(
-            doc_id=doc_id,
+            skill_id=skill_id,
             status="failed",
             error=f"Metadata storage failed: {str(e)}",
         )
@@ -1383,17 +1371,17 @@ async def process_pdf_for_skill(
 
     # ========== PHASE 6: Mark as Completed ==========
     await metadata_provider.update_processing_status(
-        doc_id=doc_id, status="completed", indexed_chunks=len(all_chunks)
+        skill_id=skill_id, status="completed", indexed_chunks=len(all_chunks)
     )
 
     logger.info(
-        f"✅ PDF processing completed successfully for {doc_id}: "
+        f"✅ PDF processing completed successfully for {skill_id}: "
         f"{len(all_chunks)} chunks indexed and verified"
     )
 
     return {
-        "doc_id": doc_id,
-        "knowledge_name": knowledge_name,
+        "skill_id": skill_id,
+        "skill_name": skill_name,
         "document_name": pdf_path.stem,
         "total_pages": len(pages),
         "total_chunks": len(all_chunks),
@@ -1523,11 +1511,11 @@ def _producer_loop(
 
 async def process_pdf_for_skill_streaming(
     pdf_path: Path,
-    knowledge_name: str,
-    knowledge_description: str,
-    knowledge_type: str = "General",
-    parent_knowledge_id: str = "root",
-    knowledge_id: str = None,
+    skill_name: str,
+    skill_description: str,
+    skill_category: str = "General",
+    parent_skill_id: str = "root",
+    head_id: str = None,
 ):
     """
     ✅ REFACTORED 2025-12-12: Producer-Consumer Pattern for Real-time Progress!
@@ -1566,11 +1554,11 @@ async def process_pdf_for_skill_streaming(
     metadata_provider = SkillMetadataProvider(db_path="./data/skill_metadata.db")
     embedding_provider = get_embedding_provider()
 
-    # Generate doc ID
+    # Generate skill ID
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    name_hash = hashlib.md5(knowledge_name.encode("utf-8")).hexdigest()[:8]
+    name_hash = hashlib.md5(skill_name.encode("utf-8")).hexdigest()[:8]
     file_hash = hashlib.md5(pdf_path.name.encode("utf-8")).hexdigest()[:6]
-    doc_id = f"doc_{timestamp}_{name_hash}_{file_hash}"
+    skill_id = f"skill_{timestamp}_{name_hash}_{file_hash}"
 
     # Yield initial event
     yield create_upload_sse_event(
@@ -1578,7 +1566,7 @@ async def process_pdf_for_skill_streaming(
         {
             "message": f"開始處理 {pdf_path.name}",
             "filename": pdf_path.name,
-            "doc_id": doc_id,
+            "skill_id": skill_id,
             "timestamp": datetime.now().strftime("%H:%M:%S"),
             "elapsed": elapsed(),
         },
@@ -1589,8 +1577,8 @@ async def process_pdf_for_skill_streaming(
             "progress",
             {
                 "phase": "init",
-                "message": f"初始化處理元件... Doc ID: {doc_id}",
-                "doc_id": doc_id,
+                "message": f"初始化處理元件... Skill ID: {skill_id}",
+                "skill_id": skill_id,
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
                 "elapsed": elapsed(),
             },
@@ -1706,9 +1694,7 @@ async def process_pdf_for_skill_streaming(
         all_chunks = []
         all_embeddings = []
         embedding_dimension = 1024
-        document_hash_id = (
-            f"docfile_{hashlib.md5(pdf_path.name.encode()).hexdigest()[:16]}"
-        )
+        doc_id = f"doc_{hashlib.md5(pdf_path.name.encode()).hexdigest()[:16]}"
 
         batch_num = 0
         total_pages = 0  # Will be updated as we receive batches
@@ -1783,11 +1769,11 @@ async def process_pdf_for_skill_streaming(
             # Create chunks for this batch
             batch_chunks = []
             for idx, (page_text, page_num) in enumerate(zip(batch_texts, batch_pages)):
-                chunk_id = f"{doc_id}_{document_hash_id}_p{page_num}"
+                chunk_id = f"{skill_id}_{doc_id}_p{page_num}"
                 chunk_metadata = {
                     "chunk_id": chunk_id,
-                    "doc_id": doc_id,
-                    "document_id": document_hash_id,
+                    "skill_id": skill_id,
+                    "document_id": doc_id,
                     "document_name": pdf_path.stem,
                     "page_number": page_num,
                     "chunk_index": len(all_chunks) + idx,
@@ -1912,7 +1898,7 @@ async def process_pdf_for_skill_streaming(
             texts=documents,
             embeddings=embedding_provider,  # Pass embedding provider instance
             metadatas=metadatas,
-            file_id=doc_id,
+            file_id=skill_id,
             store_type="skill",
             precomputed_embeddings=all_embeddings,  # Pass pre-computed embeddings
         )
@@ -1922,12 +1908,12 @@ async def process_pdf_for_skill_streaming(
         # === PHASE 5: Store metadata ===
         source_name = pdf_path.stem
         await metadata_provider.create_skill(
-            doc_id=doc_id,
-            knowledge_name=knowledge_name,
-            knowledge_description=knowledge_description,
-            knowledge_type=knowledge_type,
-            knowledge_level="professional",
-            tags=[knowledge_type.lower()],
+            skill_id=skill_id,
+            skill_name=skill_name,
+            skill_description=skill_description,
+            skill_category=skill_category,
+            skill_level="professional",
+            tags=[skill_category.lower()],
             total_chunks=len(all_chunks),
             metadata={
                 "embedding_model": "BAAI/bge-m3",
@@ -1937,14 +1923,14 @@ async def process_pdf_for_skill_streaming(
                 "batch_size": BATCH_SIZE,
                 "max_retries": MAX_RETRIES,
             },
-            parent_knowledge_id=parent_knowledge_id,
+            parent_skill_id=parent_skill_id,
             source_name=source_name,
-            knowledge_id=knowledge_id,
+            head_id=head_id,
         )
 
         # Update processing status with indexed chunks count
         await metadata_provider.update_processing_status(
-            doc_id=doc_id, status="completed", indexed_chunks=len(all_embeddings)
+            skill_id=skill_id, status="completed", indexed_chunks=len(all_embeddings)
         )
 
         # Insert document mapping and chunk metadata
@@ -1954,11 +1940,11 @@ async def process_pdf_for_skill_streaming(
 
         cursor.execute(
             """
-            INSERT OR REPLACE INTO knowledge_document_mapping
-            (doc_id, file_id, document_name, document_path, total_pages, relevance_score)
+            INSERT OR REPLACE INTO skill_document_mapping
+            (skill_id, file_id, document_name, document_path, total_pages, relevance_score)
             VALUES (?, ?, ?, ?, ?, ?)
         """,
-            (doc_id, document_hash_id, pdf_path.stem, str(pdf_path), total_pages, 1.0),
+            (skill_id, doc_id, pdf_path.stem, str(pdf_path), total_pages, 1.0),
         )
 
         # Insert chunk metadata (CRITICAL for retrieval!)
@@ -1976,14 +1962,14 @@ async def process_pdf_for_skill_streaming(
             chunk_meta = chunk["metadata"]
             cursor.execute(
                 """
-                INSERT OR REPLACE INTO knowledge_chunk_metadata
-                (chunk_id, doc_id, document_id, document_name, page_number,
+                INSERT OR REPLACE INTO skill_chunk_metadata
+                (chunk_id, skill_id, document_id, document_name, page_number,
                  chunk_index, chunk_text, embedding_model, embedding_dimension, metadata)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     chunk_meta["chunk_id"],
-                    doc_id,
+                    skill_id,
                     chunk_meta["document_id"],
                     chunk_meta["document_name"],
                     chunk_meta["page_number"],
@@ -1998,7 +1984,7 @@ async def process_pdf_for_skill_streaming(
         conn.commit()
         conn.close()
         logger.info(
-            f"✅ Inserted document mapping and {len(all_chunks)} chunk metadata for doc {doc_id}"
+            f"✅ Inserted document mapping and {len(all_chunks)} chunk metadata for skill {skill_id}"
         )
 
         total_time = time.time() - start_time
@@ -2006,8 +1992,8 @@ async def process_pdf_for_skill_streaming(
             "complete",
             {
                 "message": "🎉 處理完成!",
-                "doc_id": doc_id,
-                "knowledge_name": knowledge_name,
+                "skill_id": skill_id,
+                "skill_name": skill_name,
                 "document_name": pdf_path.stem,
                 "total_pages": total_pages,
                 "total_chunks": len(all_chunks),
@@ -2038,6 +2024,392 @@ async def process_pdf_for_skill_streaming(
         )
 
 
+async def process_document_for_skill_streaming(
+    file_path: Path,
+    file_content: bytes,
+    skill_name: str,
+    skill_description: str,
+    skill_category: str = "General",
+    parent_skill_id: str = "root",
+    head_id: str = None,
+):
+    """
+    Non-PDF document processing with SSE streaming progress.
+
+    Handles DOCX, PPTX, TXT, MD files using InputDataHandleService for text extraction,
+    then follows the same embedding → FAISS → metadata pipeline as PDF processing.
+
+    Uses the same SSE event format as process_pdf_for_skill_streaming() so the frontend
+    does not need any SSE parsing changes.
+
+    Yields SSE events for each processing step.
+    """
+    import time
+
+    start_time = time.time()
+
+    def elapsed():
+        return f"{time.time() - start_time:.1f}s"
+
+    # Initialize providers
+    vector_provider = VectorStoreProvider(persist_directory="./data/faiss_indices")
+    metadata_provider = SkillMetadataProvider(db_path="./data/skill_metadata.db")
+    embedding_provider = get_embedding_provider()
+    input_service = InputDataHandleService()
+
+    # Generate skill ID
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    name_hash = hashlib.md5(skill_name.encode("utf-8")).hexdigest()[:8]
+    file_hash = hashlib.md5(file_path.name.encode("utf-8")).hexdigest()[:6]
+    skill_id = f"skill_{timestamp}_{name_hash}_{file_hash}"
+
+    BATCH_SIZE = 6
+    MAX_RETRIES = 3
+
+    # Yield initial event
+    yield create_upload_sse_event(
+        "start",
+        {
+            "message": f"開始處理 {file_path.name}",
+            "filename": file_path.name,
+            "skill_id": skill_id,
+            "timestamp": datetime.now().strftime("%H:%M:%S"),
+            "elapsed": elapsed(),
+        },
+    )
+
+    try:
+        # === PHASE 1: Text Extraction ===
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "extraction",
+                "message": f"📄 正在提取文字 ({file_path.suffix.upper()})...",
+                "percent": 10,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        try:
+            corpus, page_count = input_service.extract_text(
+                file_content, file_path.name
+            )
+        except ValueError as e:
+            if "密碼保護" in str(e):
+                yield create_upload_sse_event(
+                    "error",
+                    {
+                        "phase": "extraction",
+                        "message": str(e),
+                        "timestamp": datetime.now().strftime("%H:%M:%S"),
+                        "elapsed": elapsed(),
+                    },
+                )
+                return
+            raise
+
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "extraction_complete",
+                "message": f"✅ 文字提取完成 ({len(corpus)} 字元)",
+                "percent": 25,
+                "characters": len(corpus),
+                "pages": page_count,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        # === PHASE 2: Chunking ===
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "chunking",
+                "message": "📋 正在分割文字...",
+                "percent": 30,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        # Use page-based chunking: split corpus into chunks
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=100,
+            separators=["\n\n", "\n", "。", ".", " ", ""],
+        )
+        text_chunks = text_splitter.split_text(corpus)
+
+        doc_id = f"doc_{hashlib.md5(file_path.name.encode()).hexdigest()[:16]}"
+        embedding_dimension = 1024
+
+        all_chunks = []
+        for idx, chunk_text in enumerate(text_chunks):
+            chunk_id = f"{skill_id}_{doc_id}_c{idx}"
+            chunk_metadata = {
+                "chunk_id": chunk_id,
+                "skill_id": skill_id,
+                "document_id": doc_id,
+                "document_name": file_path.stem,
+                "page_number": idx + 1,
+                "chunk_index": idx,
+                "embedding_model": "BAAI/bge-m3",
+                "embedding_dimension": embedding_dimension,
+            }
+            all_chunks.append(
+                {
+                    "chunk_id": chunk_id,
+                    "content": chunk_text,
+                    "metadata": chunk_metadata,
+                }
+            )
+
+        yield create_upload_sse_event(
+            "checkpoint",
+            {
+                "phase": "chunking_complete",
+                "message": f"✅ 分割完成 ({len(all_chunks)} 個 chunks)",
+                "total_chunks": len(all_chunks),
+                "percent": 35,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        # === PHASE 3: Batch Embedding ===
+        all_embeddings = []
+        total_batches = (len(all_chunks) + BATCH_SIZE - 1) // BATCH_SIZE
+
+        for batch_idx in range(0, len(all_chunks), BATCH_SIZE):
+            batch_end = min(batch_idx + BATCH_SIZE, len(all_chunks))
+            batch_chunks_slice = all_chunks[batch_idx:batch_end]
+            batch_texts = [c["content"] for c in batch_chunks_slice]
+            batch_num = batch_idx // BATCH_SIZE + 1
+
+            # Calculate progress: 35% to 80%
+            progress_percent = 35 + int((batch_num / total_batches) * 45)
+
+            retry_count = 0
+            batch_embeddings = None
+
+            while retry_count < MAX_RETRIES:
+                try:
+                    yield create_upload_sse_event(
+                        "progress",
+                        {
+                            "phase": "embedding",
+                            "message": f"🧠 嵌入批次 {batch_num}/{total_batches}",
+                            "batch_num": batch_num,
+                            "percent": progress_percent,
+                            "timestamp": datetime.now().strftime("%H:%M:%S"),
+                            "elapsed": elapsed(),
+                        },
+                    )
+
+                    batch_embeddings = embedding_provider.embed_texts(
+                        texts=batch_texts,
+                        batch_size=len(batch_texts),
+                        normalize=True,
+                        show_progress=False,
+                    )
+                    break  # Success
+
+                except Exception as e:
+                    retry_count += 1
+                    logger.error(
+                        f"Batch {batch_num} embedding failed (attempt {retry_count}/{MAX_RETRIES}): {str(e)}"
+                    )
+                    if retry_count >= MAX_RETRIES:
+                        yield create_upload_sse_event(
+                            "error",
+                            {
+                                "phase": "embedding",
+                                "message": f"❌ 批次 {batch_num} 嵌入失敗: {str(e)}",
+                                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                                "elapsed": elapsed(),
+                            },
+                        )
+                        raise
+                    wait_time = 2**retry_count
+                    await asyncio.sleep(wait_time)
+
+            all_embeddings.extend(batch_embeddings)
+
+            yield create_upload_sse_event(
+                "checkpoint",
+                {
+                    "phase": "batch_complete",
+                    "message": f"✅ 批次 {batch_num}/{total_batches} 完成",
+                    "batch_num": batch_num,
+                    "total_chunks": len(all_embeddings),
+                    "total_embeddings": len(all_embeddings),
+                    "percent": progress_percent,
+                    "timestamp": datetime.now().strftime("%H:%M:%S"),
+                    "elapsed": elapsed(),
+                },
+            )
+
+        # === PHASE 4: Store FAISS ===
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "storage",
+                "message": "💾 儲存向量索引...",
+                "percent": 85,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        documents = [chunk["content"] for chunk in all_chunks]
+        metadatas = [chunk["metadata"] for chunk in all_chunks]
+
+        vector_provider.create_store_from_texts(
+            texts=documents,
+            embeddings=embedding_provider,
+            metadatas=metadatas,
+            file_id=skill_id,
+            store_type="skill",
+            precomputed_embeddings=all_embeddings,
+        )
+
+        logger.info(
+            f"Stored {len(all_embeddings)} vectors in FAISS for {file_path.name}"
+        )
+
+        # === PHASE 5: Store metadata ===
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "metadata",
+                "message": f"💾 儲存元資料...",
+                "percent": 90,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        source_name = file_path.stem
+        await metadata_provider.create_skill(
+            skill_id=skill_id,
+            skill_name=skill_name,
+            skill_description=skill_description,
+            skill_category=skill_category,
+            skill_level="professional",
+            tags=[skill_category.lower()],
+            total_chunks=len(all_chunks),
+            metadata={
+                "embedding_model": "BAAI/bge-m3",
+                "embedding_dimension": embedding_dimension,
+                "source_file": str(file_path),
+                "is_per_pdf_child": True,
+                "batch_size": BATCH_SIZE,
+                "max_retries": MAX_RETRIES,
+            },
+            parent_skill_id=parent_skill_id,
+            source_name=source_name,
+            head_id=head_id,
+        )
+
+        await metadata_provider.update_processing_status(
+            skill_id=skill_id, status="completed", indexed_chunks=len(all_embeddings)
+        )
+
+        # Insert document mapping and chunk metadata
+        db_path = Path("data/skill_metadata.db")
+        conn = sqlite3.connect(db_path, timeout=30.0)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT OR REPLACE INTO skill_document_mapping
+            (skill_id, file_id, document_name, document_path, total_pages, relevance_score)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """,
+            (skill_id, doc_id, file_path.stem, str(file_path), page_count, 1.0),
+        )
+
+        yield create_upload_sse_event(
+            "progress",
+            {
+                "phase": "metadata",
+                "message": f"💾 儲存 {len(all_chunks)} 個 chunk 元資料...",
+                "percent": 95,
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+        for chunk in all_chunks:
+            chunk_meta = chunk["metadata"]
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO skill_chunk_metadata
+                (chunk_id, skill_id, document_id, document_name, page_number,
+                 chunk_index, chunk_text, embedding_model, embedding_dimension, metadata)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+                (
+                    chunk_meta["chunk_id"],
+                    skill_id,
+                    chunk_meta["document_id"],
+                    chunk_meta["document_name"],
+                    chunk_meta["page_number"],
+                    chunk_meta["chunk_index"],
+                    chunk["content"][:2000],
+                    "BAAI/bge-m3",
+                    embedding_dimension,
+                    json.dumps(chunk_meta),
+                ),
+            )
+
+        conn.commit()
+        conn.close()
+        logger.info(
+            f"Inserted document mapping and {len(all_chunks)} chunk metadata for skill {skill_id}"
+        )
+
+        total_time = time.time() - start_time
+        yield create_upload_sse_event(
+            "complete",
+            {
+                "message": "🎉 處理完成!",
+                "skill_id": skill_id,
+                "skill_name": skill_name,
+                "document_name": file_path.stem,
+                "total_pages": page_count,
+                "total_chunks": len(all_chunks),
+                "indexed_chunks": len(all_embeddings),
+                "success_rate": f"{len(all_embeddings) / len(all_chunks) * 100:.1f}%",
+                "embedding_model": "BAAI/bge-m3",
+                "batch_size": BATCH_SIZE,
+                "total_time": f"{total_time:.1f}s",
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+    except Exception as e:
+        logger.error(f"Document processing failed for {file_path.name}: {e}")
+        import traceback
+
+        yield create_upload_sse_event(
+            "error",
+            {
+                "phase": "processing",
+                "message": f"❌ 處理失敗: {str(e)}",
+                "error": str(e),
+                "stack": traceback.format_exc()[:500],
+                "timestamp": datetime.now().strftime("%H:%M:%S"),
+                "elapsed": elapsed(),
+            },
+        )
+
+
 @router.post("/config/skills/{skill_name}/upload-source-stream")
 async def upload_source_to_skill_stream(
     skill_name: str,
@@ -2050,11 +2422,15 @@ async def upload_source_to_skill_stream(
     Returns real-time progress updates via Server-Sent Events.
     """
     # 1. Validate File
-    if not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    file_ext = Path(file.filename).suffix.lower().lstrip(".")
+    if file_ext not in settings.ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"不支援的檔案格式: '.{file_ext}'。支援格式: {', '.join(settings.ALLOWED_EXTENSIONS)}",
+        )
 
     # 2. Save File first (synchronously to get the path)
-    upload_dir = PROJECT_ROOT / "uploadfiles" / "pdf"
+    upload_dir = PROJECT_ROOT / "uploadfiles" / file_ext
     upload_dir.mkdir(parents=True, exist_ok=True)
     file_path = upload_dir / file.filename
 
@@ -2065,41 +2441,41 @@ async def upload_source_to_skill_stream(
     logger.info(f"Uploaded source file for streaming: {file_path}")
 
     # 3. Get skill metadata
-    knowledge_description = description or file.filename
-    knowledge_type = "General"
-    knowledge_id = None
-    parent_knowledge_id = "root"
+    skill_description = description or file.filename
+    skill_category = "General"
+    head_id = None
+    parent_skill_id = "root"
 
     try:
         skill_heads = await metadata_provider.list_skill_heads(enabled_only=False)
         skill_head = next(
-            (h for h in skill_heads if h["knowledge_name"] == skill_name), None
+            (h for h in skill_heads if h["skill_name"] == skill_name), None
         )
 
         if skill_head:
-            knowledge_id = skill_head["knowledge_id"]
-            knowledge_description = skill_head.get("description", knowledge_description)
-            knowledge_type = skill_head.get("category", knowledge_type)
+            head_id = skill_head["head_id"]
+            skill_description = skill_head.get("description", skill_description)
+            skill_category = skill_head.get("category", skill_category)
         else:
-            knowledge_id = await metadata_provider.create_skill_head(
-                knowledge_name=skill_name,
-                description=knowledge_description,
-                category=knowledge_type,
+            head_id = await metadata_provider.create_skill_head(
+                skill_name=skill_name,
+                description=skill_description,
+                category=skill_category,
             )
 
         # Find parent skill
         all_skills = await metadata_provider.list_skills()
         for skill in all_skills:
             if (
-                skill.get("knowledge_name") == skill_name
-                and skill.get("parent_knowledge_id") == "root"
-                and skill.get("doc_id") != "root"
+                skill.get("skill_name") == skill_name
+                and skill.get("parent_skill_id") == "root"
+                and skill.get("skill_id") != "root"
             ):
-                parent_knowledge_id = skill.get("doc_id")
+                parent_skill_id = skill.get("skill_id")
                 break
 
     except Exception as e:
-        logger.error(f"Error accessing knowledge_info: {e}")
+        logger.error(f"Error accessing skill_heads: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to access skill metadata: {str(e)}"
         )
@@ -2117,16 +2493,29 @@ async def upload_source_to_skill_stream(
             },
         )
 
-        # Process PDF with streaming
-        async for event in process_pdf_for_skill_streaming(
-            pdf_path=file_path,
-            knowledge_name=skill_name,
-            knowledge_description=knowledge_description,
-            knowledge_type=knowledge_type,
-            parent_knowledge_id=parent_knowledge_id,
-            knowledge_id=knowledge_id,
-        ):
-            yield event
+        # Format-based routing: PDF uses Producer-Consumer, others use unified pipeline
+        file_ext = Path(file.filename).suffix.lower().lstrip(".")
+        if file_ext == "pdf":
+            async for event in process_pdf_for_skill_streaming(
+                pdf_path=file_path,
+                skill_name=skill_name,
+                skill_description=skill_description,
+                skill_category=skill_category,
+                parent_skill_id=parent_skill_id,
+                head_id=head_id,
+            ):
+                yield event
+        else:
+            async for event in process_document_for_skill_streaming(
+                file_path=file_path,
+                file_content=content,
+                skill_name=skill_name,
+                skill_description=skill_description,
+                skill_category=skill_category,
+                parent_skill_id=parent_skill_id,
+                head_id=head_id,
+            ):
+                yield event
 
     return EventSourceResponse(generate_sse_events(), ping=15)
 
@@ -2149,11 +2538,15 @@ async def upload_source_to_skill(
     Returns Server-Sent Events with progress updates.
     """
     # 1. Validate File
-    if not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    file_ext = Path(file.filename).suffix.lower().lstrip(".")
+    if file_ext not in settings.ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"不支援的檔案格式: '.{file_ext}'。支援格式: {', '.join(settings.ALLOWED_EXTENSIONS)}",
+        )
 
     # 2. Save File first (synchronously to get the path)
-    upload_dir = PROJECT_ROOT / "uploadfiles" / "pdf"
+    upload_dir = PROJECT_ROOT / "uploadfiles" / file_ext
     upload_dir.mkdir(parents=True, exist_ok=True)
     file_path = upload_dir / file.filename
 
@@ -2163,58 +2556,54 @@ async def upload_source_to_skill(
 
     logger.info(f"Uploaded source file: {file_path} for skill {skill_name}")
 
-    # 3. Get skill metadata from knowledge_info table (SQLite - Single Source of Truth)
-    knowledge_description = description or file.filename
-    knowledge_type = "General"
-    knowledge_id = None
-    parent_knowledge_id = "root"
+    # 3. Get skill metadata from skill_heads table (SQLite - Single Source of Truth)
+    skill_description = description or file.filename
+    skill_category = "General"
+    head_id = None
+    parent_skill_id = "root"
 
     try:
         # Find skill_head by name
         skill_heads = await metadata_provider.list_skill_heads(enabled_only=False)
         skill_head = next(
-            (h for h in skill_heads if h["knowledge_name"] == skill_name), None
+            (h for h in skill_heads if h["skill_name"] == skill_name), None
         )
 
         if skill_head:
-            knowledge_id = skill_head["knowledge_id"]
-            knowledge_description = skill_head.get("description", knowledge_description)
-            knowledge_type = skill_head.get("category", knowledge_type)
-            logger.info(
-                f"Found knowledge_info for '{skill_name}': knowledge_id={knowledge_id}"
-            )
+            head_id = skill_head["head_id"]
+            skill_description = skill_head.get("description", skill_description)
+            skill_category = skill_head.get("category", skill_category)
+            logger.info(f"Found skill_head for '{skill_name}': head_id={head_id}")
         else:
             # Skill head not found - create one automatically
-            knowledge_id = await metadata_provider.create_skill_head(
-                knowledge_name=skill_name,
-                description=knowledge_description,
-                category=knowledge_type,
+            head_id = await metadata_provider.create_skill_head(
+                skill_name=skill_name,
+                description=skill_description,
+                category=skill_category,
             )
-            logger.info(
-                f"Created new knowledge_info for '{skill_name}': knowledge_id={knowledge_id}"
-            )
+            logger.info(f"Created new skill_head for '{skill_name}': head_id={head_id}")
 
         # Find existing main skill to link as parent (3-level tree hierarchy)
         all_skills = await metadata_provider.list_skills()
         for skill in all_skills:
             if (
-                skill.get("knowledge_name") == skill_name
-                and skill.get("parent_knowledge_id") == "root"
-                and skill.get("doc_id") != "root"
+                skill.get("skill_name") == skill_name
+                and skill.get("parent_skill_id") == "root"
+                and skill.get("skill_id") != "root"
             ):
-                parent_knowledge_id = skill.get("doc_id")
+                parent_skill_id = skill.get("skill_id")
                 logger.info(
-                    f"Found main skill '{skill_name}' with ID: {parent_knowledge_id}"
+                    f"Found main skill '{skill_name}' with ID: {parent_skill_id}"
                 )
                 break
 
-        if parent_knowledge_id == "root":
+        if parent_skill_id == "root":
             logger.info(
                 f"No existing main skill found for '{skill_name}', creating as top-level skill"
             )
 
     except Exception as e:
-        logger.error(f"Error accessing knowledge_info: {e}")
+        logger.error(f"Error accessing skill_heads: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to access skill metadata: {str(e)}"
         )
@@ -2232,16 +2621,29 @@ async def upload_source_to_skill(
             },
         )
 
-        # Process PDF with unified streaming pipeline
-        async for event in process_pdf_for_skill_streaming(
-            pdf_path=file_path,
-            knowledge_name=skill_name,
-            knowledge_description=knowledge_description,
-            knowledge_type=knowledge_type,
-            parent_knowledge_id=parent_knowledge_id,
-            knowledge_id=knowledge_id,
-        ):
-            yield event
+        # Format-based routing: PDF uses Producer-Consumer, others use unified pipeline
+        file_ext = Path(file.filename).suffix.lower().lstrip(".")
+        if file_ext == "pdf":
+            async for event in process_pdf_for_skill_streaming(
+                pdf_path=file_path,
+                skill_name=skill_name,
+                skill_description=skill_description,
+                skill_category=skill_category,
+                parent_skill_id=parent_skill_id,
+                head_id=head_id,
+            ):
+                yield event
+        else:
+            async for event in process_document_for_skill_streaming(
+                file_path=file_path,
+                file_content=content,
+                skill_name=skill_name,
+                skill_description=skill_description,
+                skill_category=skill_category,
+                parent_skill_id=parent_skill_id,
+                head_id=head_id,
+            ):
+                yield event
 
     return EventSourceResponse(generate_sse_events(), ping=15)
 
@@ -2292,54 +2694,55 @@ async def delete_skill_by_name(
     """
     Complete deletion of a skill by name including all related resources:
 
-    1. knowledge_info table - Remove knowledge definition (new architecture)
-    2. SQLite Database - Delete all records with matching knowledge_name
-    3. FAISS Indices - Delete all vector stores for this knowledge
+    1. skill_heads table - Remove skill head definition (new architecture)
+    2. SQLite Database - Delete all records with matching skill_name
+    3. FAISS Indices - Delete all vector stores for this skill
     4. (Optional) PDF Files - NOT deleted by default (may be shared)
 
-    NOTE: This endpoint is deprecated. Use DELETE /heads/{knowledge_id} instead.
+    NOTE: This endpoint is deprecated. Use DELETE /heads/{head_id} instead.
     This endpoint no longer depends on skill_config.json.
     """
     logger.info(f"Starting complete deletion for skill_name: {skill_name}")
 
     deletion_results = {
-        "knowledge_name": skill_name,
+        "skill_name": skill_name,
         "head_deleted": False,
         "faiss_deleted": False,
         "sqlite_deleted": False,
-        "doc_ids_deleted": [],
+        "skill_ids_deleted": [],
         "chunks_deleted": 0,
         "docs_deleted": 0,
         "pdfs_deleted": 0,
         "errors": [],
     }
 
+    skill_head = None
+    head_id = None
+
     try:
-        # 1. Remove from knowledge_info table (new architecture - single source of truth)
+        # 1. Remove from skill_heads table (new architecture - single source of truth)
         try:
             skill_heads = await metadata_provider.list_skill_heads(enabled_only=False)
             skill_head = next(
-                (h for h in skill_heads if h["knowledge_name"] == skill_name), None
+                (h for h in skill_heads if h["skill_name"] == skill_name), None
             )
 
             if skill_head:
-                knowledge_id = skill_head["knowledge_id"]
-                await metadata_provider.delete_skill_head(knowledge_id)
+                head_id = skill_head["head_id"]
+                await metadata_provider.delete_skill_head(head_id)
                 deletion_results["head_deleted"] = True
-                logger.info(
-                    f"Removed knowledge_info '{skill_name}' (knowledge_id={knowledge_id})"
-                )
+                logger.info(f"Removed skill head '{skill_name}' (head_id={head_id})")
             else:
                 logger.warning(
-                    f"Knowledge info '{skill_name}' not found in knowledge_info table"
+                    f"Skill head '{skill_name}' not found in skill_heads table"
                 )
-                deletion_results["errors"].append(f"Knowledge info not found")
+                deletion_results["errors"].append(f"Skill head not found")
 
         except Exception as e:
             logger.error(f"Failed to delete from skill_heads: {e}")
             deletion_results["errors"].append(f"Skill head deletion error: {str(e)}")
 
-        # 2. Find all doc_ids with this knowledge_name in SQLite
+        # 2. Find all skill_ids linked to this skill via head_id or skill_name
         try:
             db_path = PROJECT_ROOT / "data" / "skill_metadata.db"
             conn = sqlite3.connect(
@@ -2347,42 +2750,51 @@ async def delete_skill_by_name(
             )  # Wait up to 30s for lock
             cursor = conn.cursor()
 
-            # Find all doc_ids with matching knowledge_name
-            cursor.execute(
-                "SELECT doc_id FROM knowledge_metadata WHERE knowledge_name = ?",
-                (skill_name,),
-            )
-            doc_ids = [row[0] for row in cursor.fetchall()]
-            deletion_results["doc_ids_deleted"] = doc_ids
-            logger.info(f"Found {len(doc_ids)} doc entries to delete: {doc_ids}")
+            # Prefer head_id lookup (more reliable than skill_name which may be duplicated)
+            if skill_head and head_id:
+                cursor.execute(
+                    "SELECT skill_id FROM skill_metadata WHERE head_id = ?",
+                    (head_id,),
+                )
+            else:
+                # Fallback: use skill_name if head was not found
+                cursor.execute(
+                    "SELECT skill_id FROM skill_metadata WHERE skill_name = ?",
+                    (skill_name,),
+                )
+            skill_ids = [row[0] for row in cursor.fetchall()]
+            deletion_results["skill_ids_deleted"] = skill_ids
+            logger.info(f"Found {len(skill_ids)} skill entries to delete: {skill_ids}")
 
             conn.close()
 
         except Exception as e:
             logger.error(f"Failed to query SQLite: {e}")
             deletion_results["errors"].append(f"SQLite query error: {str(e)}")
-            doc_ids = []
+            skill_ids = []
 
-        # 3. Delete FAISS indices for each doc_id
+        # 3. Delete FAISS indices for each skill_id
         import shutil
 
-        for doc_id in doc_ids:
+        for skill_id in skill_ids:
             try:
-                faiss_path = PROJECT_ROOT / "data" / "faiss_indices" / "skills" / doc_id
+                faiss_path = (
+                    PROJECT_ROOT / "data" / "faiss_indices" / "skills" / skill_id
+                )
                 if faiss_path.exists():
                     shutil.rmtree(faiss_path)
                     logger.info(f"Deleted FAISS index: {faiss_path}")
                 else:
                     logger.warning(f"FAISS index not found: {faiss_path}")
             except Exception as e:
-                logger.error(f"Failed to delete FAISS for {doc_id}: {e}")
+                logger.error(f"Failed to delete FAISS for {skill_id}: {e}")
                 deletion_results["errors"].append(
-                    f"FAISS deletion error ({doc_id}): {str(e)}"
+                    f"FAISS deletion error ({skill_id}): {str(e)}"
                 )
 
-        deletion_results["faiss_deleted"] = len(doc_ids) > 0
+        deletion_results["faiss_deleted"] = len(skill_ids) > 0
 
-        # 4. Delete SQLite records for each doc_id
+        # 4. Delete SQLite records for each skill_id
         try:
             db_path = PROJECT_ROOT / "data" / "skill_metadata.db"
             conn = sqlite3.connect(
@@ -2394,30 +2806,30 @@ async def delete_skill_by_name(
             total_docs = 0
             total_overviews = 0
 
-            for doc_id in doc_ids:
-                # Delete from knowledge_chunk_metadata
+            for skill_id in skill_ids:
+                # Delete from skill_chunk_metadata
                 cursor.execute(
-                    "DELETE FROM knowledge_chunk_metadata WHERE doc_id = ?", (doc_id,)
+                    "DELETE FROM skill_chunk_metadata WHERE skill_id = ?", (skill_id,)
                 )
                 total_chunks += cursor.rowcount
 
-                # Delete from knowledge_document_mapping
+                # Delete from skill_document_mapping
                 cursor.execute(
-                    "DELETE FROM knowledge_document_mapping WHERE doc_id = ?", (doc_id,)
+                    "DELETE FROM skill_document_mapping WHERE skill_id = ?", (skill_id,)
                 )
                 total_docs += cursor.rowcount
 
-                # Delete from knowledge_overviews (overview/summary data)
+                # Delete from skill_overviews (overview/summary data)
                 cursor.execute(
-                    "DELETE FROM knowledge_overviews WHERE doc_id = ?", (doc_id,)
+                    "DELETE FROM skill_overviews WHERE skill_id = ?", (skill_id,)
                 )
                 total_overviews += cursor.rowcount
 
-                # Delete from knowledge_metadata
+                # Delete from skill_metadata
                 cursor.execute(
-                    "DELETE FROM knowledge_metadata WHERE doc_id = ?", (doc_id,)
+                    "DELETE FROM skill_metadata WHERE skill_id = ?", (skill_id,)
                 )
-                logger.info(f"Deleted SQLite records for {doc_id}")
+                logger.info(f"Deleted SQLite records for {skill_id}")
 
             conn.commit()
             conn.close()
@@ -2520,7 +2932,7 @@ async def add_instant_attachment(request: InstantAttachmentRequest):
 
     # Add attachment
     new_attachment = {
-        "knowledge_name": request.knowledge_name,
+        "skill_name": request.skill_name,
         "path": request.path,
         "description": request.description,
         "added_at": datetime.now().isoformat(),
@@ -2615,7 +3027,7 @@ async def update_rebuild_threshold(request: RebuildThresholdRequest):
 class SkillOrderItem(BaseModel):
     """Model for skill order item"""
 
-    knowledge_name: str
+    skill_name: str
     display_order: int
 
 
@@ -2634,11 +3046,11 @@ async def reorder_skills(
     Update the display order of skills.
     This affects both the config page and the chat page.
 
-    NEW: Uses knowledge_info table (SQLite - Single Source of Truth)
+    NEW: Uses skill_heads table (SQLite - Single Source of Truth)
     DEPRECATED: No longer uses skill_config.json (archived)
 
     Args:
-        order: List of knowledge names with their new display_order values
+        order: List of skill names with their new display_order values
         provider: SkillMetadataProvider dependency
 
     Returns:
@@ -2648,35 +3060,33 @@ async def reorder_skills(
         # NEW: Get all skill heads from database
         skill_heads = await provider.list_skill_heads()
 
-        # Create a map of knowledge_name -> display_order
-        order_map = {item.knowledge_name: item.display_order for item in request.order}
+        # Create a map of skill_name -> display_order
+        order_map = {item.skill_name: item.display_order for item in request.order}
 
         # Update display_order for each skill head in database
         updated_skills = []
         for head in skill_heads:
-            knowledge_name = head.get("knowledge_name")
-            if knowledge_name in order_map:
-                new_order = order_map[knowledge_name]
-                knowledge_id = head.get("knowledge_id")
+            skill_name = head.get("skill_name")
+            if skill_name in order_map:
+                new_order = order_map[skill_name]
+                head_id = head.get("head_id")
 
-                # Update display_order in knowledge_info table
+                # Update display_order in skill_heads table
                 await provider.update_skill_head(
-                    knowledge_id=knowledge_id, display_order=new_order
+                    head_id=head_id, display_order=new_order
                 )
 
                 updated_skills.append(
                     {
-                        "knowledge_name": knowledge_name,
+                        "skill_name": skill_name,
                         "display_order": new_order,
-                        "knowledge_id": knowledge_id,
+                        "head_id": head_id,
                     }
                 )
 
-                logger.info(f"Updated {knowledge_name} display_order to {new_order}")
+                logger.info(f"Updated {skill_name} display_order to {new_order}")
 
-        logger.info(
-            f"Skills reordered: {[s['knowledge_name'] for s in updated_skills]}"
-        )
+        logger.info(f"Skills reordered: {[s['skill_name'] for s in updated_skills]}")
 
         return {"message": "Skills reordered successfully", "skills": updated_skills}
     except Exception as e:
@@ -2728,7 +3138,11 @@ async def get_available_pdfs(base_path: str = "refData"):
                         ):  # Only include non-empty directories
                             result["subdirs"].append(subdir)
 
-                    elif item.is_file() and item.suffix.lower() == ".pdf":
+                    elif (
+                        item.is_file()
+                        and item.suffix.lower().lstrip(".")
+                        in settings.ALLOWED_EXTENSIONS
+                    ):
                         # Add PDF file info
                         try:
                             size_mb = round(item.stat().st_size / (1024 * 1024), 2)
@@ -2816,8 +3230,8 @@ async def trigger_rebuild(request: RebuildRequest, background_tasks: BackgroundT
             env = os.environ.copy()
             env["SKILL_CONFIG_PATH"] = config_path
 
-            if request.knowledge_name:
-                env["SKILL_FILTER"] = request.knowledge_name
+            if request.skill_name:
+                env["SKILL_FILTER"] = request.skill_name
 
             if request.force_all:
                 env["FORCE_ALL"] = "true"
@@ -2838,7 +3252,7 @@ async def trigger_rebuild(request: RebuildRequest, background_tasks: BackgroundT
                 f"Starting rebuild with smart strategy: {request.use_smart_strategy}"
             )
             logger.info(f"  Force all: {request.force_all}")
-            logger.info(f"  Skill filter: {request.knowledge_name or 'None'}")
+            logger.info(f"  Skill filter: {request.skill_name or 'None'}")
 
             result = subprocess.run(
                 cmd,
@@ -2896,7 +3310,7 @@ async def trigger_rebuild(request: RebuildRequest, background_tasks: BackgroundT
 
     return {
         "message": "Rebuild started in background",
-        "knowledge_filter": request.knowledge_name,
+        "skill_filter": request.skill_name,
         "clean_first": request.clean_first,
         "use_smart_strategy": request.use_smart_strategy,
         "force_all": request.force_all,
@@ -2943,7 +3357,7 @@ async def check_index_integrity(
     Manual integrity check endpoint
 
     Query params:
-        skill_id: Optional - check specific doc, or all incomplete docs if omitted
+        skill_id: Optional - check specific skill, or all incomplete skills if omitted
 
     Returns:
         Integrity check results with diagnosis information
@@ -2972,8 +3386,8 @@ async def check_index_integrity(
         if not is_valid:
             diagnosis = await diagnose_incomplete_index(skill_id, expected_chunks)
             return {
-                "doc_id": skill_id,
-                "knowledge_name": skill_metadata.get("knowledge_name"),
+                "skill_id": skill_id,
+                "skill_name": skill_metadata.get("skill_name"),
                 "status": "failed",
                 "expected_chunks": expected_chunks,
                 "actual_vectors": actual_vectors,
@@ -2983,8 +3397,8 @@ async def check_index_integrity(
             }
 
         return {
-            "doc_id": skill_id,
-            "knowledge_name": skill_metadata.get("knowledge_name"),
+            "skill_id": skill_id,
+            "skill_name": skill_metadata.get("skill_name"),
             "status": "ok",
             "vectors": actual_vectors,
             "expected": expected_chunks,
@@ -2997,15 +3411,15 @@ async def check_index_integrity(
 
         results = []
         for skill in incomplete_skills:
-            doc_id = skill["doc_id"]
+            skill_id = skill["skill_id"]
             expected = skill["total_chunks"]
 
-            is_valid, actual, error = await verify_index_integrity(doc_id, expected)
+            is_valid, actual, error = await verify_index_integrity(skill_id, expected)
 
             results.append(
                 {
-                    "doc_id": doc_id,
-                    "knowledge_name": skill["knowledge_name"],
+                    "skill_id": skill_id,
+                    "skill_name": skill["skill_name"],
                     "expected_chunks": expected,
                     "actual_vectors": actual,
                     "is_valid": is_valid,
@@ -3175,29 +3589,29 @@ async def rename_skill(
     """
     Rename a skill.
 
-    Updates the knowledge_name in the database.
-    Supports both knowledge_info (knowledge_xxx) and knowledge_metadata (doc_xxx) IDs.
+    Updates the skill_name in the database.
+    Supports both skill_heads (head_xxx) and skill_metadata (skill_xxx) IDs.
     """
     logger.info(f"Renaming skill {skill_id} to '{request.new_name}'")
 
     try:
-        # Determine if this is a knowledge_id or doc_id
-        if skill_id.startswith("knowledge_"):
-            # This is a knowledge info entry - update knowledge_info table
+        # Determine if this is a head_id or skill_id
+        if skill_id.startswith("head_"):
+            # This is a skill head - update skill_heads table
             head = await metadata_provider.get_skill_head(skill_id)
             if not head:
                 raise HTTPException(
-                    status_code=404, detail=f"Knowledge info not found: {skill_id}"
+                    status_code=404, detail=f"Skill head not found: {skill_id}"
                 )
 
             # Use the provider's update method
             updated_head = await metadata_provider.update_skill_head(
-                skill_id, knowledge_name=request.new_name
+                skill_id, skill_name=request.new_name
             )
 
             if not updated_head:
                 raise HTTPException(
-                    status_code=500, detail="Failed to update knowledge info"
+                    status_code=500, detail="Failed to update skill head"
                 )
 
             logger.info(
@@ -3206,19 +3620,19 @@ async def rename_skill(
 
             return {
                 "success": True,
-                "doc_id": skill_id,
+                "skill_id": skill_id,
                 "new_name": request.new_name,
                 "message": f"Skill renamed to '{request.new_name}'",
             }
         else:
-            # This is a regular doc_id - update knowledge_metadata table
+            # This is a regular skill_id - update skill_metadata table
             skill = await metadata_provider.get_skill(skill_id)
             if not skill:
                 raise HTTPException(
                     status_code=404, detail=f"Skill not found: {skill_id}"
                 )
 
-            # Update the knowledge name in database
+            # Update the skill name in database
             db_path = PROJECT_ROOT / "data" / "skill_metadata.db"
             conn = sqlite3.connect(
                 str(db_path), timeout=30.0
@@ -3227,9 +3641,9 @@ async def rename_skill(
 
             cursor.execute(
                 """
-                UPDATE knowledge_metadata
-                SET knowledge_name = ?, updated_at = ?
-                WHERE doc_id = ?
+                UPDATE skill_metadata
+                SET skill_name = ?, updated_at = ?
+                WHERE skill_id = ?
             """,
                 (request.new_name, datetime.now(timezone.utc).isoformat(), skill_id),
             )
@@ -3243,7 +3657,7 @@ async def rename_skill(
 
             return {
                 "success": True,
-                "doc_id": skill_id,
+                "skill_id": skill_id,
                 "new_name": request.new_name,
                 "message": f"Skill renamed to '{request.new_name}'",
             }
@@ -3270,14 +3684,14 @@ async def delete_skill_complete(
 
     1. FAISS Vector Store - Delete embeddings index files
     2. PDF File - Delete the source PDF file
-    3. SQLite Metadata - Delete from knowledge_metadata, knowledge_document_mapping, knowledge_chunk_metadata
+    3. SQLite Metadata - Delete from skill_metadata, skill_document_mapping, skill_chunk_metadata
 
     This is the NotebookLM-style "Remove Source" operation.
     """
-    logger.info(f"Starting complete deletion for doc_id: {skill_id}")
+    logger.info(f"Starting complete deletion for skill_id: {skill_id}")
 
     deletion_results = {
-        "doc_id": skill_id,
+        "skill_id": skill_id,
         "faiss_deleted": False,
         "pdf_deleted": False,
         "sqlite_deleted": False,
@@ -3290,13 +3704,13 @@ async def delete_skill_complete(
         if not skill:
             raise HTTPException(status_code=404, detail=f"Skill not found: {skill_id}")
 
-        knowledge_name = skill.get("knowledge_name", "Unknown")
+        skill_name = skill.get("skill_name", "Unknown")
         metadata = skill.get("metadata", {})
         source_file = (
             metadata.get("source_file", "") if isinstance(metadata, dict) else ""
         )
 
-        logger.info(f"Deleting skill '{knowledge_name}' (source: {source_file})")
+        logger.info(f"Deleting skill '{skill_name}' (source: {source_file})")
 
         # 2. Delete FAISS Vector Store
         try:
@@ -3383,33 +3797,31 @@ async def delete_skill_complete(
             )  # Wait up to 30s for lock
             cursor = conn.cursor()
 
-            # Delete from knowledge_chunk_metadata
+            # Delete from skill_chunk_metadata
             cursor.execute(
-                "DELETE FROM knowledge_chunk_metadata WHERE doc_id = ?", (skill_id,)
+                "DELETE FROM skill_chunk_metadata WHERE skill_id = ?", (skill_id,)
             )
             chunks_deleted = cursor.rowcount
             logger.info(f"Deleted {chunks_deleted} chunk records")
 
-            # Delete from knowledge_document_mapping
+            # Delete from skill_document_mapping
             cursor.execute(
-                "DELETE FROM knowledge_document_mapping WHERE doc_id = ?", (skill_id,)
+                "DELETE FROM skill_document_mapping WHERE skill_id = ?", (skill_id,)
             )
             docs_deleted = cursor.rowcount
             logger.info(f"Deleted {docs_deleted} document mapping records")
 
-            # Delete from knowledge_overviews (overview/summary data)
+            # Delete from skill_overviews (overview/summary data)
             cursor.execute(
-                "DELETE FROM knowledge_overviews WHERE doc_id = ?", (skill_id,)
+                "DELETE FROM skill_overviews WHERE skill_id = ?", (skill_id,)
             )
             overviews_deleted = cursor.rowcount
             logger.info(f"Deleted {overviews_deleted} overview records")
 
-            # Delete from knowledge_metadata (main table)
-            cursor.execute(
-                "DELETE FROM knowledge_metadata WHERE doc_id = ?", (skill_id,)
-            )
-            doc_deleted = cursor.rowcount
-            logger.info(f"Deleted {doc_deleted} knowledge metadata record")
+            # Delete from skill_metadata (main table)
+            cursor.execute("DELETE FROM skill_metadata WHERE skill_id = ?", (skill_id,))
+            skill_deleted = cursor.rowcount
+            logger.info(f"Deleted {skill_deleted} skill metadata record")
 
             conn.commit()
             conn.close()
@@ -3431,7 +3843,7 @@ async def delete_skill_complete(
 
             # Filter out the deleted skill
             config["instant_attachments"] = [
-                att for att in instant_attachments if att.get("doc_id") != skill_id
+                att for att in instant_attachments if att.get("skill_id") != skill_id
             ]
 
             if len(config["instant_attachments"]) < original_count:
@@ -3453,27 +3865,25 @@ async def delete_skill_complete(
             has_warnings = len(deletion_results["errors"]) > 0
             if has_warnings:
                 logger.info(
-                    f"Deleted skill '{knowledge_name}' ({skill_id}) with warnings: {deletion_results['errors']}"
+                    f"Deleted skill '{skill_name}' ({skill_id}) with warnings: {deletion_results['errors']}"
                 )
             else:
-                logger.info(
-                    f"Successfully deleted skill '{knowledge_name}' ({skill_id})"
-                )
+                logger.info(f"Successfully deleted skill '{skill_name}' ({skill_id})")
 
             return {
                 "success": True,
-                "message": f"Successfully deleted skill '{knowledge_name}'",
+                "message": f"Successfully deleted skill '{skill_name}'",
                 "has_warnings": has_warnings,
                 **deletion_results,
             }
         else:
             # SQLite deletion failed - this is a real failure
             logger.error(
-                f"Failed to delete skill '{knowledge_name}': SQLite deletion failed"
+                f"Failed to delete skill '{skill_name}': SQLite deletion failed"
             )
             return {
                 "success": False,
-                "message": f"Failed to delete skill '{knowledge_name}' - database error",
+                "message": f"Failed to delete skill '{skill_name}' - database error",
                 **deletion_results,
             }
 
@@ -3492,16 +3902,16 @@ async def delete_skill_complete(
 class SkillHeadCreateRequest(BaseModel):
     """Request model for creating a skill head"""
 
-    knowledge_name: str = Field(..., min_length=1, description="Unique knowledge name")
-    description: str = Field("", description="Knowledge description")
-    category: str = Field("General", description="Knowledge category")
+    skill_name: str = Field(..., min_length=1, description="Unique skill name")
+    description: str = Field("", description="Skill description")
+    category: str = Field("General", description="Skill category")
     display_order: int = Field(0, description="Display order in UI")
 
 
 class SkillHeadUpdateRequest(BaseModel):
     """Request model for updating a skill head"""
 
-    knowledge_name: Optional[str] = None
+    skill_name: Optional[str] = None
     description: Optional[str] = None
     category: Optional[str] = None
     display_order: Optional[int] = None
@@ -3538,28 +3948,26 @@ async def create_skill_head(
     """
     Create a new skill head.
 
-    A skill head is the parent definition of a knowledge.
-    Documents are uploaded separately and linked via knowledge_id.
+    A skill head is the parent definition of a skill.
+    Documents are uploaded separately and linked via head_id.
     """
     try:
-        # Generate knowledge_id
+        # Generate head_id
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        hash_suffix = hashlib.md5(request.knowledge_name.encode()).hexdigest()[:8]
-        knowledge_id = f"knowledge_{timestamp}_{hash_suffix}"
+        hash_suffix = hashlib.md5(request.skill_name.encode()).hexdigest()[:8]
+        head_id = f"head_{timestamp}_{hash_suffix}"
 
-        # Check if knowledge name already exists
-        existing = await metadata_provider.get_skill_head_by_name(
-            request.knowledge_name
-        )
+        # Check if skill name already exists
+        existing = await metadata_provider.get_skill_head_by_name(request.skill_name)
         if existing:
             raise HTTPException(
                 status_code=400,
-                detail=f"Knowledge with name '{request.knowledge_name}' already exists",
+                detail=f"Skill head with name '{request.skill_name}' already exists",
             )
 
         result = await metadata_provider.create_skill_head(
-            knowledge_id=knowledge_id,
-            knowledge_name=request.knowledge_name,
+            head_id=head_id,
+            skill_name=request.skill_name,
             description=request.description,
             category=request.category,
             display_order=request.display_order,
@@ -3627,8 +4035,8 @@ async def update_skill_head(
 
         # Build updates dict
         updates = {}
-        if request.knowledge_name is not None:
-            updates["knowledge_name"] = request.knowledge_name
+        if request.skill_name is not None:
+            updates["skill_name"] = request.skill_name
         if request.description is not None:
             updates["description"] = request.description
         if request.category is not None:
@@ -3673,26 +4081,26 @@ async def delete_skill_head(
         # Delete FAISS indices for each document
         faiss_deleted = []
         for doc in documents:
-            doc_id = doc.get("doc_id")
-            if doc_id:
+            skill_id = doc.get("skill_id")
+            if skill_id:
                 try:
                     index_path = (
-                        PROJECT_ROOT / "data" / "faiss_indices" / "skills" / doc_id
+                        PROJECT_ROOT / "data" / "faiss_indices" / "skills" / skill_id
                     )
                     if index_path.exists():
                         import shutil
 
                         shutil.rmtree(index_path)
-                        faiss_deleted.append(doc_id)
+                        faiss_deleted.append(skill_id)
                 except Exception as e:
-                    logger.warning(f"Failed to delete FAISS index for {doc_id}: {e}")
+                    logger.warning(f"Failed to delete FAISS index for {skill_id}: {e}")
 
         # Delete from database
         deleted = await metadata_provider.delete_skill_head(head_id)
 
         return {
             "success": deleted,
-            "knowledge_name": existing["knowledge_name"],
+            "skill_head": existing["skill_name"],
             "documents_deleted": len(documents),
             "faiss_indices_deleted": len(faiss_deleted),
         }
@@ -4217,20 +4625,18 @@ async def export_skill(
     """
     logger.info(f"[Export] Starting export for head_id: {head_id}")
 
-    # 1. 驗證 knowledge info 存在
+    # 1. 驗證 skill head 存在
     try:
         skill_heads = await metadata_provider.list_skill_heads(enabled_only=False)
-        skill_head = next(
-            (h for h in skill_heads if h["knowledge_id"] == head_id), None
-        )
+        skill_head = next((h for h in skill_heads if h["head_id"] == head_id), None)
 
         if not skill_head:
             raise HTTPException(
-                status_code=404, detail=f"Knowledge info not found: {head_id}"
+                status_code=404, detail=f"Skill head not found: {head_id}"
             )
 
-        knowledge_name = skill_head.get("knowledge_name", "unknown")
-        logger.info(f"[Export] Found knowledge info: {knowledge_name}")
+        skill_name = skill_head.get("skill_name", "unknown")
+        logger.info(f"[Export] Found skill head: {skill_name}")
 
     except HTTPException:
         raise
@@ -4245,8 +4651,7 @@ async def export_skill(
         documents = await metadata_provider.get_documents_for_head(head_id)
         if not documents:
             raise HTTPException(
-                status_code=400,
-                detail=f"No documents found for knowledge: {knowledge_name}",
+                status_code=400, detail=f"No documents found for skill: {skill_name}"
             )
 
         logger.info(f"[Export] Found {len(documents)} documents for head {head_id}")
@@ -4261,30 +4666,31 @@ async def export_skill(
 
     # 3. 驗證 FAISS 索引存在（至少一個 document 需要有索引）
     faiss_base_dir = PROJECT_ROOT / "data" / "faiss_indices" / "skills"
-    doc_ids_with_faiss = []
+    skill_ids_with_faiss = []
 
     for doc in documents:
-        doc_id = doc.get("doc_id")
-        faiss_dir = faiss_base_dir / doc_id
+        skill_id = doc.get("skill_id")
+        faiss_dir = faiss_base_dir / skill_id
         index_faiss = faiss_dir / "index.faiss"
         index_pkl = faiss_dir / "index.pkl"
 
         if index_faiss.exists() and index_pkl.exists():
-            doc_ids_with_faiss.append(doc_id)
+            skill_ids_with_faiss.append(skill_id)
         else:
-            logger.warning(f"[Export] FAISS index missing for doc_id: {doc_id}")
+            logger.warning(f"[Export] FAISS index missing for skill_id: {skill_id}")
 
-    if not doc_ids_with_faiss:
+    if not skill_ids_with_faiss:
         raise HTTPException(
-            status_code=500,
-            detail=f"No FAISS indices found for knowledge: {knowledge_name}",
+            status_code=500, detail=f"No FAISS indices found for skill: {skill_name}"
         )
 
-    logger.info(f"[Export] Found {len(doc_ids_with_faiss)} doc(s) with FAISS indices")
+    logger.info(
+        f"[Export] Found {len(skill_ids_with_faiss)} skill(s) with FAISS indices"
+    )
 
     # 4. 建立臨時目錄
     temp_dir = tempfile.mkdtemp(prefix=f"skill_export_{head_id}_")
-    safe_skill_name = sanitize_filename(knowledge_name)
+    safe_skill_name = sanitize_filename(skill_name)
     skill_folder = Path(temp_dir) / safe_skill_name
     skill_folder.mkdir(parents=True, exist_ok=True)
 
@@ -4292,11 +4698,11 @@ async def export_skill(
         # 5. 匯出資料庫資料
         # ============================================================
         # Export v2.0: 把 metadata 整合到 manifest.json
-        # - knowledge_info: 放入 manifest.json
-        # - knowledge_metadata: 放入 manifest.json
-        # - knowledge_document_mapping: 放入 manifest.json
-        # - knowledge_chunk_metadata: 保留 CSV（資料量大）
-        # - 保持原有 doc_id 不變，匯入時直接使用
+        # - skill_heads: 放入 manifest.json
+        # - skill_metadata: 放入 manifest.json
+        # - skill_document_mapping: 放入 manifest.json
+        # - skill_chunk_metadata: 保留 CSV（資料量大）
+        # - 保持原有 skill_id 不變，匯入時直接使用
         # ============================================================
         db_path = PROJECT_ROOT / "data" / "skill_metadata.db"
         conn = sqlite3.connect(str(db_path))
@@ -4305,40 +4711,38 @@ async def export_skill(
 
         total_chunks = 0
 
-        # 5a. knowledge_info → 放入 manifest
-        cursor.execute(
-            "SELECT * FROM knowledge_info WHERE knowledge_id = ?", (head_id,)
-        )
-        knowledge_info_rows = cursor.fetchall()
-        knowledge_info_data = []
-        if knowledge_info_rows:
+        # 5a. skill_heads → 放入 manifest
+        cursor.execute("SELECT * FROM skill_heads WHERE head_id = ?", (head_id,))
+        skill_heads_rows = cursor.fetchall()
+        skill_heads_data = []
+        if skill_heads_rows:
             columns = [desc[0] for desc in cursor.description]
-            for row in knowledge_info_rows:
-                knowledge_info_data.append(dict(zip(columns, tuple(row))))
+            for row in skill_heads_rows:
+                skill_heads_data.append(dict(zip(columns, tuple(row))))
             logger.info(
-                f"[Export] Collected {len(knowledge_info_data)} rows from knowledge_info"
+                f"[Export] Collected {len(skill_heads_data)} rows from skill_heads"
             )
 
-        # 5b. knowledge_metadata → 放入 manifest
-        doc_id_placeholders = ",".join(["?" for _ in doc_ids_with_faiss])
+        # 5b. skill_metadata → 放入 manifest
+        skill_id_placeholders = ",".join(["?" for _ in skill_ids_with_faiss])
         cursor.execute(
-            f"SELECT * FROM knowledge_metadata WHERE doc_id IN ({doc_id_placeholders})",
-            doc_ids_with_faiss,
+            f"SELECT * FROM skill_metadata WHERE skill_id IN ({skill_id_placeholders})",
+            skill_ids_with_faiss,
         )
-        knowledge_metadata_rows = cursor.fetchall()
-        knowledge_metadata_data = []
-        if knowledge_metadata_rows:
+        skill_metadata_rows = cursor.fetchall()
+        skill_metadata_data = []
+        if skill_metadata_rows:
             columns = [desc[0] for desc in cursor.description]
-            for row in knowledge_metadata_rows:
-                knowledge_metadata_data.append(dict(zip(columns, tuple(row))))
+            for row in skill_metadata_rows:
+                skill_metadata_data.append(dict(zip(columns, tuple(row))))
             logger.info(
-                f"[Export] Collected {len(knowledge_metadata_data)} rows from knowledge_metadata"
+                f"[Export] Collected {len(skill_metadata_data)} rows from skill_metadata"
             )
 
-        # 5c. knowledge_document_mapping → 放入 manifest
+        # 5c. skill_document_mapping → 放入 manifest
         cursor.execute(
-            f"SELECT * FROM knowledge_document_mapping WHERE doc_id IN ({doc_id_placeholders})",
-            doc_ids_with_faiss,
+            f"SELECT * FROM skill_document_mapping WHERE skill_id IN ({skill_id_placeholders})",
+            skill_ids_with_faiss,
         )
         doc_mapping_rows = cursor.fetchall()
         doc_mapping_data = []
@@ -4347,13 +4751,13 @@ async def export_skill(
             for row in doc_mapping_rows:
                 doc_mapping_data.append(dict(zip(columns, tuple(row))))
             logger.info(
-                f"[Export] Collected {len(doc_mapping_data)} rows from knowledge_document_mapping"
+                f"[Export] Collected {len(doc_mapping_data)} rows from skill_document_mapping"
             )
 
-        # 5d. knowledge_overviews → 放入 manifest
+        # 5d. skill_overviews → 放入 manifest
         cursor.execute(
-            f"SELECT * FROM knowledge_overviews WHERE doc_id IN ({doc_id_placeholders})",
-            doc_ids_with_faiss,
+            f"SELECT * FROM skill_overviews WHERE skill_id IN ({skill_id_placeholders})",
+            skill_ids_with_faiss,
         )
         overviews_rows = cursor.fetchall()
         overviews_data = []
@@ -4362,13 +4766,13 @@ async def export_skill(
             for row in overviews_rows:
                 overviews_data.append(dict(zip(columns, tuple(row))))
             logger.info(
-                f"[Export] Collected {len(overviews_data)} rows from knowledge_overviews"
+                f"[Export] Collected {len(overviews_data)} rows from skill_overviews"
             )
 
-        # 5e. knowledge_chunk_metadata → 保留 CSV（資料量大）
+        # 5e. skill_chunk_metadata → 保留 CSV（資料量大）
         cursor.execute(
-            f"SELECT * FROM knowledge_chunk_metadata WHERE doc_id IN ({doc_id_placeholders})",
-            doc_ids_with_faiss,
+            f"SELECT * FROM skill_chunk_metadata WHERE skill_id IN ({skill_id_placeholders})",
+            skill_ids_with_faiss,
         )
         chunk_rows = cursor.fetchall()
         csv_files = {}
@@ -4378,10 +4782,10 @@ async def export_skill(
             writer = csv.writer(csv_buffer)
             writer.writerow(columns)
             writer.writerows([tuple(row) for row in chunk_rows])
-            csv_files["knowledge_chunk_metadata.csv"] = csv_buffer.getvalue()
+            csv_files["skill_chunk_metadata.csv"] = csv_buffer.getvalue()
             total_chunks = len(chunk_rows)
             logger.info(
-                f"[Export] Exported {total_chunks} rows to knowledge_chunk_metadata.csv"
+                f"[Export] Exported {total_chunks} rows to skill_chunk_metadata.csv"
             )
 
         conn.close()
@@ -4389,33 +4793,33 @@ async def export_skill(
         # 6. 建立 manifest.json（包含所有 metadata）
         # ============================================================
         # Export v2.0: manifest.json 是 Single Source of Truth
-        # - 包含 knowledge_info、knowledge_metadata、knowledge_document_mapping
+        # - 包含 skill_heads、skill_metadata、skill_document_mapping
         # - 匯入時直接使用原 ID，不生成新 ID
         # ============================================================
         manifest = {
             "export_version": "2.0",
             "export_date": datetime.now(timezone.utc).isoformat(),
             # 核心 ID（保持不變，匯入時直接使用）
-            "knowledge_id": knowledge_id,
-            "doc_ids": doc_ids_with_faiss,
+            "head_id": head_id,
+            "skill_ids": skill_ids_with_faiss,
             # 基本資訊
-            "knowledge_name": knowledge_name,
-            "knowledge_description": skill_head.get("description", ""),
+            "skill_name": skill_name,
+            "skill_description": skill_head.get("description", ""),
             "category": skill_head.get("category", "General"),
             "total_chunks": total_chunks,
-            "document_count": len(doc_ids_with_faiss),
+            "document_count": len(skill_ids_with_faiss),
             # 嵌入模型資訊
             "embedding_model": "BAAI/bge-m3",
             "embedding_dimension": 1024,
             # ===== 內嵌 metadata（不再使用 CSV）=====
-            "knowledge_info": knowledge_info_data,
-            "knowledge_metadata": knowledge_metadata_data,
-            "knowledge_document_mapping": doc_mapping_data,
-            "knowledge_overviews": overviews_data,
+            "skill_heads": skill_heads_data,
+            "skill_metadata": skill_metadata_data,
+            "skill_document_mapping": doc_mapping_data,
+            "skill_overviews": overviews_data,
             # CSV 檔案（只有 chunk_metadata 因資料量大）
             "csv_files": list(csv_files.keys()),
-            # FAISS 目錄（保持原 doc_id 作為目錄名）
-            "faiss_folders": doc_ids_with_faiss,
+            # FAISS 目錄（保持原 skill_id 作為目錄名）
+            "faiss_folders": skill_ids_with_faiss,
             # 匯出元資訊
             "export_metadata": {
                 "system_version": "DocAI v2.0",
@@ -4430,23 +4834,23 @@ async def export_skill(
         (skill_folder / "manifest.json").write_text(manifest_json, encoding="utf-8")
         logger.info(f"[Export] Written manifest.json with integrated metadata")
 
-        # 只寫入 knowledge_chunk_metadata.csv
+        # 只寫入 skill_chunk_metadata.csv
         for csv_name, csv_content in csv_files.items():
             (skill_folder / csv_name).write_text(csv_content, encoding="utf-8")
 
-        # 8. 複製 FAISS 檔案（每個 doc_id 一個資料夾）
+        # 8. 複製 FAISS 檔案（每個 skill_id 一個資料夾）
         faiss_export_dir = skill_folder / "faiss_indices"
         faiss_export_dir.mkdir(parents=True, exist_ok=True)
 
-        for doc_id in doc_ids_with_faiss:
-            src_faiss_dir = faiss_base_dir / doc_id
-            dst_faiss_dir = faiss_export_dir / doc_id
+        for skill_id in skill_ids_with_faiss:
+            src_faiss_dir = faiss_base_dir / skill_id
+            dst_faiss_dir = faiss_export_dir / skill_id
             dst_faiss_dir.mkdir(parents=True, exist_ok=True)
 
             shutil.copy2(src_faiss_dir / "index.faiss", dst_faiss_dir / "index.faiss")
             shutil.copy2(src_faiss_dir / "index.pkl", dst_faiss_dir / "index.pkl")
 
-            logger.info(f"[Export] Copied FAISS index for {doc_id}")
+            logger.info(f"[Export] Copied FAISS index for {skill_id}")
 
         # 9. 壓縮成 ZIP
         zip_filename = f"{safe_skill_name}.zip"
@@ -4579,9 +4983,7 @@ async def preview_skill_import(
 
         # 8. 解析資訊
         export_version = manifest.get("export_version", "1.0")
-        skill_name = manifest.get(
-            "knowledge_name", manifest.get("skill_name", "Unknown")
-        )
+        skill_name = manifest.get("skill_name", "Unknown")
         # v2.0 使用 "export_date"，舊版本可能用 "export_timestamp" 或 "exported_at"
         export_date = manifest.get(
             "export_date",
@@ -4593,8 +4995,8 @@ async def preview_skill_import(
         total_chunks = 0
 
         if export_version == "2.0":
-            # v2.0: metadata 在 manifest 中，key 是 "knowledge_metadata" (不是 "metadata")
-            metadata_list = manifest.get("knowledge_metadata", [])
+            # v2.0: metadata 在 manifest 中，key 是 "skill_metadata" (不是 "metadata")
+            metadata_list = manifest.get("skill_metadata", [])
             for meta in metadata_list:
                 doc_name = meta.get("source_name") or meta.get("source_file", "Unknown")
                 if doc_name and doc_name != "Unknown":
@@ -4631,28 +5033,27 @@ async def preview_skill_import(
 
         # 檢查名稱衝突
         cursor.execute(
-            "SELECT COUNT(*) FROM knowledge_info WHERE knowledge_name = ?",
-            (skill_name,),
+            "SELECT COUNT(*) FROM skill_heads WHERE skill_name = ?", (skill_name,)
         )
         has_name_conflict = cursor.fetchone()[0] > 0
 
         # 檢查 ID 衝突
         has_id_conflict = False
         if export_version == "2.0":
-            original_knowledge_id = manifest.get("knowledge_id", "")
-            original_doc_ids = manifest.get("doc_ids", [])
+            original_head_id = manifest.get("head_id", "")
+            original_skill_ids = manifest.get("skill_ids", [])
 
-            if original_knowledge_id:
+            if original_head_id:
                 cursor.execute(
-                    "SELECT COUNT(*) FROM knowledge_info WHERE knowledge_id = ?",
-                    (original_knowledge_id,),
+                    "SELECT COUNT(*) FROM skill_heads WHERE head_id = ?",
+                    (original_head_id,),
                 )
                 if cursor.fetchone()[0] > 0:
                     has_id_conflict = True
 
-            for did in original_doc_ids:
+            for sid in original_skill_ids:
                 cursor.execute(
-                    "SELECT COUNT(*) FROM knowledge_metadata WHERE doc_id = ?", (did,)
+                    "SELECT COUNT(*) FROM skill_metadata WHERE skill_id = ?", (sid,)
                 )
                 if cursor.fetchone()[0] > 0:
                     has_id_conflict = True
@@ -4662,7 +5063,7 @@ async def preview_skill_import(
 
         # 10. 返回預覽資訊
         return {
-            "knowledge_name": skill_name,
+            "skill_name": skill_name,
             "document_count": len(documents),
             "total_chunks": total_chunks,
             "export_date": export_date,
@@ -4767,15 +5168,10 @@ async def import_skill(
 
         if export_version == "2.0":
             # v2.0: metadata 在 manifest.json 中
-            required_fields = [
-                "knowledge_name",
-                "knowledge_id",
-                "doc_ids",
-                "faiss_folders",
-            ]
+            required_fields = ["skill_name", "head_id", "skill_ids", "faiss_folders"]
         else:
             # v1.0: metadata 在 CSV 中
-            required_fields = ["knowledge_name", "faiss_folders"]
+            required_fields = ["skill_name", "faiss_folders"]
 
         missing_fields = [field for field in required_fields if field not in manifest]
         if missing_fields:
@@ -4799,47 +5195,45 @@ async def import_skill(
                     detail=f"Missing FAISS pkl: {faiss_folder}/index.pkl",
                 )
 
-        logger.info(f"[Import] Manifest validated: {manifest['knowledge_name']}")
+        logger.info(f"[Import] Manifest validated: {manifest['skill_name']}")
 
         # ============================================================
         # 10. v2.0 核心改動：直接使用原 ID，只檢查衝突
         # ============================================================
-        skill_name = manifest["knowledge_name"]
+        skill_name = manifest["skill_name"]
         db_path = PROJECT_ROOT / "data" / "skill_metadata.db"
         conn = sqlite3.connect(str(db_path))
         cursor = conn.cursor()
 
         # 取得原 ID
         if export_version == "2.0":
-            original_knowledge_id = manifest["knowledge_id"]
-            original_doc_ids = manifest["doc_ids"]
+            original_head_id = manifest["head_id"]
+            original_skill_ids = manifest["skill_ids"]
         else:
             # v1.0 向下相容
-            original_knowledge_id = manifest.get(
-                "source_knowledge_id", manifest.get("knowledge_id", "")
+            original_head_id = manifest.get(
+                "source_head_id", manifest.get("head_id", "")
             )
-            original_doc_ids = manifest.get("faiss_folders", [])
+            original_skill_ids = manifest.get("faiss_folders", [])
 
-        # 檢查 knowledge_id 衝突
+        # 檢查 head_id 衝突
         cursor.execute(
-            "SELECT COUNT(*) FROM knowledge_info WHERE knowledge_id = ?",
-            (original_knowledge_id,),
+            "SELECT COUNT(*) FROM skill_heads WHERE head_id = ?", (original_head_id,)
         )
-        knowledge_id_conflict = cursor.fetchone()[0] > 0
+        head_id_conflict = cursor.fetchone()[0] > 0
 
-        # 檢查 doc_id 衝突
-        doc_id_conflicts = []
-        for did in original_doc_ids:
+        # 檢查 skill_id 衝突
+        skill_id_conflicts = []
+        for sid in original_skill_ids:
             cursor.execute(
-                "SELECT COUNT(*) FROM knowledge_metadata WHERE doc_id = ?", (did,)
+                "SELECT COUNT(*) FROM skill_metadata WHERE skill_id = ?", (sid,)
             )
             if cursor.fetchone()[0] > 0:
-                doc_id_conflicts.append(did)
+                skill_id_conflicts.append(sid)
 
-        # 檢查 knowledge_name 衝突
+        # 檢查 skill_name 衝突
         cursor.execute(
-            "SELECT COUNT(*) FROM knowledge_info WHERE knowledge_name = ?",
-            (skill_name,),
+            "SELECT COUNT(*) FROM skill_heads WHERE skill_name = ?", (skill_name,)
         )
         name_conflict = cursor.fetchone()[0] > 0
 
@@ -4848,28 +5242,28 @@ async def import_skill(
         # 決定使用的 ID
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
-        if knowledge_id_conflict or doc_id_conflicts:
+        if head_id_conflict or skill_id_conflicts:
             # 有衝突：需要生成新 ID
             logger.warning(f"[Import] ID conflicts detected:")
-            if knowledge_id_conflict:
-                logger.warning(f"  - knowledge_id conflict: {original_knowledge_id}")
-            if doc_id_conflicts:
-                logger.warning(f"  - doc_id conflicts: {doc_id_conflicts}")
+            if head_id_conflict:
+                logger.warning(f"  - head_id conflict: {original_head_id}")
+            if skill_id_conflicts:
+                logger.warning(f"  - skill_id conflicts: {skill_id_conflicts}")
 
             name_hash = hashlib.md5(skill_name.encode("utf-8")).hexdigest()[:8]
-            final_knowledge_id = f"knowledge_{timestamp}_{name_hash}"
+            final_head_id = f"head_{timestamp}_{name_hash}"
 
             id_mapping = {}
-            for i, old_did in enumerate(original_doc_ids):
-                file_hash = hashlib.md5(f"{old_did}_{i}".encode()).hexdigest()[:6]
-                id_mapping[old_did] = f"doc_{timestamp}_{name_hash}_{file_hash}"
+            for i, old_sid in enumerate(original_skill_ids):
+                file_hash = hashlib.md5(f"{old_sid}_{i}".encode()).hexdigest()[:6]
+                id_mapping[old_sid] = f"skill_{timestamp}_{name_hash}_{file_hash}"
 
             ids_were_changed = True
             logger.info(f"[Import] Generated new IDs due to conflicts")
         else:
             # 無衝突：直接使用原 ID（v2.0 核心改動）
-            final_knowledge_id = original_knowledge_id
-            id_mapping = {did: did for did in original_doc_ids}  # 原 ID = 新 ID
+            final_head_id = original_head_id
+            id_mapping = {sid: sid for sid in original_skill_ids}  # 原 ID = 新 ID
             ids_were_changed = False
             logger.info(f"[Import] Using original IDs (no conflicts)")
 
@@ -4883,7 +5277,7 @@ async def import_skill(
             final_skill_name = skill_name
 
         logger.info(f"[Import] Final IDs:")
-        logger.info(f"  - knowledge_id: {final_knowledge_id}")
+        logger.info(f"  - head_id: {final_head_id}")
         for old_id, new_id in id_mapping.items():
             if old_id == new_id:
                 logger.info(f"  - {old_id} (unchanged)")
@@ -4895,38 +5289,38 @@ async def import_skill(
         # ============================================================
         if export_version == "2.0":
             # v2.0: 從 manifest.json 讀取 metadata
-            knowledge_info_data = manifest.get("knowledge_info", [])
-            knowledge_metadata_data = manifest.get("knowledge_metadata", [])
-            doc_mapping_data = manifest.get("knowledge_document_mapping", [])
-            overviews_data = manifest.get("knowledge_overviews", [])
+            skill_heads_data = manifest.get("skill_heads", [])
+            skill_metadata_data = manifest.get("skill_metadata", [])
+            doc_mapping_data = manifest.get("skill_document_mapping", [])
+            overviews_data = manifest.get("skill_overviews", [])
 
             # 更新 ID（如果有衝突）
-            for row in knowledge_info_data:
-                if row.get("knowledge_id") == original_knowledge_id:
-                    row["knowledge_id"] = final_knowledge_id
-                row["knowledge_name"] = final_skill_name
+            for row in skill_heads_data:
+                if row.get("head_id") == original_head_id:
+                    row["head_id"] = final_head_id
+                row["skill_name"] = final_skill_name
 
-            for row in knowledge_metadata_data:
-                if row.get("doc_id") in id_mapping:
-                    row["doc_id"] = id_mapping[row["doc_id"]]
-                if row.get("knowledge_id") == original_knowledge_id:
-                    row["knowledge_id"] = final_knowledge_id
-                row["knowledge_name"] = final_skill_name
+            for row in skill_metadata_data:
+                if row.get("skill_id") in id_mapping:
+                    row["skill_id"] = id_mapping[row["skill_id"]]
+                if row.get("head_id") == original_head_id:
+                    row["head_id"] = final_head_id
+                row["skill_name"] = final_skill_name
 
             for row in doc_mapping_data:
-                if row.get("doc_id") in id_mapping:
-                    row["doc_id"] = id_mapping[row["doc_id"]]
+                if row.get("skill_id") in id_mapping:
+                    row["skill_id"] = id_mapping[row["skill_id"]]
 
             for row in overviews_data:
-                if row.get("doc_id") in id_mapping:
-                    row["doc_id"] = id_mapping[row["doc_id"]]
+                if row.get("skill_id") in id_mapping:
+                    row["skill_id"] = id_mapping[row["skill_id"]]
 
             logger.info(f"[Import v2.0] Loaded metadata from manifest.json")
 
         else:
             # v1.0 向下相容：從 CSV 讀取
-            knowledge_info_data = []
-            knowledge_metadata_data = []
+            skill_heads_data = []
+            skill_metadata_data = []
             doc_mapping_data = []
             overviews_data = []
 
@@ -4943,29 +5337,26 @@ async def import_skill(
 
                 for row in rows:
                     # 更新 ID
-                    if (
-                        "knowledge_id" in row
-                        and row["knowledge_id"] == original_knowledge_id
-                    ):
-                        row["knowledge_id"] = final_knowledge_id
-                    if "doc_id" in row and row["doc_id"] in id_mapping:
-                        row["doc_id"] = id_mapping[row["doc_id"]]
-                    if "knowledge_name" in row and table_csv == "knowledge_info.csv":
-                        row["knowledge_name"] = final_skill_name
+                    if "head_id" in row and row["head_id"] == original_head_id:
+                        row["head_id"] = final_head_id
+                    if "skill_id" in row and row["skill_id"] in id_mapping:
+                        row["skill_id"] = id_mapping[row["skill_id"]]
+                    if "skill_name" in row and table_csv == "skill_heads.csv":
+                        row["skill_name"] = final_skill_name
 
-                if table_csv == "knowledge_info.csv":
-                    knowledge_info_data = rows
-                elif table_csv == "knowledge_metadata.csv":
-                    knowledge_metadata_data = rows
-                elif table_csv == "knowledge_document_mapping.csv":
+                if table_csv == "skill_heads.csv":
+                    skill_heads_data = rows
+                elif table_csv == "skill_metadata.csv":
+                    skill_metadata_data = rows
+                elif table_csv == "skill_document_mapping.csv":
                     doc_mapping_data = rows
-                elif table_csv == "knowledge_overviews.csv":
+                elif table_csv == "skill_overviews.csv":
                     overviews_data = rows
 
             logger.info(f"[Import v1.0] Loaded metadata from CSV files")
 
-        # 12. 讀取 knowledge_chunk_metadata.csv（所有版本都用 CSV）
-        chunk_csv_path = skill_folder / "knowledge_chunk_metadata.csv"
+        # 12. 讀取 skill_chunk_metadata.csv（所有版本都用 CSV）
+        chunk_csv_path = skill_folder / "skill_chunk_metadata.csv"
         chunk_data = []
 
         if chunk_csv_path.exists():
@@ -4973,18 +5364,18 @@ async def import_skill(
                 reader = csv.DictReader(f)
                 chunk_headers = reader.fieldnames
                 for row in reader:
-                    # 更新 doc_id（如果有衝突）
-                    if row.get("doc_id") in id_mapping:
-                        old_doc_id = row["doc_id"]
-                        new_doc_id = id_mapping[old_doc_id]
-                        row["doc_id"] = new_doc_id
+                    # 更新 skill_id（如果有衝突）
+                    if row.get("skill_id") in id_mapping:
+                        old_skill_id = row["skill_id"]
+                        new_skill_id = id_mapping[old_skill_id]
+                        row["skill_id"] = new_skill_id
 
                         # 只有在 ID 變更時才更新 chunk_id
                         if ids_were_changed and row.get("chunk_id", "").startswith(
-                            old_doc_id
+                            old_skill_id
                         ):
                             row["chunk_id"] = row["chunk_id"].replace(
-                                old_doc_id, new_doc_id, 1
+                                old_skill_id, new_skill_id, 1
                             )
 
                     chunk_data.append(row)
@@ -5000,59 +5391,59 @@ async def import_skill(
         try:
             cursor = conn.cursor()
 
-            # 插入 knowledge_info
-            if knowledge_info_data:
-                for row in knowledge_info_data:
+            # 插入 skill_heads
+            if skill_heads_data:
+                for row in skill_heads_data:
                     columns = list(row.keys())
                     placeholders = ", ".join(["?" for _ in columns])
-                    sql = f"INSERT INTO knowledge_info ({', '.join(columns)}) VALUES ({placeholders})"
+                    sql = f"INSERT INTO skill_heads ({', '.join(columns)}) VALUES ({placeholders})"
                     cursor.execute(sql, list(row.values()))
                 logger.info(
-                    f"[Import] Inserted {len(knowledge_info_data)} rows into knowledge_info"
+                    f"[Import] Inserted {len(skill_heads_data)} rows into skill_heads"
                 )
 
-            # 插入 knowledge_metadata
-            if knowledge_metadata_data:
-                for row in knowledge_metadata_data:
+            # 插入 skill_metadata
+            if skill_metadata_data:
+                for row in skill_metadata_data:
                     columns = list(row.keys())
                     placeholders = ", ".join(["?" for _ in columns])
-                    sql = f"INSERT INTO knowledge_metadata ({', '.join(columns)}) VALUES ({placeholders})"
+                    sql = f"INSERT INTO skill_metadata ({', '.join(columns)}) VALUES ({placeholders})"
                     cursor.execute(sql, list(row.values()))
                 logger.info(
-                    f"[Import] Inserted {len(knowledge_metadata_data)} rows into knowledge_metadata"
+                    f"[Import] Inserted {len(skill_metadata_data)} rows into skill_metadata"
                 )
 
-            # 插入 knowledge_chunk_metadata (使用 INSERT OR REPLACE 避免 chunk_id 衝突)
+            # 插入 skill_chunk_metadata (使用 INSERT OR REPLACE 避免 chunk_id 衝突)
             if chunk_data:
                 for row in chunk_data:
                     columns = list(row.keys())
                     placeholders = ", ".join(["?" for _ in columns])
-                    sql = f"INSERT OR REPLACE INTO knowledge_chunk_metadata ({', '.join(columns)}) VALUES ({placeholders})"
+                    sql = f"INSERT OR REPLACE INTO skill_chunk_metadata ({', '.join(columns)}) VALUES ({placeholders})"
                     cursor.execute(sql, list(row.values()))
                 logger.info(
-                    f"[Import] Inserted/Updated {len(chunk_data)} rows into knowledge_chunk_metadata"
+                    f"[Import] Inserted/Updated {len(chunk_data)} rows into skill_chunk_metadata"
                 )
 
-            # 插入 knowledge_document_mapping (使用 INSERT OR REPLACE 避免衝突)
+            # 插入 skill_document_mapping (使用 INSERT OR REPLACE 避免衝突)
             if doc_mapping_data:
                 for row in doc_mapping_data:
                     columns = list(row.keys())
                     placeholders = ", ".join(["?" for _ in columns])
-                    sql = f"INSERT OR REPLACE INTO knowledge_document_mapping ({', '.join(columns)}) VALUES ({placeholders})"
+                    sql = f"INSERT OR REPLACE INTO skill_document_mapping ({', '.join(columns)}) VALUES ({placeholders})"
                     cursor.execute(sql, list(row.values()))
                 logger.info(
-                    f"[Import] Inserted/Updated {len(doc_mapping_data)} rows into knowledge_document_mapping"
+                    f"[Import] Inserted/Updated {len(doc_mapping_data)} rows into skill_document_mapping"
                 )
 
-            # 插入 knowledge_overviews
+            # 插入 skill_overviews
             if overviews_data:
                 for row in overviews_data:
                     columns = list(row.keys())
                     placeholders = ", ".join(["?" for _ in columns])
-                    sql = f"INSERT INTO knowledge_overviews ({', '.join(columns)}) VALUES ({placeholders})"
+                    sql = f"INSERT INTO skill_overviews ({', '.join(columns)}) VALUES ({placeholders})"
                     cursor.execute(sql, list(row.values()))
                 logger.info(
-                    f"[Import] Inserted {len(overviews_data)} rows into knowledge_overviews"
+                    f"[Import] Inserted {len(overviews_data)} rows into skill_overviews"
                 )
 
             conn.commit()
@@ -5072,7 +5463,7 @@ async def import_skill(
         # 14. 複製 FAISS 索引（保持原目錄名或使用新名）
         # ============================================================
         faiss_base_dir = PROJECT_ROOT / "data" / "faiss_indices" / "skills"
-        final_doc_ids = list(id_mapping.values())
+        final_skill_ids = list(id_mapping.values())
 
         try:
             for original_sid, final_sid in id_mapping.items():
@@ -5113,8 +5504,8 @@ async def import_skill(
 
             embedding_wrapper = BGEWrapper(bge_provider)
 
-            first_doc_id = final_doc_ids[0]
-            test_faiss_dir = faiss_base_dir / first_doc_id
+            first_skill_id = final_skill_ids[0]
+            test_faiss_dir = faiss_base_dir / first_skill_id
 
             vector_store = FAISS.load_local(
                 str(test_faiss_dir),
@@ -5126,32 +5517,31 @@ async def import_skill(
 
         except Exception as e:
             # 清理已建立的 FAISS 目錄和資料庫記錄
-            for final_did in final_doc_ids:
-                faiss_dir = faiss_base_dir / final_did
+            for final_sid in final_skill_ids:
+                faiss_dir = faiss_base_dir / final_sid
                 shutil.rmtree(faiss_dir, ignore_errors=True)
 
             # 回滾資料庫
             conn = sqlite3.connect(str(db_path))
             try:
                 cursor = conn.cursor()
-                for final_did in final_doc_ids:
+                for final_sid in final_skill_ids:
                     cursor.execute(
-                        "DELETE FROM knowledge_chunk_metadata WHERE doc_id = ?",
-                        (final_did,),
+                        "DELETE FROM skill_chunk_metadata WHERE skill_id = ?",
+                        (final_sid,),
                     )
                     cursor.execute(
-                        "DELETE FROM knowledge_document_mapping WHERE doc_id = ?",
-                        (final_did,),
+                        "DELETE FROM skill_document_mapping WHERE skill_id = ?",
+                        (final_sid,),
                     )
                     cursor.execute(
-                        "DELETE FROM knowledge_overviews WHERE doc_id = ?", (final_did,)
+                        "DELETE FROM skill_overviews WHERE skill_id = ?", (final_sid,)
                     )
                     cursor.execute(
-                        "DELETE FROM knowledge_metadata WHERE doc_id = ?", (final_did,)
+                        "DELETE FROM skill_metadata WHERE skill_id = ?", (final_sid,)
                     )
                 cursor.execute(
-                    "DELETE FROM knowledge_info WHERE knowledge_id = ?",
-                    (final_knowledge_id,),
+                    "DELETE FROM skill_heads WHERE head_id = ?", (final_head_id,)
                 )
                 conn.commit()
             finally:
@@ -5168,13 +5558,13 @@ async def import_skill(
         return {
             "success": True,
             "message": f"Skill '{final_skill_name}' imported successfully",
-            "knowledge_id": final_knowledge_id,
-            "doc_ids": final_doc_ids,
-            "knowledge_name": final_skill_name,
-            "original_knowledge_name": skill_name,
+            "head_id": final_head_id,
+            "skill_ids": final_skill_ids,
+            "skill_name": final_skill_name,
+            "original_skill_name": skill_name,
             "ids_were_changed": ids_were_changed,
             "name_was_renamed": skill_name != final_skill_name,
-            "document_count": len(final_doc_ids),
+            "document_count": len(final_skill_ids),
             "total_chunks": len(chunk_data),
             "export_version": export_version,
             "import_timestamp": datetime.now(timezone.utc).isoformat(),

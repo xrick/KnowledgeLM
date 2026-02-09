@@ -1,0 +1,8 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting python-docx
+  Using cached python_docx-1.2.0-py3-none-any.whl.metadata (2.0 kB)
+Requirement already satisfied: lxml>=3.1.0 in /home/mapleleaf/.local/lib/python3.12/site-packages (from python-docx) (6.0.2)
+Requirement already satisfied: typing_extensions>=4.9.0 in /home/mapleleaf/.local/lib/python3.12/site-packages (from python-docx) (4.15.0)
+Using cached python_docx-1.2.0-py3-none-any.whl (252 kB)
+Installing collected packages: python-docx
+Successfully installed python-docx-1.2.0

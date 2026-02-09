@@ -11,104 +11,6 @@ This is a DocAI RAG system implementing Skill-Based Architecture with complete i
 
 ---
 
-## 📅 Session Update - 2026-01-26 (Database Naming Refactor: skill → knowledge)
-
-### 🎯 目標
-將整個系統從 `skill` 為核心的命名體系，重構為以 `knowledge`（知識層）和 `doc`（文件層）為核心的命名體系。
-
-### 核心概念映射
-
-| 舊概念 | 新概念 | 說明 |
-|--------|--------|------|
-| `skill` (技能) | `knowledge` (知識) | 頂層概念重命名 |
-| `head` (頭/群組) | `knowledge` (知識) | 群組層概念合併到 knowledge |
-| `skill_id` (文件層) | `doc_id` | 文件層用 `doc` 表示 |
-
-### ✅ 已完成：資料庫表格重構
-
-**資料庫**: `data/skill_metadata.db`
-**備份**: `data/skill_metadata.db.backup_before_rename`
-
-#### 表名變更
-
-| 舊表名 | 新表名 | 狀態 |
-|--------|--------|------|
-| `skill_heads` | `knowledge_info` | ✅ 完成 |
-| `skill_metadata` | `knowledge_metadata` | ✅ 完成 |
-| `skill_chunk_metadata` | `knowledge_chunk_metadata` | ✅ 完成 |
-| `skill_document_mapping` | `knowledge_document_mapping` | ✅ 完成 |
-| `skill_overviews` | `knowledge_overviews` | ✅ 完成 |
-
-#### 欄位名變更
-
-| 舊欄位名 | 新欄位名 | 所在表 |
-|----------|----------|--------|
-| `head_id` | `knowledge_id` | knowledge_info, knowledge_metadata |
-| `skill_id` | `doc_id` | knowledge_metadata, knowledge_chunk_metadata, knowledge_document_mapping, knowledge_overviews |
-| `skill_name` | `knowledge_name` | knowledge_info, knowledge_metadata |
-| `skill_description` | `knowledge_description` | knowledge_metadata |
-| `skill_category` | `knowledge_type` | knowledge_metadata |
-| `skill_level` | `knowledge_level` | knowledge_metadata |
-| `parent_skill_id` | `parent_knowledge_id` | knowledge_metadata |
-| `related_skills` | `related_knowledge` | knowledge_metadata |
-
-#### 值前綴變更
-
-| 用途 | 舊前綴 | 新前綴 |
-|------|--------|--------|
-| 知識群組 ID | `head_` | `knowledge_` |
-| 文件 ID | `skill_` | `doc_` |
-| 父層參照 | `skill_` | `knowledge_` |
-| chunk_id 值 | `skill_` | `doc_` |
-
-#### Index 變更
-
-| 所在表 | 新 Index 名稱 |
-|--------|--------------|
-| knowledge_metadata | `idx_knowledge_type`, `idx_knowledge_name`, `idx_knowledge_level`, `idx_parent_knowledge_id`, `idx_knowledge_id`, `idx_processing_status` |
-| knowledge_chunk_metadata | `idx_chunk_doc_page` |
-| knowledge_document_mapping | `idx_knowledge_doc_mapping_doc`, `idx_knowledge_doc_mapping_file` |
-
-### ⏳ 待完成：程式碼重構（需用戶許可）
-
-**計畫文件**: `claudedocs/sys_internal_db_and_op/code_refactor_plan_20260126v1.md`
-
-| Phase | 範圍 | 檔案數 | 預估改動 | 優先級 |
-|-------|------|--------|----------|--------|
-| Phase 1 | Provider（資料存取層） | 3 | ~310 處 | 🔴 CRITICAL |
-| Phase 2 | API Endpoints | 1 | ~115 處 | 🔴 CRITICAL |
-| Phase 3 | SkillServices（業務邏輯） | 8 | ~135 處 | 🟡 IMPORTANT |
-| Phase 4 | Frontend Templates | 4 | ~60 處 | 🟡 IMPORTANT |
-| Phase 5 | Scripts（工具腳本） | 14 | ~370 處 | 🟡~🟢 |
-| Phase 6 | Others | 3 | ~10 處 | 🟢 OPTIONAL |
-| **合計** | | **33 檔** | **~1000 處** | |
-
-**執行順序**: Phase 1 (Provider) → Phase 2 (API) → Phase 3 (Services) → Phase 4 (Frontend) → Phase 5 (Scripts) → Phase 6 (Others)
-
-**核心規則**: 所有程式碼修改需經用戶許可方可執行
-
-**重要**: 資料庫已經改完但程式碼尚未改，系統目前無法正常運行。需繼續完成程式碼重構。
-
-### 📁 本次產出文件
-
-| 檔案 | 說明 |
-|------|------|
-| `claudedocs/sys_internal_db_and_op/db_table_refactor_20260126v1.md` | 資料庫表格重構完整紀錄（含所有 SQL 語句） |
-| `claudedocs/sys_internal_db_and_op/code_refactor_plan_20260126v1.md` | 程式碼重構計畫（6 Phase、33 檔、~1000 處改動明細） |
-
-### 🔄 回滾方案
-
-```bash
-# 還原資料庫
-cp data/skill_metadata.db.backup_before_rename data/skill_metadata.db
-```
-
-### `skill_document_mapping.file_id` 分析結論
-
-`file_id` 在查詢路徑上未被使用，僅有寫入操作。待程式碼重構階段決定保留或移除。
-
----
-
 ## 📝 Modification Diary System (修改日記規則)
 
 **強制規則**: 每次對程式碼進行修改，都必須記錄在修改日記中。
@@ -163,6 +65,49 @@ cp data/skill_metadata.db.backup_before_rename data/skill_metadata.db
 ---
 
 ## 🚨 Known Issues / 已知問題
+
+### 🔴 ISSUE-001: Skill 選擇後查詢失敗 (P0 最高優先級) - 2026-01-23
+
+**優先級**: 🔴 **最高 (P0)**  
+**狀態**: ✅ 已修復  
+**詳細文檔**: `claudedocs/top_issues/ISSUE_001_skill_selection_empty_query.md`
+
+**問題描述**：
+用戶在 Skill Chat 頁面選擇任何 Skill 後進行查詢，系統總是回答「抱歉，我無法回答此問題，因為缺少相關文檔內容」。
+
+**根本原因**：
+前端 `handleSkillGroupClick` 和 `selectSkillGroupFromTree` 函數在處理**舊架構 Skill**（`skill.documents = []`）時，沒有設置 `selectedSkills`，導致查詢無法發送或發送空的 skill_id。
+
+**影響範圍**：
+- 所有舊架構 Skill（六法全書-刑法、投資理財原版等）
+- 任何 `documents` 陣列為空的 Skill
+
+**解決方案**：
+在選擇函數中增加 `else` 分支，當 `skill.documents` 為空時，直接使用 `headId` 作為 skill_id：
+
+```javascript
+if (skill.documents && skill.documents.length > 0) {
+    // 新架構：選擇所有子文檔
+    skill.documents.forEach(doc => { selectedSkills.push({...}); });
+} else {
+    // ✅ 修復：舊架構 fallback - 使用 head_id
+    selectedSkills.push({ id: headId, isHead: true, ... });
+}
+```
+
+**修改檔案**：
+- `template/skill_main.html` - Lines ~3740, ~4010
+
+**偵測方法**：
+1. Console 檢查：選擇 Skill 後應看到 `with X documents` 而非 `with 0 documents`
+2. 瀏覽器 Network tab：檢查 `/demo/query` 請求的 skill_id 是否正確
+
+**預防措施**：
+1. 統一架構：為所有舊架構 Skill 創建對應的 document 記錄
+2. 前端防禦性編程：統一選擇函數，確保 `selectedSkills` 永不為空
+3. API 層 fallback：當 documents 為空時嘗試直接使用 head_id
+
+---
 
 ### ✅ 聊天介面捲動問題 (SOLVED) - 2025-12-16
 

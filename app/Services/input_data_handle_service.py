@@ -6,19 +6,25 @@ File extraction, validation, and text chunking for document ingestion.
 Supports PDF, DOCX, TXT, and Markdown files.
 """
 
-import logging
 import hashlib
 import io
-from typing import List, Dict, Optional, Tuple, BinaryIO, Any
-from pathlib import Path
+import logging
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, BinaryIO, Dict, List, Optional, Tuple
 
 # Document extraction libraries
 from PyPDF2 import PdfReader
+
 try:
     from docx import Document as DocxDocument
 except ImportError:
     DocxDocument = None
+
+try:
+    from pptx import Presentation as PptxPresentation
+except ImportError:
+    PptxPresentation = None
 
 # LangChain text splitting (updated for langchain 1.x)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -27,7 +33,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.core.config import settings
 from app.Services.chunking_strategies import (
     ChunkingStrategyFactory,
-    get_default_strategy
+    get_default_strategy,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,7 +58,7 @@ class InputDataHandleService:
         chunk_size: Optional[int] = None,
         chunk_overlap: Optional[int] = None,
         allowed_extensions: Optional[List[str]] = None,
-        max_file_size: Optional[int] = None
+        max_file_size: Optional[int] = None,
     ):
         """
         Initialize Input Data Handle Service
@@ -74,7 +80,7 @@ class InputDataHandleService:
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
             separators=settings.CHUNK_SEPARATORS,
-            length_function=len
+            length_function=len,
         )
 
         # Strategy Pattern: Initialize chunking strategy
@@ -84,21 +90,21 @@ class InputDataHandleService:
                 "hierarchical",
                 chunk_sizes=settings.HIERARCHICAL_CHUNK_SIZES,
                 overlap=settings.HIERARCHICAL_OVERLAP,
-                separators=settings.CHUNK_SEPARATORS
+                separators=settings.CHUNK_SEPARATORS,
             )
         elif strategy_name == "recursive":
             self.chunking_strategy = ChunkingStrategyFactory.create(
                 "recursive",
                 chunk_size=settings.CHUNK_SIZE,
                 chunk_overlap=settings.CHUNK_OVERLAP,
-                separators=settings.CHUNK_SEPARATORS
+                separators=settings.CHUNK_SEPARATORS,
             )
         else:
             self.chunking_strategy = ChunkingStrategyFactory.create(
                 "page_based",
                 chunk_size=settings.PAGE_BASED_CHUNK_SIZE,
                 overlap=settings.PAGE_BASED_CHUNK_OVERLAP,
-                separators=settings.CHUNK_SEPARATORS
+                separators=settings.CHUNK_SEPARATORS,
             )
 
         logger.info(
@@ -107,9 +113,7 @@ class InputDataHandleService:
         )
 
     def validate_file(
-        self,
-        file_content: bytes,
-        filename: str
+        self, file_content: bytes, filename: str
     ) -> Tuple[bool, Optional[str]]:
         """
         Validate file before processing
@@ -127,7 +131,7 @@ class InputDataHandleService:
             ...     raise ValueError(error)
         """
         # Check file extension
-        file_ext = Path(filename).suffix.lower().lstrip('.')
+        file_ext = Path(filename).suffix.lower().lstrip(".")
         if file_ext not in self.allowed_extensions:
             return False, (
                 f"Unsupported file type: '{file_ext}'. "
@@ -139,9 +143,7 @@ class InputDataHandleService:
         if file_size > self.max_file_size:
             max_mb = self.max_file_size / (1024 * 1024)
             current_mb = file_size / (1024 * 1024)
-            return False, (
-                f"File too large: {current_mb:.2f}MB (max: {max_mb:.2f}MB)"
-            )
+            return False, (f"File too large: {current_mb:.2f}MB (max: {max_mb:.2f}MB)")
 
         # Check file is not empty
         if file_size == 0:
@@ -149,7 +151,7 @@ class InputDataHandleService:
 
         return True, None
 
-    def extract_text_from_pdf(self, file_content: bytes) -> str:
+    def extract_text_from_pdf(self, file_content: bytes) -> Tuple[str, int]:
         """
         Extract text from PDF file
 
@@ -157,34 +159,38 @@ class InputDataHandleService:
             file_content: PDF binary content
 
         Returns:
-            Extracted text
+            Tuple of (extracted_text, page_count)
 
         Raises:
-            ValueError: If PDF extraction fails
+            ValueError: If PDF extraction fails or file is password-protected
         """
         try:
-
             pdf_file = io.BytesIO(file_content)
             reader = PdfReader(pdf_file)
+
+            # Password protection detection
+            if reader.is_encrypted:
+                raise ValueError("此檔案受密碼保護，無法處理。請移除密碼保護後重新上傳。")
+
             _pages = len(reader.pages)
             # Extract text from all pages
-            corpus = ''.join([
-                page.extract_text() or ''
-                for page in reader.pages
-            ])
+            corpus = "".join([page.extract_text() or "" for page in reader.pages])
 
             if not corpus.strip():
                 raise ValueError("PDF contains no extractable text")
 
-            logger.info(f"Extracted {len(corpus)} characters from PDF ({len(reader.pages)} pages)")
+            logger.info(
+                f"Extracted {len(corpus)} characters from PDF ({len(reader.pages)} pages)"
+            )
             return corpus, _pages
 
-
+        except ValueError:
+            raise
         except Exception as e:
             logger.error(f"PDF extraction failed: {str(e)}")
             raise ValueError(f"Failed to extract PDF: {str(e)}")
 
-    def extract_text_from_docx(self, file_content: bytes) -> str:
+    def extract_text_from_docx(self, file_content: bytes) -> Tuple[str, int]:
         """
         Extract text from DOCX file
 
@@ -192,10 +198,10 @@ class InputDataHandleService:
             file_content: DOCX binary content
 
         Returns:
-            Extracted text
+            Tuple of (extracted_text, paragraph_count)
 
         Raises:
-            ValueError: If DOCX extraction fails
+            ValueError: If DOCX extraction fails or file is password-protected
             ImportError: If python-docx not installed
         """
         if DocxDocument is None:
@@ -206,25 +212,38 @@ class InputDataHandleService:
         try:
             docx_file = io.BytesIO(file_content)
             doc = DocxDocument(docx_file)
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "bad zip" in error_msg or "encrypted" in error_msg or "password" in error_msg:
+                raise ValueError("此檔案受密碼保護，無法處理。請移除密碼保護後重新上傳。")
+            raise ValueError(f"Failed to extract DOCX: {str(e)}")
 
+        try:
             # Extract all paragraphs
-            corpus = '\n\n'.join([
-                paragraph.text
-                for paragraph in doc.paragraphs
-                if paragraph.text.strip()
-            ])
+            corpus = "\n\n".join(
+                [
+                    paragraph.text
+                    for paragraph in doc.paragraphs
+                    if paragraph.text.strip()
+                ]
+            )
 
             if not corpus.strip():
                 raise ValueError("DOCX contains no text")
 
-            logger.info(f"Extracted {len(corpus)} characters from DOCX ({len(doc.paragraphs)} paragraphs)")
-            return corpus
+            paragraph_count = len([p for p in doc.paragraphs if p.text.strip()])
+            logger.info(
+                f"Extracted {len(corpus)} characters from DOCX ({paragraph_count} paragraphs)"
+            )
+            return corpus, paragraph_count
 
+        except ValueError:
+            raise
         except Exception as e:
             logger.error(f"DOCX extraction failed: {str(e)}")
             raise ValueError(f"Failed to extract DOCX: {str(e)}")
 
-    def extract_text_from_txt(self, file_content: bytes) -> str:
+    def extract_text_from_txt(self, file_content: bytes) -> Tuple[str, int]:
         """
         Extract text from TXT/MD file
 
@@ -232,7 +251,7 @@ class InputDataHandleService:
             file_content: Text binary content
 
         Returns:
-            Decoded text
+            Tuple of (decoded_text, 1)
 
         Raises:
             ValueError: If text decoding fails
@@ -240,25 +259,87 @@ class InputDataHandleService:
         try:
             # Try UTF-8 first, fallback to latin-1
             try:
-                text = file_content.decode('utf-8')
+                text = file_content.decode("utf-8")
             except UnicodeDecodeError:
-                text = file_content.decode('latin-1')
+                text = file_content.decode("latin-1")
 
             if not text.strip():
                 raise ValueError("Text file is empty")
 
             logger.info(f"Extracted {len(text)} characters from text file")
-            return text
+            return text, 1
 
+        except ValueError:
+            raise
         except Exception as e:
             logger.error(f"Text extraction failed: {str(e)}")
             raise ValueError(f"Failed to extract text: {str(e)}")
 
-    def extract_text(
-        self,
-        file_content: bytes,
-        filename: str
-    ) -> str:
+    def extract_text_from_pptx(self, file_content: bytes) -> Tuple[str, int]:
+        """
+        Extract text from PPTX file
+
+        Args:
+            file_content: PPTX binary content
+
+        Returns:
+            Tuple of (extracted_text, slide_count)
+
+        Raises:
+            ValueError: If PPTX extraction fails or file is password-protected
+            ImportError: If python-pptx not installed
+        """
+        if PptxPresentation is None:
+            raise ImportError(
+                "python-pptx not installed. Install with: pip install python-pptx"
+            )
+
+        try:
+            pptx_file = io.BytesIO(file_content)
+            prs = PptxPresentation(pptx_file)
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "encrypted" in error_msg or "password" in error_msg or "bad zip" in error_msg:
+                raise ValueError("此檔案受密碼保護，無法處理。請移除密碼保護後重新上傳。")
+            raise ValueError(f"Failed to open PPTX: {str(e)}")
+
+        try:
+            slide_texts = []
+            for slide_num, slide in enumerate(prs.slides, 1):
+                texts = []
+                for shape in slide.shapes:
+                    if shape.has_text_frame:
+                        for paragraph in shape.text_frame.paragraphs:
+                            text = paragraph.text.strip()
+                            if text:
+                                texts.append(text)
+                    # Extract table content
+                    if shape.has_table:
+                        for row in shape.table.rows:
+                            row_text = " | ".join(
+                                cell.text.strip() for cell in row.cells if cell.text.strip()
+                            )
+                            if row_text:
+                                texts.append(row_text)
+                if texts:
+                    slide_texts.append(f"[Slide {slide_num}]\n" + "\n".join(texts))
+
+            corpus = "\n\n".join(slide_texts)
+            if not corpus.strip():
+                raise ValueError("PPTX contains no extractable text")
+
+            logger.info(
+                f"Extracted {len(corpus)} characters from PPTX ({len(prs.slides)} slides)"
+            )
+            return corpus, len(prs.slides)
+
+        except ValueError:
+            raise
+        except Exception as e:
+            logger.error(f"PPTX extraction failed: {str(e)}")
+            raise ValueError(f"Failed to extract PPTX: {str(e)}")
+
+    def extract_text(self, file_content: bytes, filename: str) -> Tuple[str, int]:
         """
         Extract text from file based on extension
 
@@ -267,26 +348,26 @@ class InputDataHandleService:
             filename: Original filename
 
         Returns:
-            Extracted text
+            Tuple of (extracted_text, page_or_section_count)
 
         Example:
-            >>> text = service.extract_text(content, "document.pdf")
+            >>> text, pages = service.extract_text(content, "document.pdf")
         """
-        file_ext = Path(filename).suffix.lower().lstrip('.')
+        file_ext = Path(filename).suffix.lower().lstrip(".")
 
-        if file_ext == 'pdf':
+        if file_ext == "pdf":
             return self.extract_text_from_pdf(file_content)
-        elif file_ext == 'docx':
+        elif file_ext == "docx":
             return self.extract_text_from_docx(file_content)
-        elif file_ext in ['txt', 'md']:
+        elif file_ext == "pptx":
+            return self.extract_text_from_pptx(file_content)
+        elif file_ext in ["txt", "md"]:
             return self.extract_text_from_txt(file_content)
         else:
             raise ValueError(f"Unsupported file extension: {file_ext}")
 
     def chunk_text(
-        self,
-        text: str,
-        metadata: Optional[Dict[str, Any]] = None
+        self, text: str, metadata: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """
         Split text into chunks using configured strategy
@@ -318,7 +399,6 @@ class InputDataHandleService:
             logger.error(f"Text chunking failed: {str(e)}")
             raise ValueError(f"Failed to chunk text: {str(e)}")
 
-
     def chunk_text_legacy(self, text: str) -> List[str]:
         """
         Legacy method: Split text into simple string chunks
@@ -341,14 +421,8 @@ class InputDataHandleService:
         except Exception as e:
             logger.error(f"Legacy chunking failed: {str(e)}")
             raise ValueError(f"Failed to chunk text: {str(e)}")
-        
-    
 
-    def generate_file_id(
-        self,
-        file_content: bytes,
-        filename: str
-    ) -> str:
+    def generate_file_id(self, file_content: bytes, filename: str) -> str:
         """
         Generate unique file ID with timestamp + UUID + content hash
 
@@ -368,14 +442,14 @@ class InputDataHandleService:
             - uuid8: First 8 chars of UUID4 (collision resistance)
             - hash8: First 8 chars of SHA256 (content verification)
         """
-        import uuid
         import time
+        import uuid
 
         # Component 1: Timestamp (sortable, chronological ordering)
         timestamp = int(time.time())
 
         # Component 2: Random UUID (collision resistance)
-        uuid_part = str(uuid.uuid4()).replace('-', '')[:8]
+        uuid_part = str(uuid.uuid4()).replace("-", "")[:8]
 
         # Component 3: Content hash (duplicate detection)
         content_hash = hashlib.sha256(file_content).hexdigest()[:8]
@@ -389,7 +463,7 @@ class InputDataHandleService:
         file_content: bytes,
         filename: str,
         file_metadata_provider,
-        max_retries: int = 3
+        max_retries: int = 3,
     ) -> str:
         """
         Generate unique file ID with database collision detection
@@ -431,7 +505,9 @@ class InputDataHandleService:
                 if existing_file is None:
                     # No collision, use this file_id
                     if attempt > 0:
-                        logger.info(f"Generated unique file_id: {file_id} (attempt {attempt + 1})")
+                        logger.info(
+                            f"Generated unique file_id: {file_id} (attempt {attempt + 1})"
+                        )
                     return file_id
                 else:
                     # Collision detected, retry with new UUID
@@ -479,13 +555,15 @@ class InputDataHandleService:
 
         for chunk in chunks:
             # Merge with existing metadata from strategy
-            chunk["metadata"].update({
-                "file_id": file_id,
-                "filename": filename,
-                "file_size": file_size,
-                "timestamp": timestamp,
-                "total_chunks": len(chunks)
-            })
+            chunk["metadata"].update(
+                {
+                    "file_id": file_id,
+                    "filename": filename,
+                    "file_size": file_size,
+                    "timestamp": timestamp,
+                    "total_chunks": len(chunks),
+                }
+            )
 
         return chunks
 
@@ -494,7 +572,7 @@ class InputDataHandleService:
         file_content: bytes,
         filename: str,
         # chunking_strategy: Optional[str] = None,
-        file_metadata_provider = None
+        file_metadata_provider=None,
     ) -> Dict:
         """
         Complete file processing workflow
@@ -518,7 +596,7 @@ class InputDataHandleService:
             - chunks: List of text chunks
             - metadata: List of chunk metadata dicts
             - chunk_count: Number of chunks
-    
+
         Example:
             >>> result = await service.process_file(content, "document.pdf", provider)
             >>> print(f"File ID: {result['file_id']}")
@@ -526,7 +604,7 @@ class InputDataHandleService:
         """
         # Step 1: Validate
         is_valid, error = self.validate_file(file_content, filename)
-        _pages:int = 0
+        _pages: int = 0
         if not is_valid:
             raise ValueError(error)
 
@@ -555,7 +633,7 @@ class InputDataHandleService:
             chunks=chunks,
             file_id=file_id,
             filename=filename,
-            file_size=len(file_content)
+            file_size=len(file_content),
         )
 
         result = {
@@ -565,7 +643,7 @@ class InputDataHandleService:
             "file_size": len(file_content),
             "chunks": chunks,  # Now contains structured chunk dicts
             "chunk_count": len(chunks),
-            "chunking_strategy": self.chunking_strategy.get_strategy_name()
+            "chunking_strategy": self.chunking_strategy.get_strategy_name(),
         }
 
         logger.info(

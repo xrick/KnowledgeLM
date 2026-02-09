@@ -30,10 +30,20 @@ RULES (violating ANY invalidates your response):
 ✅ Provide migration strategies
 
 ```
-/sc:improve --focus quality
-請逐步進行程式碼的修改與重構
+/sc:troubleshoot --fix
+/sc:troubleshoot --fix
+立即修復（低風險、高價值）：
+   - 同時修改相關的程式碼
+   - 列出有哪些python檔被修改
+   - 請先準備roll-back機制
+   - 補齊 `skill_chunk_metadata` 的 CREATE TABLE
+   - 修正 `skills.py:2752` 查錯表的問題
+   - 清理 9 筆孤兒記錄
+when you finish, record the problem descript
+   - 統一 `head_id` 前綴（修正六法全書-民法的 `skill_` 前綴）
+   
 ```
-
+  
 FINAL REMINDER: If you suggest creating new files, explain why existing files cannot be extended. If you recommend rewrites, justify why refactoring won't work.
 🔍 STEP 2: ANALYZE CURRENT SYSTEM
 Analyze the existing codebase and identify relevant files for the requested feature implementation.

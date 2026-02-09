@@ -1,0 +1,4 @@
+pydantic
+pyvis
+llama-index-core
+llama-index-llms-openai

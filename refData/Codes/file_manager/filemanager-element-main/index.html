@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #F8FAFB;
+            font-family:Inter,  sans-serif;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>File Manager</h1>
+    <button id="api">Show api based manager</button>
+    <button id="function">Show function based manager</button>
+    <file-manager endpoint="/api" hidden></file-manager>
+    <fn-file-manager hidden></fn-file-manager>
+    <fn-file-manager hidden readonly></fn-file-manager>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

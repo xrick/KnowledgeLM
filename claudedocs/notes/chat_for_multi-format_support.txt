@@ -1,0 +1,8 @@
+/sc:brainstorm
+1.upload strategies: use different name for different document type, for example, we upload a pptx
+  then the backend will save it to uploadfiles/pptx.
+2.do reference scan first
+3.非 PDF 檔案**不會有 SSE streaming 進度**, so we need to another SSE stream progress, because display progress for user is very important.
+4.yes, add md format support
+5. modify「Add PDF」to 「Add Document」
+6. if the docx or pptx or pdf have password protect, don't process, just response user the file is protected and can't be processed.

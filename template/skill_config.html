@@ -601,9 +601,58 @@
             }
 
             .source-icon {
-                color: var(--danger);
                 font-size: 1.25rem;
             }
+
+            /* File type specific icon colors */
+            .source-icon.pdf-icon {
+                color: #ef4444; /* Red for PDF */
+            }
+            .source-icon.doc-icon {
+                color: #3b82f6; /* Blue for Word */
+            }
+            .source-icon.ppt-icon {
+                color: #f97316; /* Orange for PowerPoint */
+            }
+            .source-icon.xls-icon {
+                color: #22c55e; /* Green for Excel */
+            }
+            .source-icon.txt-icon {
+                color: #6b7280; /* Gray for Text */
+            }
+            .source-icon.md-icon {
+                color: #7c3aed; /* Purple for Markdown */
+            }
+            .source-icon.default-icon {
+                color: #6b7280; /* Gray for unknown */
+            }
+
+            /* Format icons tooltip for Add Source modal */
+            .format-icons-row {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                background: var(--card-bg, #f8fafc);
+                border-radius: 6px;
+                border: 1px solid var(--border-color, #e2e8f0);
+            }
+            .format-icon-item {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                font-size: 0.75rem;
+                color: var(--text-muted, #64748b);
+            }
+            .format-icon-item i {
+                font-size: 1rem;
+            }
+            .format-icon-item.pdf i { color: #ef4444; }
+            .format-icon-item.docx i { color: #3b82f6; }
+            .format-icon-item.pptx i { color: #f97316; }
+            .format-icon-item.md i { color: #7c3aed; }
+            .format-icon-item.txt i { color: #6b7280; }
 
             .source-name {
                 font-weight: 500;
@@ -943,7 +992,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon green">
-                                <i class="fa-solid fa-file-pdf"></i>
+                                <i class="fa-solid fa-file-lines"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-value" id="stat-pdfs">0</div>
@@ -977,7 +1026,7 @@
                                 <div class="card-title">
                                     <i class="fa-solid fa-folder-tree"></i>
                                     <span id="section-skills-pdfs-title"
-                                        >Skills & PDF Sources</span
+                                        >Skills & Document Sources</span
                                     >
                                 </div>
                             </div>
@@ -1154,7 +1203,7 @@
             <div class="modal" style="max-width: 600px">
                 <div class="modal-header">
                     <div class="modal-title" id="modal-add-source-title">
-                        Add PDF Source
+                        Add Document
                     </div>
                     <button
                         class="modal-close"
@@ -1175,7 +1224,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" id="label-select-pdf"
-                            >Select PDF File</label
+                            >Select Document</label
                         >
                         <div
                             style="
@@ -1187,7 +1236,7 @@
                             <input
                                 type="file"
                                 id="pdf-file-input"
-                                accept=".pdf"
+                                accept=".pdf,.docx,.pptx,.txt,.md"
                                 style="display: none"
                                 onchange="handlePDFFileSelected()"
                             />
@@ -1201,7 +1250,7 @@
                                 "
                                 id="btn-choose-file"
                             >
-                                <i class="fa-solid fa-file-pdf"></i>
+                                <i class="fa-solid fa-file-lines"></i>
                                 <span id="choose-file-text">Choose File</span>
                             </button>
                             <span
@@ -1209,6 +1258,30 @@
                                 style="color: #6b7280; font-size: 0.875rem"
                                 >No file chosen</span
                             >
+                        </div>
+                        <!-- Supported formats with icons -->
+                        <div class="format-icons-row" title="支援的文件格式 / Supported file formats">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-right: 0.25rem;">支援格式:</span>
+                            <span class="format-icon-item pdf">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>PDF</span>
+                            </span>
+                            <span class="format-icon-item docx">
+                                <i class="fa-solid fa-file-word"></i>
+                                <span>DOCX</span>
+                            </span>
+                            <span class="format-icon-item pptx">
+                                <i class="fa-solid fa-file-powerpoint"></i>
+                                <span>PPTX</span>
+                            </span>
+                            <span class="format-icon-item md">
+                                <i class="fa-solid fa-file-code"></i>
+                                <span>MD</span>
+                            </span>
+                            <span class="format-icon-item txt">
+                                <i class="fa-solid fa-file-lines"></i>
+                                <span>TXT</span>
+                            </span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1451,8 +1524,7 @@ Loading logs...</pre
                             "
                         >
                             <li>
-                                <strong>PDF 來源檔案</strong> - 組成此技能的所有
-                                PDF 文件
+                                <strong>來源文件</strong> - 組成此技能的所有文件
                             </li>
                             <li>
                                 <strong>FAISS 向量索引</strong> -
@@ -1563,7 +1635,7 @@ Loading logs...</pre
                             "
                         >
                             <li>清除所有現有的 Skill 索引</li>
-                            <li>重新處理所有 PDF 來源檔案</li>
+                            <li>重新處理所有來源文件</li>
                             <li>重新生成所有向量嵌入</li>
                             <li>此過程可能需要數十分鐘時間</li>
                         </ul>
@@ -1823,7 +1895,7 @@ Loading logs...</pre
                 <div class="modal-body">
                     <div style="text-align: center; padding: 1rem 0">
                         <i
-                            class="fa-solid fa-file-pdf"
+                            class="fa-solid fa-file-lines"
                             style="
                                 font-size: 3rem;
                                 color: #6b7280;
@@ -1866,7 +1938,7 @@ Loading logs...</pre
                                 "
                             >
                                 <li>向量嵌入索引 (FAISS)</li>
-                                <li>PDF 原始檔案</li>
+                                <li>原始文件</li>
                                 <li>所有相關的元資料</li>
                             </ul>
                         </div>
@@ -2323,6 +2395,34 @@ Loading logs...</pre
                     section === "skills" ? "block" : "none";
             }
 
+            // ===== File Type Icons =====
+            function getFileTypeIcon(filename) {
+                if (!filename) return { icon: "fa-file", iconClass: "default-icon" };
+
+                const ext = filename.toLowerCase().split(".").pop();
+
+                switch (ext) {
+                    case "pdf":
+                        return { icon: "fa-file-pdf", iconClass: "pdf-icon" };
+                    case "doc":
+                    case "docx":
+                        return { icon: "fa-file-word", iconClass: "doc-icon" };
+                    case "ppt":
+                    case "pptx":
+                        return { icon: "fa-file-powerpoint", iconClass: "ppt-icon" };
+                    case "xls":
+                    case "xlsx":
+                        return { icon: "fa-file-excel", iconClass: "xls-icon" };
+                    case "md":
+                    case "markdown":
+                        return { icon: "fa-file-code", iconClass: "md-icon" };
+                    case "txt":
+                        return { icon: "fa-file-lines", iconClass: "txt-icon" };
+                    default:
+                        return { icon: "fa-file", iconClass: "default-icon" };
+                }
+            }
+
             // ===== Data Loading =====
             // NEW: Use /tree endpoint (skill_heads architecture)
             async function loadConfig() {
@@ -2504,10 +2604,22 @@ Loading logs...</pre
                                 <ul class="source-list">
                                     ${documents
                                         .map(
-                                            (doc, di) => `
+                                            (doc, di) => {
+                                                // Extract source_file from metadata for file extension
+                                                let sourceFileForIcon = doc.source_name || "";
+                                                if (doc.metadata) {
+                                                    try {
+                                                        const meta = typeof doc.metadata === 'string' ? JSON.parse(doc.metadata) : doc.metadata;
+                                                        if (meta.source_file) {
+                                                            sourceFileForIcon = meta.source_file;
+                                                        }
+                                                    } catch (e) { /* use fallback */ }
+                                                }
+                                                const fileIcon = getFileTypeIcon(sourceFileForIcon);
+                                                return `
                                         <li class="source-item">
                                             <div class="source-info">
-                                                <i class="fa-solid fa-file-pdf source-icon"></i>
+                                                <i class="fa-solid ${fileIcon.icon} source-icon ${fileIcon.iconClass}"></i>
                                                 <div>
                                                     <div class="source-name">${doc.source_name || "Unknown"}</div>
                                                     <div class="source-path">
@@ -2533,7 +2645,8 @@ Loading logs...</pre
                                                 </button>
                                             </div>
                                         </li>
-                                    `,
+                                    `;
+                                            }
                                         )
                                         .join("")}
                                 </ul>
@@ -2541,7 +2654,7 @@ Loading logs...</pre
                                     : `
                                 <div style="text-align: center; padding: 1rem; color: var(--text-muted);">
                                     <i class="fa-solid fa-inbox" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
-                                    <div>No documents yet. Add PDFs to get started.</div>
+                                    <div>No documents yet. Add documents to get started.</div>
                                 </div>
                             `
                             }
@@ -3058,15 +3171,25 @@ Loading logs...</pre
                     .value.trim();
 
                 if (!fileInput.files || fileInput.files.length === 0) {
-                    alert("Please select a PDF file");
+                    alert("Please select a file");
                     return;
                 }
 
                 const file = fileInput.files[0];
 
-                // Validate file is PDF
-                if (!file.name.toLowerCase().endsWith(".pdf")) {
-                    alert("Please select a PDF file");
+                // Validate file extension
+                const allowedExtensions = [
+                    ".pdf",
+                    ".docx",
+                    ".pptx",
+                    ".txt",
+                    ".md",
+                ];
+                const fileExt = "." + file.name.split(".").pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExt)) {
+                    alert(
+                        `不支援的檔案格式: ${fileExt}\n支援格式: PDF, DOCX, PPTX, TXT, MD`,
+                    );
                     return;
                 }
 
@@ -3201,7 +3324,7 @@ Loading logs...</pre
                 switch (eventType) {
                     case "start":
                         appendUploadLog(
-                            `開始處理 PDF: ${data.filename}`,
+                            `開始處理文件: ${data.filename}`,
                             "phase",
                         );
                         updateUploadProgress(5, "開始處理...");
@@ -3744,7 +3867,7 @@ Loading logs...</pre
                 const statsHtml = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
                     <div><i class="fa-solid fa-folder" style="color: #6b7280; margin-right: 0.5rem;"></i>技能名稱: <strong>${skillName}</strong></div>
-                    <div><i class="fa-solid fa-file-pdf" style="color: #6b7280; margin-right: 0.5rem;"></i>文件數量: <strong>${docCount} 個</strong></div>
+                    <div><i class="fa-solid fa-file-lines" style="color: #6b7280; margin-right: 0.5rem;"></i>文件數量: <strong>${docCount} 個</strong></div>
                 </div>
             `;
                 document.getElementById("delete-skill-stats").innerHTML =
@@ -3816,7 +3939,7 @@ Loading logs...</pre
                             deletionSummary.push("配置檔記錄");
                         if (result.pdfs_deleted > 0)
                             deletionSummary.push(
-                                `${result.pdfs_deleted} 個 PDF 檔案`,
+                                `${result.pdfs_deleted} 個文件`,
                             );
                         if (result.documents_deleted > 0)
                             deletionSummary.push(
@@ -4023,7 +4146,7 @@ Loading logs...</pre
                             (doc) => `
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
                             <span style="display: flex; align-items: center; gap: 0.5rem;">
-                                <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i>
+                                <i class="fa-solid fa-file-lines" style="color: #ef4444;"></i>
                                 <span style="font-size: 0.875rem;">${doc.name}</span>
                             </span>
                             <span style="font-size: 0.75rem; color: var(--text-muted);">${doc.chunks} chunks</span>

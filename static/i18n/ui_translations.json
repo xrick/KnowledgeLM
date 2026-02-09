@@ -13,7 +13,7 @@
         "sidebar": {
             "skill_tree": "技能樹",
             "configuration": "配置",
-            "skills_pdfs": "技能 & PDFs"
+            "skills_pdfs": "技能 & 文件"
         },
 
         "header": {
@@ -59,23 +59,23 @@
         "config": {
             "stats": {
                 "skills": "技能",
-                "pdf_sources": "PDF來源",
+                "pdf_sources": "文件來源",
                 "instant_attachments": "快速附加附件",
                 "documents": "文件",
                 "total_chunks": "頁段"
             },
             "skill_card": {
-                "add_pdf": "新增PDF",
+                "add_pdf": "新增文件",
                 "export_skill": "匯出技能",
                 "delete_skill": "刪除技能",
                 "enabled": "已啟用",
                 "disabled": "已停用",
-                "pdfs": "PDFs",
+                "pdfs": "文件",
                 "chunks": "頁段",
                 "vectors": "向量"
             },
             "section": {
-                "skills_pdfs": "技能 & PDF 來源"
+                "skills_pdfs": "技能 & 文件來源"
             },
             "empty": {
                 "no_skills": "尚無技能配置",
@@ -91,12 +91,12 @@
                 "category_placeholder": "例如：技術",
                 "cancel": "取消",
                 "add": "新增技能",
-                "add_source_title": "新增PDF來源",
+                "add_source_title": "新增文件來源",
                 "skill_label": "技能",
-                "select_pdf": "選擇 PDF 檔案",
+                "select_pdf": "選擇文件",
                 "choose_file": "選擇檔案",
                 "no_file_chosen": "尚未選擇檔案",
-                "pdf_description_placeholder": "PDF 的簡短描述",
+                "pdf_description_placeholder": "文件的簡短描述",
                 "add_source": "增加來源",
                 "loading_logs": "載入日誌中..."
             },
@@ -109,7 +109,7 @@
                 "logs_title": "重建日誌",
                 "what_shows": "這顯示什麼？",
                 "what_shows_tooltip": "顯示技能索引重建的進度和詳細資訊",
-                "rebuild_process": "重建過程：即時顯示索引技能 PDF 的進度",
+                "rebuild_process": "重建過程：即時顯示索引技能文件的進度",
                 "timing_info": "時間資訊：重建開始時間、持續時間、完成時間",
                 "status_details": "狀態詳情：哪些技能被重建、處理了多少頁段",
                 "error_messages": "錯誤訊息：重建過程中遇到的任何問題",
@@ -119,7 +119,7 @@
             "delete_skill": {
                 "title": "刪除技能確認",
                 "will_delete": "此操作將永久刪除以下資料：",
-                "pdf_sources": "PDF 來源檔案 - 組成此技能的所有 PDF 文件",
+                "pdf_sources": "來源文件 - 組成此技能的所有文件",
                 "faiss_index": "FAISS 向量索引 - 所有向量嵌入資料",
                 "sqlite_records": "SQLite 資料庫記錄 - skill_metadata、chunk_metadata、document_mapping",
                 "config_file": "skill_config.json - 配置檔中的技能定義",
@@ -214,7 +214,7 @@
         "sidebar": {
             "skill_tree": "Skill Tree",
             "configuration": "Configuration",
-            "skills_pdfs": "Skills & PDFs"
+            "skills_pdfs": "Skills & Documents"
         },
 
         "header": {
@@ -260,24 +260,24 @@
         "config": {
             "stats": {
                 "skills": "Skills",
-                "pdf_sources": "PDF Sources",
+                "pdf_sources": "Document Sources",
                 "instant_attachments": "Instant Attachments",
                 "documents": "Documents",
                 "total_chunks": "Chunks"
             },
             "skill_card": {
-                "add_pdf": "Add PDF",
+                "add_pdf": "Add Document",
                 "export_skill": "Export Skill",
                 "delete_skill": "Delete Skill",
                 "enabled": "Enabled",
                 "disabled": "Disabled",
-                "pdfs": "PDFs",
+                "pdfs": "Documents",
                 "chunks": "chunks",
                 "vectors": "vectors",
                 "toggle_status": "Click to toggle enabled/disabled status"
             },
             "section": {
-                "skills_pdfs": "Skills & PDF Sources"
+                "skills_pdfs": "Skills & Document Sources"
             },
             "empty": {
                 "no_skills": "No skills configured",
@@ -293,12 +293,12 @@
                 "category_placeholder": "e.g., Technology",
                 "cancel": "Cancel",
                 "add": "Add Skill",
-                "add_source_title": "Add PDF Source",
+                "add_source_title": "Add Document Source",
                 "skill_label": "Skill",
-                "select_pdf": "Select PDF File",
+                "select_pdf": "Select Document",
                 "choose_file": "Choose File",
                 "no_file_chosen": "No file chosen",
-                "pdf_description_placeholder": "Brief description of the PDF",
+                "pdf_description_placeholder": "Brief description of the document",
                 "add_source": "Add Source",
                 "loading_logs": "Loading logs..."
             },
@@ -311,7 +311,7 @@
                 "logs_title": "Rebuild Logs",
                 "what_shows": "What does this show?",
                 "what_shows_tooltip": "Shows progress and details of skill index rebuilding",
-                "rebuild_process": "Rebuild Process: Real-time progress of indexing skill PDFs",
+                "rebuild_process": "Rebuild Process: Real-time progress of indexing skill documents",
                 "timing_info": "Timing Info: When rebuild started, duration, completion time",
                 "status_details": "Status Details: Which skills were rebuilt, how many chunks processed",
                 "error_messages": "Error Messages: Any issues encountered during rebuild",
@@ -321,7 +321,7 @@
             "delete_skill": {
                 "title": "Delete Skill Confirmation",
                 "will_delete": "This operation will permanently delete the following data:",
-                "pdf_sources": "PDF Source Files - All PDF documents that make up this skill",
+                "pdf_sources": "Source Documents - All documents that make up this skill",
                 "faiss_index": "FAISS Vector Index - All vector embedding data",
                 "sqlite_records": "SQLite Database Records - skill_metadata, chunk_metadata, document_mapping",
                 "config_file": "skill_config.json - Skill definition in config file",

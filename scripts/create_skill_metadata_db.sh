@@ -223,6 +223,9 @@ CREATE TABLE IF NOT EXISTS skill_document_mapping (
     mapping_id INTEGER PRIMARY KEY AUTOINCREMENT,
     skill_id TEXT NOT NULL,                      -- 關聯的 skill_id
     file_id TEXT NOT NULL,                       -- 關聯的 file_id（來自 docai.db）
+    document_name TEXT,                          -- 文件名稱
+    document_path TEXT,                          -- 文件路徑
+    total_pages INTEGER DEFAULT 0,               -- 總頁數
     relevance_score REAL DEFAULT 0.0,            -- 相關度分數 (0.0-1.0)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (skill_id) REFERENCES skill_metadata(skill_id) ON DELETE CASCADE
@@ -236,11 +239,14 @@ CREATE TABLE IF NOT EXISTS skill_document_mapping (
 CREATE TABLE IF NOT EXISTS skill_chunk_metadata (
     chunk_id TEXT PRIMARY KEY,                   -- Chunk 唯一識別碼
     skill_id TEXT NOT NULL,                      -- 關聯的 skill_id
+    document_id TEXT,                            -- 文件 ID
+    document_name TEXT,                          -- 文件名稱
     chunk_index INTEGER NOT NULL,                -- Chunk 在文件中的索引
     chunk_text TEXT,                             -- Chunk 文字內容
     page_number INTEGER,                         -- 來源頁碼
     faiss_index INTEGER,                         -- FAISS 向量索引位置
     embedding_model TEXT,                        -- 使用的 Embedding 模型
+    embedding_dimension INTEGER,                 -- Embedding 向量維度
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     metadata TEXT,                               -- 額外元數據 (JSON)
     FOREIGN KEY (skill_id) REFERENCES skill_metadata(skill_id) ON DELETE CASCADE

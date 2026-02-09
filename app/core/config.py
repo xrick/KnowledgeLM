@@ -6,10 +6,11 @@ Centralized configuration using Pydantic Settings for environment variable manag
 Supports enterprise-grade storage backends: Milvus, MongoDB, Redis, SQLite.
 """
 
+from pathlib import Path
 from typing import List, Optional
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -20,10 +21,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore"
     )
 
     # =============================================================================
@@ -40,7 +38,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER_BASE_URL: str = "http://localhost:11434/v1"
     # LLM_PROVIDER_BASE_URL: str = "http://192.168.200.48:11434/v1"
     LLM_PROVIDER_API_KEY: Optional[str] = "ollama"
-    DEFAULT_LLM_MODEL: str = "gpt-oss:20b"  #phi4-mini:3.8b"
+    DEFAULT_LLM_MODEL: str = "gpt-oss:20b"  # phi4-mini:3.8b"
     LLM_TIMEOUT: float = 300.0  # Extended to 5 minutes for LLM cold start (was 60.0)
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_TOKENS: Optional[int] = None
@@ -51,7 +49,7 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     EMBEDDING_FALLBACK: str = "jinaai/jina-embeddings-v2-base-zh"
     EMBEDDING_DIMENSION: int = 384
-    EMBEDDING_DEVICE: str = "cpu" # "mps"  # or "cuda:0"
+    EMBEDDING_DEVICE: str = "cpu"  # "mps"  # or "cuda:0"
     EMBEDDING_NORMALIZE: bool = False
 
     # =============================================================================
@@ -98,21 +96,29 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./uploadfiles"
     PDF_UPLOAD_DIR: str = "./uploadfiles/pdf"  # PDF-specific directory
     MAX_FILE_SIZE: int = 50_000_000  # 50MB
-    ALLOWED_EXTENSIONS: List[str] = Field(default_factory=lambda: ["pdf"])  # PDF only for now
+    ALLOWED_EXTENSIONS: List[str] = Field(
+        default_factory=lambda: ["pdf", "docx", "pptx", "txt", "md"]
+    )
 
     # =============================================================================
     # Text Chunking Settings
     # =============================================================================
     # Default chunking strategy
     # RecursiveCharacterTextSplitter is most effective for PDF documents
-    CHUNKING_STRATEGY: str = "page_based"  # "hierarchical" or "recursive" or "page_based"
+    CHUNKING_STRATEGY: str = (
+        "page_based"  # "hierarchical" or "recursive" or "page_based"
+    )
     CHUNK_SIZE: int = 500
     CHUNK_OVERLAP: int = 50
-    CHUNK_SEPARATORS: List[str] = Field(default_factory=lambda: ["\n\n", "\n", "。", "！", "？", " ", ""])
+    CHUNK_SEPARATORS: List[str] = Field(
+        default_factory=lambda: ["\n\n", "\n", "。", "！", "？", " ", ""]
+    )
     PAGE_BASED_CHUNK_SIZE: int = 2000
     PAGE_BASED_CHUNK_OVERLAP: int = 200
     # Hierarchical Indexing Settings (Multi-level chunking)
-    HIERARCHICAL_CHUNK_SIZES: List[int] = Field(default_factory=lambda: [2000, 1000, 500])  # Parent, Child, Grandchild
+    HIERARCHICAL_CHUNK_SIZES: List[int] = Field(
+        default_factory=lambda: [2000, 1000, 500]
+    )  # Parent, Child, Grandchild
     HIERARCHICAL_OVERLAP: int = 100
     ENABLE_MULTIVECTOR_RETRIEVAL: bool = True  # Use MultiVectorRetriever
 
@@ -128,10 +134,16 @@ class Settings(BaseSettings):
     # Iterative Query Expansion Settings (Advanced Multi-Round Expansion)
     # =============================================================================
     ENABLE_ITERATIVE_EXPANSION: bool = True  # Enable advanced multi-round expansion
-    ITERATIVE_EXPANSION_ROUNDS: int = 1  # Number of expansion rounds (1-3) - default 1 for speed
+    ITERATIVE_EXPANSION_ROUNDS: int = (
+        1  # Number of expansion rounds (1-3) - default 1 for speed
+    )
     EXPANSION_PRUNING_THRESHOLD: float = 0.6  # Min quality score to keep query (0-1)
-    ENABLE_EXPANSION_SCORING: bool = False  # Disable LLM scoring for speed (adds 30s+ per call)
-    EXPANSION_STRATEGY_MODE: str = "single"  # "single" for speed, "iterative" for quality, "adaptive"
+    ENABLE_EXPANSION_SCORING: bool = (
+        False  # Disable LLM scoring for speed (adds 30s+ per call)
+    )
+    EXPANSION_STRATEGY_MODE: str = (
+        "single"  # "single" for speed, "iterative" for quality, "adaptive"
+    )
 
     # =============================================================================
     # Retrieval Settings

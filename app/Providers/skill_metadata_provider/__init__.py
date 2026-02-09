@@ -1,8 +1,8 @@
 """
-Knowledge Metadata Provider.
+Skill Metadata Provider.
 
-SQLite-based provider for knowledge metadata persistence.
-Handles: knowledge metadata, knowledge overviews, knowledge-document mappings.
+SQLite-based provider for skill metadata persistence.
+Handles: skill metadata, skill overviews, skill-document mappings.
 """
 
 from app.Providers.skill_metadata_provider.client import (
