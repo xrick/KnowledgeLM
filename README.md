@@ -1,97 +1,64 @@
-這是一份為您重新優化、整合多文件支援說明，並結合系統架構與未來展望的完整 `README.md`。這份文件特別強化了對多種格式（PDF, DOCX, PPTX, MD, TXT）支援的描述，並保持專業且易讀的結構。
+# DocAI: Local Retrieval-Augmented Generation System
 
----
+> **Version:** 1.0 (2025-12-04)  
+> **Concept:** Your Personal Librarian for Documents
 
-# 📚 KnowledgeLM : 全方位本地化知識檢索增強生成系統
+DocAI is a robust, local RAG (Retrieval-Augmented Generation) system designed to ingest, index, and answer questions from your documents. It functions as a "personal librarian" that not only knows where every book is stored but can also read, understand, and synthesize answers based on curated knowledge domains.
 
-> **版本：** 1.0 (2025-12-04)
-> **定位：** 您的企業級數位圖書館員 —— 支援多格式文檔分析，打造私有化精準知識庫。
+## 📖 Overview
 
-KnowledgeLM 是一款基於 **FastAPI** 與 **Python 3.11** 構建的高性能 RAG (Retrieval-Augmented Generation) 系統。它能深度整合您的本地文檔，透過先進的語義搜索與大語言模型（LLM），提供精準的問答與知識合成服務。
+DocAI implements a **Dual RAG Architecture**, running two parallel systems to support different use cases:
 
----
+1.  **Skill-Based RAG (New Architecture):**
+    * Focuses on curated "Skills" (Knowledge Domains) combining multiple source files.
+    * Uses **FAISS** for lightweight, physically isolated vector indices.
+    * Managed via **SQLite** with a "Single Source of Truth" design (`skill_heads`).
+    * optimized for precise, domain-specific Q&A.
 
-## 📖 系統概述
+2.  **File-Based RAG (Legacy System):**
+    * Focuses on individual, searchable PDF files.
+    * Uses **Milvus** for high-performance vector storage.
+    * Features a complex 5-Phase OPMP pipeline with SSE streaming.
 
-KnowledgeLM 採用 **「雙重 RAG 架構」 (Dual RAG Architecture)**，針對不同規模與需求的知識管理提供最佳路徑：
+## 🚀 Key Features
 
-1. **技能導向 RAG (Skill-Based RAG)：**
-* 將多份關聯文件（不限格式）歸納為單一「技能（Skill）」知識領域。
-* 使用 **FAISS** 向量資料庫實現物理隔離，確保特定領域問答的精確度與安全性。
+* **Local Processing:** Powered by local LLMs (Ollama) and OpenAI integration.
+* **Dual Vector Stores:** Leverages both **Milvus** (Global/File) and **FAISS** (Local/Skill) for optimal performance.
+* **Smart Ingestion Pipeline:**
+    * Automatic PDF text extraction (PyPDF2).
+    * Smart chunking (~1000 chars with overlap).
+    * High-dimensional embeddings using `BAAI/bge-m3` (1024-dim).
+* **Architecture Patterns:**
+    * **Layered Architecture:** Clear separation between API, Services, and Providers.
+    * **Single Source of Truth:** `skill_heads` table eliminates sync issues between JSON configs and DB.
+    * **Hybrid Data Models:** Uses `TypedDict` for high-performance internal data transfer and `Pydantic` for robust API validation.
 
+## 🛠️ Technology Stack
 
-2. **文件導向 RAG (File-Based RAG)：**
-* 針對獨立檔案進行快速索引，適合海量分散文檔的全局檢索。
-* 整合 **Milvus** 高性能向量引擎，支援複雜的 5 階段 OPMP 處理管道。
+| Component | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Backend** | Python 3.11, FastAPI | API server & Async processing |
+| **Vector DB (Skill)** | FAISS | Lightweight, file-based indices |
+| **Vector DB (File)** | Milvus | Legacy high-performance search |
+| **Metadata DB** | SQLite | Skill definitions & relationships |
+| **Embeddings** | BAAI/bge-m3 | Multilingual 1024-dim embeddings |
+| **LLM** | Ollama / OpenAI | Response generation |
+| **Frontend** | Vanilla JS + Jinja2 | User Interface |
 
-
-
----
-
-## 🚀 核心功能與多文件支援
-
-### 📂 全方位的多格式支援
-
-系統內建強大的解析引擎，支援以下文件類型的自動化攝取與分塊處理：
-
-* **PDF (.pdf)**：支援複雜版面解析與文本提取。
-* **Word (.docx)**：完整攝取辦公文檔內容。
-* **PowerPoint (.pptx)**：解析簡報投影片中的關鍵資訊。
-* **Markdown (.md)**：原生支援結構化技術文檔。
-* **純文本 (.txt)**：支援各類標準文本資料。
-
-### 🧠 智能處理技術
-
-* **本地化隱私保護**：支援透過 **Ollama** 運行本地 LLM，確保數據處理完全不出機房。
-* **高維度語義向量**：採用 `BAAI/bge-m3` 模型，提供 1024 維度的多語言嵌入，極大提升中英文檢索相關性。
-* **動態模型管理**：內建 `LLMManager`，支援在運行時切換不同的模型（如從 phi4 切換至 Llama 3），靈活應對不同任務。
-* **查詢優化策略**：整合「多輪查詢擴展」技術，自動將模糊的問題拆解為具體的子查詢，顯著降低模型幻覺。
-
----
-
-## 🛠️ 技術棧 (Technology Stack)
-
-| 組件 | 技術選擇 | 用途 |
-| --- | --- | --- |
-| **後端框架** | Python 3.11, FastAPI | 高並發非同步 API 處理 |
-| **向量庫 (Skill)** | FAISS | 本地、輕量、隔離的向量索引 |
-| **向量庫 (File)** | Milvus | 大規模全局向量搜索服務 |
-| **元數據庫** | SQLite / MongoDB | 儲存技能定義、檔案關聯及對話歷史 |
-| **嵌入模型** | BAAI/bge-m3 | 多語言語義理解與向量化 |
-| **推理引擎** | Ollama / OpenAI | 答案生成與文本理解 |
-
----
-
-## 📂 專案架構 (Project Structure)
+## 📂 Project Structure
 
 ```text
-DOCAI/ (Project Root)
-├── app/                        # 核心程式碼庫
-│   ├── api/v1/                 # 接口層：定義上傳、對話、模型切換路由
-│   ├── core/                   # 核心配置：系統參數與環境變數管理
-│   ├── Providers/              # 基礎設施：LLM、Embedding、DB 驅動
-│   ├── Services/               # 檔案 RAG 邏輯：處理單一文件的檢索增強
-│   └── SkillServices/          # 技能 RAG 邏輯：處理跨文件領域知識
-├── data/                       # 數據存儲
-│   ├── faiss_indices/          # 物理 FAISS 索引檔
-│   ├── files/                  # 存儲上傳的原始文檔 (PDF, DOCX等)
-│   └── skill_metadata.db       # 技能架構元數據
-└── template/                   # 前端介面：Jinja2 模板與 UI 組件
-
-```
-
----
-
-## 🌟 系統優點與未來展望
-
-### 系統亮點
-
-* **格式無縫對接**：統一的 Ingestion Pipeline，讓不同格式的文件能協同工作。
-* **極致彈性**：可根據硬體環境選擇 FAISS (輕量) 或 Milvus (強大) 向量後端。
-* **開發友好**：清晰的層級設計，方便擴展新的 Embedding 模型或檢索演算法。
-
-### 未來發展 (Roadmap)
-
-* **自動化摘要**：為每個新上傳的文件或技能自動生成概覽說明。
-* **GraphRAG 整合**：引入知識圖譜技術，強化對文檔間複雜關係的推理能力。
-* **OCR 強化**：針對掃描版 PDF 與圖片提供更精準的文字識別支援。
+DOCAI/
+├── app/
+│   ├── api/v1/endpoints/    # FastAPI route handlers
+│   ├── models/              # Pydantic & TypedDict definitions
+│   ├── Providers/           # Infrastructure layer (DB, Vector, LLM)
+│   ├── Services/            # Business logic (File-based RAG)
+│   └── SkillServices/       # Business logic (Skill-based RAG)
+├── data/
+│   ├── faiss_indices/       # Physical FAISS vector stores
+│   ├── files/               # Raw PDF sources
+│   ├── skills/              # Skill-specific data
+│   ├── docai.db             # Legacy file metadata
+│   └── skill_metadata.db    # New SQLite skill architecture
+└── template/                # HTML/Jinja2 templates

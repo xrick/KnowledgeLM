@@ -1,3 +1,4 @@
+# app/Providers/skill_metadata_provider/__init__.py
 """
 Skill Metadata Provider.
 

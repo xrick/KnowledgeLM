@@ -30,17 +30,23 @@ RULES (violating ANY invalidates your response):
 ✅ Provide migration strategies
 
 ```
-/sc:troubleshoot --fix
-/sc:troubleshoot --fix
-立即修復（低風險、高價值）：
-   - 同時修改相關的程式碼
-   - 列出有哪些python檔被修改
-   - 請先準備roll-back機制
-   - 補齊 `skill_chunk_metadata` 的 CREATE TABLE
-   - 修正 `skills.py:2752` 查錯表的問題
-   - 清理 9 筆孤兒記錄
-when you finish, record the problem descript
-   - 統一 `head_id` 前綴（修正六法全書-民法的 `skill_` 前綴）
+/sc:design --think-hard --focus architecture --magic --c7 --seq --serena
+請嚴格遵守以下規則與任務目標執行：
+【重要限制】
+在未獲得我明確允許之前，不得修改任何現有程式碼。
+僅能在我指定的範圍內進行調整或新增功能。
+【主要任務目標】
+**使用者介面改版**: 請看以下二個圖片：
+- 新增檔案新介面：refData/design/add_multifiles_modified.png
+- 批次處理新介面：refData/design/processing_multiple_files_UI.jpg
+請修改系統，使其符合以下功能需求：
+支援使用者「同時選擇多個檔案或多個目錄」。
+支援「批次上傳與批次處理」功能，包含：
+系統需處理所有被選取的檔案。
+若選擇的是目錄，需自動處理該目錄內所有檔案。
+所有被選取或被處理的檔案，皆必須符合系統規定的檔案格式。
+若檔案格式不符合規定，系統應略過或提示錯誤（不得強制處理）。
+請確保最終設計符合上述所有限制與條件。
    
 ```
   

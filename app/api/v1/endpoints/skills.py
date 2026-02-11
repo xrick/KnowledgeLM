@@ -2421,8 +2421,9 @@ async def upload_source_to_skill_stream(
     Upload a PDF file with SSE streaming progress.
     Returns real-time progress updates via Server-Sent Events.
     """
-    # 1. Validate File
-    file_ext = Path(file.filename).suffix.lower().lstrip(".")
+    # 1. Validate File — strip directory components (webkitdirectory sends relative paths)
+    safe_filename = Path(file.filename).name
+    file_ext = Path(safe_filename).suffix.lower().lstrip(".")
     if file_ext not in settings.ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
@@ -2432,7 +2433,7 @@ async def upload_source_to_skill_stream(
     # 2. Save File first (synchronously to get the path)
     upload_dir = PROJECT_ROOT / "uploadfiles" / file_ext
     upload_dir.mkdir(parents=True, exist_ok=True)
-    file_path = upload_dir / file.filename
+    file_path = upload_dir / safe_filename
 
     content = await file.read()
     with open(file_path, "wb") as f:
@@ -2441,7 +2442,7 @@ async def upload_source_to_skill_stream(
     logger.info(f"Uploaded source file for streaming: {file_path}")
 
     # 3. Get skill metadata
-    skill_description = description or file.filename
+    skill_description = description or safe_filename
     skill_category = "General"
     head_id = None
     parent_skill_id = "root"
@@ -2486,15 +2487,15 @@ async def upload_source_to_skill_stream(
         yield create_upload_sse_event(
             "file_saved",
             {
-                "message": f"📁 檔案已保存: {file.filename}",
-                "filename": file.filename,
+                "message": f"📁 檔案已保存: {safe_filename}",
+                "filename": safe_filename,
                 "size": len(content),
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
             },
         )
 
         # Format-based routing: PDF uses Producer-Consumer, others use unified pipeline
-        file_ext = Path(file.filename).suffix.lower().lstrip(".")
+        file_ext = Path(safe_filename).suffix.lower().lstrip(".")
         if file_ext == "pdf":
             async for event in process_pdf_for_skill_streaming(
                 pdf_path=file_path,
@@ -2537,8 +2538,9 @@ async def upload_source_to_skill(
 
     Returns Server-Sent Events with progress updates.
     """
-    # 1. Validate File
-    file_ext = Path(file.filename).suffix.lower().lstrip(".")
+    # 1. Validate File — strip directory components (webkitdirectory sends relative paths)
+    safe_filename = Path(file.filename).name
+    file_ext = Path(safe_filename).suffix.lower().lstrip(".")
     if file_ext not in settings.ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
@@ -2548,7 +2550,7 @@ async def upload_source_to_skill(
     # 2. Save File first (synchronously to get the path)
     upload_dir = PROJECT_ROOT / "uploadfiles" / file_ext
     upload_dir.mkdir(parents=True, exist_ok=True)
-    file_path = upload_dir / file.filename
+    file_path = upload_dir / safe_filename
 
     content = await file.read()
     with open(file_path, "wb") as f:
@@ -2557,7 +2559,7 @@ async def upload_source_to_skill(
     logger.info(f"Uploaded source file: {file_path} for skill {skill_name}")
 
     # 3. Get skill metadata from skill_heads table (SQLite - Single Source of Truth)
-    skill_description = description or file.filename
+    skill_description = description or safe_filename
     skill_category = "General"
     head_id = None
     parent_skill_id = "root"
@@ -2614,15 +2616,15 @@ async def upload_source_to_skill(
         yield create_upload_sse_event(
             "file_saved",
             {
-                "message": f"📁 檔案已保存: {file.filename}",
-                "filename": file.filename,
+                "message": f"📁 檔案已保存: {safe_filename}",
+                "filename": safe_filename,
                 "size": len(content),
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
             },
         )
 
         # Format-based routing: PDF uses Producer-Consumer, others use unified pipeline
-        file_ext = Path(file.filename).suffix.lower().lstrip(".")
+        file_ext = Path(safe_filename).suffix.lower().lstrip(".")
         if file_ext == "pdf":
             async for event in process_pdf_for_skill_streaming(
                 pdf_path=file_path,
