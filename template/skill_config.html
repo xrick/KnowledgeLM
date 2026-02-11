@@ -784,9 +784,6 @@
             .file-tree-item .tree-tag.tag-pptx { background: rgba(249,115,22,0.1); color: #f97316; }
             .file-tree-item .tree-tag.tag-md { background: rgba(124,58,237,0.1); color: #7c3aed; }
             .file-tree-item .tree-tag.tag-txt { background: rgba(107,114,128,0.1); color: #6b7280; }
-            .file-tree-item .tree-tag.tag-xlsx { background: rgba(16,185,129,0.1); color: #10b981; }
-            .file-tree-item .tree-tag.tag-xls { background: rgba(5,150,105,0.1); color: #059669; }
-            .file-tree-item .tree-tag.tag-csv { background: rgba(13,148,136,0.1); color: #0d9488; }
             .file-tree-item.skipped-item {
                 opacity: 0.5;
             }
@@ -1535,7 +1532,7 @@
                                 type="file"
                                 id="multi-file-input"
                                 multiple
-                                accept=".pdf,.docx,.pptx,.txt,.md,.xlsx,.xls,.csv"
+                                accept=".pdf,.docx,.pptx,.txt,.md"
                                 style="display: none"
                                 onchange="handleMultiFileSelected()"
                             />
@@ -1576,15 +1573,6 @@
                         </span>
                         <span class="format-chip active" data-ext=".pptx" onclick="toggleFormatFilter('.pptx')">
                             <i class="fa-solid fa-file-powerpoint" style="color:#f97316"></i> PPTX
-                        </span>
-                        <span class="format-chip active" data-ext=".xlsx" onclick="toggleFormatFilter('.xlsx')">
-                            <i class="fa-solid fa-file-excel" style="color:#10b981"></i> XLSX
-                        </span>
-                        <span class="format-chip active" data-ext=".xls" onclick="toggleFormatFilter('.xls')">
-                            <i class="fa-solid fa-file-excel" style="color:#059669"></i> XLS
-                        </span>
-                        <span class="format-chip active" data-ext=".csv" onclick="toggleFormatFilter('.csv')">
-                            <i class="fa-solid fa-file-csv" style="color:#0d9488"></i> CSV
                         </span>
                         <span class="format-chip active" data-ext=".md" onclick="toggleFormatFilter('.md')">
                             <i class="fa-solid fa-file-code" style="color:#7c3aed"></i> MD
@@ -3106,7 +3094,7 @@ Loading logs...</pre
             }
 
             // ===== Batch Upload: File Selection State & Functions =====
-            const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".pptx", ".txt", ".md", ".xlsx", ".xls", ".csv"];
+            const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".pptx", ".txt", ".md"];
 
             const fileSelectState = {
                 allFiles: [],      // { file, ext, path, selected, valid, index }
