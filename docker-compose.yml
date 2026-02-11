@@ -1,0 +1,110 @@
+# ============================================
+# DocAI RAG Application - Docker Compose
+# ============================================
+# Services: DocAI App, MongoDB, Redis
+# ============================================
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # DocAI Main Application
+  # ==========================================
+  docai-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docai-app
+    ports:
+      - "8082:8082"
+    env_file:
+      - .env.docker
+    volumes:
+      # User uploaded files - Bind Mount (external)
+      - ./uploadfiles:/app/uploadfiles
+      # Database and indices - Named Volume (persistent)
+      - docai_data:/app/data
+      # Logs - Bind Mount (external for debugging)
+      - ./logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - docai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ==========================================
+  # MongoDB - Chat History Storage
+  # ==========================================
+  mongodb:
+    image: mongo:7.0
+    container_name: docai-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=docai
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - docai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ==========================================
+  # Redis - Cache Layer
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: docai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - docai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# ==========================================
+# Volumes Definition
+# ==========================================
+volumes:
+  # DocAI application data (SQLite, FAISS indices)
+  docai_data:
+    driver: local
+  # MongoDB data
+  mongodb_data:
+    driver: local
+  # MongoDB config
+  mongodb_config:
+    driver: local
+  # Redis data
+  redis_data:
+    driver: local
+
+# ==========================================
+# Networks Definition
+# ==========================================
+networks:
+  docai-network:
+    driver: bridge

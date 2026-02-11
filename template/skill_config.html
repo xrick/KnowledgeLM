@@ -654,6 +654,306 @@
             .format-icon-item.md i { color: #7c3aed; }
             .format-icon-item.txt i { color: #6b7280; }
 
+            /* ===== BATCH UPLOAD: File Select Buttons ===== */
+            .file-select-buttons {
+                display: flex;
+                gap: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+            .file-select-buttons .btn {
+                flex: 1;
+            }
+
+            /* ===== BATCH UPLOAD: Format Filter Chips ===== */
+            .format-filter-chips {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin: 0.75rem 0;
+                flex-wrap: wrap;
+            }
+            .format-filter-chips .chip-label {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-right: 0.25rem;
+            }
+            .format-chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                padding: 0.25rem 0.625rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                border: 1px solid var(--border);
+                background: var(--card-bg);
+                color: var(--text-muted);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                user-select: none;
+            }
+            .format-chip:hover {
+                border-color: var(--primary);
+            }
+            .format-chip.active {
+                background: rgba(59, 130, 246, 0.1);
+                border-color: var(--primary);
+                color: var(--primary);
+            }
+            .format-chip i {
+                font-size: 0.8rem;
+            }
+
+            /* ===== BATCH UPLOAD: File Tree Container ===== */
+            .file-tree-container {
+                max-height: 300px;
+                overflow-y: auto;
+                border: 1px solid var(--border);
+                border-radius: 0.5rem;
+                background: var(--card-bg);
+            }
+            .file-tree-empty {
+                padding: 2rem;
+                text-align: center;
+                color: var(--text-muted);
+                font-size: 0.875rem;
+            }
+            .file-tree-item {
+                display: flex;
+                align-items: center;
+                padding: 0.375rem 0.75rem;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+                font-size: 0.8125rem;
+                gap: 0.5rem;
+                transition: background 0.15s ease;
+            }
+            .file-tree-item:last-child {
+                border-bottom: none;
+            }
+            .file-tree-item:hover {
+                background: rgba(59, 130, 246, 0.04);
+            }
+            .file-tree-item.dir-item {
+                font-weight: 600;
+                cursor: pointer;
+                background: rgba(0,0,0,0.02);
+            }
+            .file-tree-item.dir-item:hover {
+                background: rgba(59, 130, 246, 0.06);
+            }
+            .file-tree-item .tree-indent {
+                display: inline-block;
+                width: calc(var(--depth, 0) * 1.25rem);
+                flex-shrink: 0;
+            }
+            .file-tree-item .tree-icon {
+                flex-shrink: 0;
+                width: 1.25rem;
+                text-align: center;
+            }
+            .file-tree-item .tree-checkbox {
+                flex-shrink: 0;
+                width: 1rem;
+                height: 1rem;
+                cursor: pointer;
+                accent-color: var(--primary);
+            }
+            .file-tree-item .tree-name {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .file-tree-item .tree-size {
+                flex-shrink: 0;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                min-width: 60px;
+                text-align: right;
+            }
+            .file-tree-item .tree-tag {
+                flex-shrink: 0;
+                font-size: 0.65rem;
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            .file-tree-item .tree-tag.tag-pdf { background: rgba(239,68,68,0.1); color: #ef4444; }
+            .file-tree-item .tree-tag.tag-docx { background: rgba(59,130,246,0.1); color: #3b82f6; }
+            .file-tree-item .tree-tag.tag-pptx { background: rgba(249,115,22,0.1); color: #f97316; }
+            .file-tree-item .tree-tag.tag-md { background: rgba(124,58,237,0.1); color: #7c3aed; }
+            .file-tree-item .tree-tag.tag-txt { background: rgba(107,114,128,0.1); color: #6b7280; }
+            .file-tree-item.skipped-item {
+                opacity: 0.5;
+            }
+            .file-tree-item.skipped-item .tree-name {
+                text-decoration: line-through;
+            }
+            .file-tree-item .tree-warn {
+                font-size: 0.7rem;
+                color: #f59e0b;
+                margin-left: 0.25rem;
+            }
+            .dir-children.collapsed {
+                display: none;
+            }
+            .dir-toggle-arrow {
+                transition: transform 0.2s ease;
+                font-size: 0.7rem;
+            }
+            .dir-toggle-arrow.collapsed {
+                transform: rotate(-90deg);
+            }
+
+            /* ===== BATCH UPLOAD: Summary Bar ===== */
+            .file-summary-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem 0.75rem;
+                margin-top: 0.5rem;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                background: var(--card-bg);
+                border-radius: 0.375rem;
+                border: 1px solid var(--border);
+            }
+
+            /* ===== BATCH UPLOAD: Progress Table ===== */
+            .batch-file-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.8125rem;
+            }
+            .batch-file-table th {
+                padding: 0.5rem 0.75rem;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.025em;
+                border-bottom: 2px solid var(--border);
+                background: rgba(0,0,0,0.02);
+            }
+            .batch-file-table td {
+                padding: 0.5rem 0.75rem;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+                vertical-align: middle;
+            }
+            .batch-file-table tr:last-child td {
+                border-bottom: none;
+            }
+            .batch-file-table .file-progress-cell {
+                min-width: 120px;
+            }
+            .batch-file-table .mini-progress-bar {
+                height: 6px;
+                background: var(--bg, #f1f5f9);
+                border-radius: 3px;
+                overflow: hidden;
+                margin-top: 0.25rem;
+            }
+            .batch-file-table .mini-progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--primary), #60a5fa);
+                transition: width 0.3s ease;
+                border-radius: 3px;
+            }
+
+            /* ===== BATCH UPLOAD: Status Badges ===== */
+            .batch-status-badge {
+                display: inline-block;
+                padding: 0.15rem 0.5rem;
+                border-radius: 9999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .batch-status-badge.status-queued { background: rgba(107,114,128,0.1); color: #6b7280; }
+            .batch-status-badge.status-processing { background: rgba(59,130,246,0.15); color: #3b82f6; }
+            .batch-status-badge.status-complete { background: rgba(16,185,129,0.15); color: #10b981; }
+            .batch-status-badge.status-failed { background: rgba(239,68,68,0.15); color: #ef4444; }
+            .batch-status-badge.status-skipped { background: rgba(245,158,11,0.15); color: #f59e0b; }
+            .batch-status-badge.status-cancelled { background: rgba(107,114,128,0.1); color: #f97316; }
+            .batch-status-badge.status-interrupted { background: rgba(249,115,22,0.15); color: #f97316; }
+
+            /* ===== BATCH UPLOAD: Log Toggle ===== */
+            .batch-log-toggle {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0;
+                cursor: pointer;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                user-select: none;
+                margin-top: 0.75rem;
+            }
+            .batch-log-toggle:hover {
+                color: var(--text);
+            }
+            .batch-log-toggle .toggle-arrow {
+                transition: transform 0.2s ease;
+                font-size: 0.65rem;
+            }
+            .batch-log-toggle .toggle-arrow.open {
+                transform: rotate(90deg);
+            }
+            .batch-log-section {
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+            .batch-log-section.collapsed {
+                max-height: 0 !important;
+            }
+
+            /* ===== BATCH UPLOAD: Cancel Confirm Dialog ===== */
+            .batch-cancel-overlay {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 10;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0.75rem;
+            }
+            .batch-cancel-overlay.active {
+                display: flex;
+            }
+            .batch-cancel-dialog {
+                background: var(--card-bg);
+                border-radius: 0.75rem;
+                padding: 1.5rem;
+                max-width: 420px;
+                width: 90%;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            }
+            .batch-cancel-dialog h3 {
+                margin: 0 0 1rem 0;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .batch-cancel-dialog p {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin: 0.375rem 0;
+                line-height: 1.5;
+            }
+            .batch-cancel-dialog .dialog-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.75rem;
+                margin-top: 1.25rem;
+            }
+
             .source-name {
                 font-weight: 500;
             }
@@ -1198,12 +1498,12 @@
             </div>
         </div>
 
-        <!-- Add Source Modal -->
+        <!-- Add Source Modal (Batch Upload) -->
         <div class="modal-overlay" id="add-source-modal">
-            <div class="modal" style="max-width: 600px">
+            <div class="modal" style="max-width: 700px">
                 <div class="modal-header">
                     <div class="modal-title" id="modal-add-source-title">
-                        Add Document
+                        新增文件來源
                     </div>
                     <button
                         class="modal-close"
@@ -1213,6 +1513,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!-- Skill Name (readonly) -->
                     <div class="form-group">
                         <label class="form-label" id="label-skill">Skill</label>
                         <input
@@ -1222,72 +1523,82 @@
                             readonly
                         />
                     </div>
+
+                    <!-- File/Directory Selection Buttons -->
                     <div class="form-group">
-                        <label class="form-label" id="label-select-pdf"
-                            >Select Document</label
-                        >
-                        <div
-                            style="
-                                display: flex;
-                                align-items: center;
-                                gap: 0.75rem;
-                            "
-                        >
+                        <label class="form-label" id="label-select-pdf">選擇文件</label>
+                        <div class="file-select-buttons">
                             <input
                                 type="file"
-                                id="pdf-file-input"
+                                id="multi-file-input"
+                                multiple
                                 accept=".pdf,.docx,.pptx,.txt,.md"
                                 style="display: none"
-                                onchange="handlePDFFileSelected()"
+                                onchange="handleMultiFileSelected()"
+                            />
+                            <input
+                                type="file"
+                                id="dir-file-input"
+                                webkitdirectory
+                                style="display: none"
+                                onchange="handleDirSelected()"
                             />
                             <button
                                 type="button"
                                 class="btn btn-outline"
-                                onclick="
-                                    document
-                                        .getElementById('pdf-file-input')
-                                        .click()
-                                "
-                                id="btn-choose-file"
+                                onclick="document.getElementById('multi-file-input').click()"
                             >
                                 <i class="fa-solid fa-file-lines"></i>
-                                <span id="choose-file-text">Choose File</span>
+                                選擇檔案
                             </button>
-                            <span
-                                id="file-name-display"
-                                style="color: #6b7280; font-size: 0.875rem"
-                                >No file chosen</span
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                onclick="document.getElementById('dir-file-input').click()"
                             >
-                        </div>
-                        <!-- Supported formats with icons -->
-                        <div class="format-icons-row" title="支援的文件格式 / Supported file formats">
-                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-right: 0.25rem;">支援格式:</span>
-                            <span class="format-icon-item pdf">
-                                <i class="fa-solid fa-file-pdf"></i>
-                                <span>PDF</span>
-                            </span>
-                            <span class="format-icon-item docx">
-                                <i class="fa-solid fa-file-word"></i>
-                                <span>DOCX</span>
-                            </span>
-                            <span class="format-icon-item pptx">
-                                <i class="fa-solid fa-file-powerpoint"></i>
-                                <span>PPTX</span>
-                            </span>
-                            <span class="format-icon-item md">
-                                <i class="fa-solid fa-file-code"></i>
-                                <span>MD</span>
-                            </span>
-                            <span class="format-icon-item txt">
-                                <i class="fa-solid fa-file-lines"></i>
-                                <span>TXT</span>
-                            </span>
+                                <i class="fa-solid fa-folder-open"></i>
+                                選擇目錄
+                            </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" id="label-pdf-description"
-                            >Description</label
-                        >
+
+                    <!-- Format Filter Chips -->
+                    <div class="format-filter-chips" id="format-filter-chips">
+                        <span class="chip-label">格式過濾:</span>
+                        <span class="format-chip active" data-ext=".pdf" onclick="toggleFormatFilter('.pdf')">
+                            <i class="fa-solid fa-file-pdf" style="color:#ef4444"></i> PDF
+                        </span>
+                        <span class="format-chip active" data-ext=".docx" onclick="toggleFormatFilter('.docx')">
+                            <i class="fa-solid fa-file-word" style="color:#3b82f6"></i> DOCX
+                        </span>
+                        <span class="format-chip active" data-ext=".pptx" onclick="toggleFormatFilter('.pptx')">
+                            <i class="fa-solid fa-file-powerpoint" style="color:#f97316"></i> PPTX
+                        </span>
+                        <span class="format-chip active" data-ext=".md" onclick="toggleFormatFilter('.md')">
+                            <i class="fa-solid fa-file-code" style="color:#7c3aed"></i> MD
+                        </span>
+                        <span class="format-chip active" data-ext=".txt" onclick="toggleFormatFilter('.txt')">
+                            <i class="fa-solid fa-file-lines" style="color:#6b7280"></i> TXT
+                        </span>
+                    </div>
+
+                    <!-- File List (Tree or Flat) -->
+                    <div class="file-tree-container" id="upload-file-list">
+                        <div class="file-tree-empty">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem; margin-bottom:0.5rem; display:block; opacity:0.4;"></i>
+                            請選擇檔案或目錄
+                        </div>
+                    </div>
+
+                    <!-- Summary Bar -->
+                    <div class="file-summary-bar" id="selected-files-summary" style="display:none;">
+                        <span id="summary-selected">已選: 0 個檔案</span>
+                        <span id="summary-skipped" style="color:#f59e0b;"></span>
+                    </div>
+
+                    <!-- Description (optional) -->
+                    <div class="form-group" style="margin-top:0.75rem;">
+                        <label class="form-label" id="label-pdf-description">Description</label>
                         <input
                             type="text"
                             class="form-input"
@@ -1303,14 +1614,16 @@
                         onclick="closeModal('add-source-modal')"
                         id="btn-source-cancel"
                     >
-                        Cancel
+                        取消
                     </button>
                     <button
                         class="btn btn-primary"
                         onclick="addSource()"
-                        id="btn-source-add"
+                        id="btn-start-batch-upload"
+                        disabled
                     >
-                        Add Source
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        開始上傳
                     </button>
                 </div>
             </div>
@@ -1680,169 +1993,115 @@ Loading logs...</pre
             </div>
         </div>
 
-        <!-- Upload Progress Modal (SSE Real-time) -->
+        <!-- Upload Progress Modal (Batch SSE Real-time) -->
         <div class="modal-overlay" id="upload-progress-modal">
             <div
                 class="modal"
                 style="
-                    max-width: 800px;
+                    max-width: 900px;
                     max-height: 85vh;
                     display: flex;
                     flex-direction: column;
+                    position: relative;
                 "
             >
                 <div class="modal-header">
                     <div class="modal-title">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span id="upload-progress-title">上傳處理進度</span>
+                        <span id="upload-progress-title">批次上傳處理</span>
                     </div>
                     <button
                         class="modal-close"
-                        onclick="cancelUpload()"
+                        onclick="handleProgressModalClose()"
                         id="upload-close-btn"
                     >
                         &times;
                     </button>
                 </div>
 
-                <!-- File Info Section -->
-                <div
-                    style="
-                        background: rgba(59, 130, 246, 0.05);
-                        border-left: 3px solid var(--primary);
-                        padding: 0.75rem 1rem;
-                        margin: 1rem;
-                    "
-                >
-                    <div
-                        style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                        "
-                    >
-                        <div>
-                            <span
-                                style="font-weight: 600; color: var(--text)"
-                                id="upload-filename"
-                                >-</span
-                            >
-                            <span
-                                style="
-                                    font-size: 0.8rem;
-                                    color: var(--text-muted);
-                                    margin-left: 0.5rem;
-                                "
-                                id="upload-filesize"
-                                >-</span
-                            >
+                <div class="modal-body" style="flex:1; overflow-y:auto; padding:1rem;">
+                    <!-- Overall Progress -->
+                    <div style="margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:0.25rem;">
+                            <span id="upload-phase">總進度</span>
+                            <span id="upload-percent">0%</span>
                         </div>
-                        <div
-                            id="upload-status-badge"
+                        <div style="height:8px; background:var(--bg,#f1f5f9); border-radius:4px; overflow:hidden;">
+                            <div id="upload-progress-bar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--primary),#60a5fa); transition:width 0.3s ease; border-radius:4px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Batch File Table -->
+                    <div style="border:1px solid var(--border); border-radius:0.5rem; overflow:hidden; margin-bottom:0.75rem;">
+                        <div style="max-height:250px; overflow-y:auto;">
+                            <table class="batch-file-table" id="batch-file-table">
+                                <thead>
+                                    <tr>
+                                        <th>檔案名稱</th>
+                                        <th style="width:80px;">大小</th>
+                                        <th style="width:80px;">狀態</th>
+                                        <th style="width:130px;">進度</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batch-file-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Log Section -->
+                    <div class="batch-log-toggle" onclick="toggleBatchLogs()">
+                        <i class="fa-solid fa-caret-right toggle-arrow" id="batch-log-arrow"></i>
+                        <i class="fa-solid fa-terminal"></i>
+                        <span>處理日誌</span>
+                        <span id="batch-log-current-file" style="color:var(--primary); font-weight:500; margin-left:0.25rem;"></span>
+                    </div>
+                    <div class="batch-log-section collapsed" id="batch-log-section" style="max-height:200px;">
+                        <pre
+                            id="upload-logs"
                             style="
-                                padding: 0.25rem 0.75rem;
-                                border-radius: 9999px;
+                                background: #1e293b;
+                                color: #e2e8f0;
+                                padding: 1rem;
+                                border-radius: 0.5rem;
                                 font-size: 0.75rem;
-                                font-weight: 600;
-                                background: rgba(251, 191, 36, 0.1);
-                                color: #f59e0b;
+                                font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+                                white-space: pre-wrap;
+                                max-height: 180px;
+                                overflow-y: auto;
+                                margin: 0;
+                                line-height: 1.6;
                             "
-                        >
-                            處理中...
+                        >等待上傳開始...</pre>
+                    </div>
+                </div>
+
+                <!-- Cancel Confirm Dialog (overlay within modal) -->
+                <div class="batch-cancel-overlay" id="batch-cancel-overlay">
+                    <div class="batch-cancel-dialog">
+                        <h3><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> 確定取消批次處理？</h3>
+                        <p id="cancel-msg-completed"></p>
+                        <p id="cancel-msg-remaining"></p>
+                        <p>正在處理中的檔案將中斷。</p>
+                        <div class="dialog-actions">
+                            <button class="btn btn-outline" onclick="closeCancelDialog()">繼續處理</button>
+                            <button class="btn" style="background:#ef4444; color:white;" onclick="executeCancelBatch()">確定取消</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Progress Bar -->
-                <div style="padding: 0 1rem">
-                    <div
-                        style="
-                            display: flex;
-                            justify-content: space-between;
-                            font-size: 0.8rem;
-                            color: var(--text-muted);
-                            margin-bottom: 0.25rem;
-                        "
-                    >
-                        <span id="upload-phase">準備中...</span>
-                        <span id="upload-percent">0%</span>
-                    </div>
-                    <div
-                        style="
-                            height: 8px;
-                            background: var(--bg);
-                            border-radius: 4px;
-                            overflow: hidden;
-                        "
-                    >
-                        <div
-                            id="upload-progress-bar"
-                            style="
-                                height: 100%;
-                                width: 0%;
-                                background: linear-gradient(
-                                    90deg,
-                                    var(--primary),
-                                    #60a5fa
-                                );
-                                transition: width 0.3s ease;
-                            "
-                        ></div>
-                    </div>
-                </div>
-
-                <!-- Logs Display -->
-                <div
-                    style="
-                        flex: 1;
-                        padding: 1rem;
-                        overflow: hidden;
-                        display: flex;
-                        flex-direction: column;
-                    "
-                >
-                    <div
-                        style="
-                            font-size: 0.8rem;
-                            color: var(--text-muted);
-                            margin-bottom: 0.5rem;
-                        "
-                    >
-                        <i class="fa-solid fa-terminal"></i> 處理日誌 (自動滾動)
-                    </div>
-                    <pre
-                        id="upload-logs"
-                        style="
-                            background: #1e293b;
-                            color: #e2e8f0;
-                            padding: 1rem;
-                            border-radius: 0.5rem;
-                            font-size: 0.75rem;
-                            font-family:
-                                &quot;JetBrains Mono&quot;,
-                                &quot;Fira Code&quot;, Consolas, monospace;
-                            white-space: pre-wrap;
-                            flex: 1;
-                            overflow-y: auto;
-                            margin: 0;
-                            line-height: 1.6;
-                        "
-                    >
-等待上傳開始...</pre
-                    >
-                </div>
-
-                <div class="modal-footer">
+                <div class="modal-footer" style="justify-content:space-between;">
                     <span
                         id="upload-elapsed"
                         style="font-size: 0.8rem; color: var(--text-muted)"
                     >
                         <i class="fa-solid fa-clock"></i> 經過時間: 0s
                     </span>
-                    <div>
+                    <div style="display:flex; gap:0.75rem;">
                         <button
                             class="btn btn-outline"
-                            onclick="cancelUpload()"
+                            onclick="requestCancelBatch()"
                             id="btn-upload-cancel"
                         >
                             <i class="fa-solid fa-stop"></i> 取消
@@ -1852,6 +2111,7 @@ Loading logs...</pre
                             onclick="closeUploadModal()"
                             id="btn-upload-close"
                             style="display: none"
+                            disabled
                         >
                             <i class="fa-solid fa-check"></i> 完成
                         </button>
@@ -2166,53 +2426,20 @@ Loading logs...</pre
                     "modal-add-source-title",
                 );
                 const labelSkill = document.getElementById("label-skill");
-                const labelSelectPdf =
-                    document.getElementById("label-select-pdf");
-                const labelPdfDescription = document.getElementById(
-                    "label-pdf-description",
-                );
                 const btnSourceCancel =
                     document.getElementById("btn-source-cancel");
-                const btnSourceAdd = document.getElementById("btn-source-add");
-                const inputSourceDesc =
-                    document.getElementById("new-source-desc");
-                const btnChooseFile =
-                    document.getElementById("btn-choose-file");
-                const chooseFileText =
-                    document.getElementById("choose-file-text");
-                const fileNameDisplay =
-                    document.getElementById("file-name-display");
+                const btnStartBatchUpload =
+                    document.getElementById("btn-start-batch-upload");
                 if (modalAddSourceTitle)
                     modalAddSourceTitle.textContent = t(
                         "config.modal.add_source_title",
                     );
                 if (labelSkill)
                     labelSkill.textContent = t("config.modal.skill_label");
-                if (labelSelectPdf)
-                    labelSelectPdf.textContent = t("config.modal.select_pdf");
-                if (labelPdfDescription)
-                    labelPdfDescription.textContent = t(
-                        "config.modal.description",
-                    );
                 if (btnSourceCancel)
                     btnSourceCancel.textContent = t("config.modal.cancel");
-                if (btnSourceAdd)
-                    btnSourceAdd.textContent = t("config.modal.add_source");
-                if (inputSourceDesc)
-                    inputSourceDesc.placeholder = t(
-                        "config.modal.pdf_description_placeholder",
-                    );
-                if (chooseFileText)
-                    chooseFileText.textContent = t("config.modal.choose_file");
-                if (
-                    (fileNameDisplay &&
-                        !document.getElementById("pdf-file-input").files) ||
-                    document.getElementById("pdf-file-input").files.length === 0
-                ) {
-                    fileNameDisplay.textContent = t(
-                        "config.modal.no_file_chosen",
-                    );
-                }
+                if (btnStartBatchUpload)
+                    btnStartBatchUpload.textContent = t("config.modal.start_upload");
 
                 // Update Rebuild Status modal
                 const rebuildLogsTitle =
@@ -2866,19 +3093,361 @@ Loading logs...</pre
                 // Dropping files onto native input works natively in most browsers
             }
 
+            // ===== Batch Upload: File Selection State & Functions =====
+            const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".pptx", ".txt", ".md"];
+
+            const fileSelectState = {
+                allFiles: [],      // { file, ext, path, selected, valid, index }
+                isTreeMode: false,
+                tree: null,
+                skippedCount: 0,
+            };
+
+            function getActiveFormatFilters() {
+                const chips = document.querySelectorAll("#format-filter-chips .format-chip.active");
+                return Array.from(chips).map(c => c.dataset.ext);
+            }
+
+            function toggleFormatFilter(ext) {
+                const chip = document.querySelector(`#format-filter-chips .format-chip[data-ext="${ext}"]`);
+                if (chip) {
+                    chip.classList.toggle("active");
+                }
+                // Re-filter existing files
+                refilterFiles();
+            }
+
+            function refilterFiles() {
+                const activeExts = getActiveFormatFilters();
+                let skipped = 0;
+                for (const f of fileSelectState.allFiles) {
+                    const wasValid = f.valid;
+                    f.valid = activeExts.includes(f.ext) && ALLOWED_EXTENSIONS.includes(f.ext);
+                    if (!f.valid) {
+                        f.selected = false;
+                        skipped++;
+                    } else if (!wasValid && f.valid) {
+                        f.selected = true; // Re-enable if filter toggled back
+                    }
+                }
+                fileSelectState.skippedCount = skipped;
+                renderCurrentFileList();
+                updateSummaryBar();
+                updateUploadButton();
+            }
+
+            function handleMultiFileSelected() {
+                const input = document.getElementById("multi-file-input");
+                if (!input.files || input.files.length === 0) return;
+
+                const activeExts = getActiveFormatFilters();
+                const files = Array.from(input.files);
+                const existingNames = new Set(fileSelectState.allFiles.map(f => f.file.name));
+
+                for (const file of files) {
+                    if (existingNames.has(file.name)) continue; // skip duplicates
+                    const ext = "." + file.name.split(".").pop().toLowerCase();
+                    const valid = activeExts.includes(ext) && ALLOWED_EXTENSIONS.includes(ext);
+                    if (!valid) fileSelectState.skippedCount++;
+                    fileSelectState.allFiles.push({
+                        file, ext, path: file.name,
+                        selected: valid, valid, index: fileSelectState.allFiles.length,
+                    });
+                }
+
+                // Mixed mode: if we already have tree items, switch to flat display
+                fileSelectState.isTreeMode = false;
+                fileSelectState.tree = null;
+                renderCurrentFileList();
+                updateSummaryBar();
+                updateUploadButton();
+            }
+
+            function handleDirSelected() {
+                const input = document.getElementById("dir-file-input");
+                if (!input.files || input.files.length === 0) return;
+
+                const activeExts = getActiveFormatFilters();
+                const files = Array.from(input.files);
+                const existingNames = new Set(fileSelectState.allFiles.map(f => f.file.name));
+
+                for (const file of files) {
+                    if (existingNames.has(file.name)) continue; // skip duplicates
+                    const ext = "." + file.name.split(".").pop().toLowerCase();
+                    const valid = activeExts.includes(ext) && ALLOWED_EXTENSIONS.includes(ext);
+                    if (!valid) fileSelectState.skippedCount++;
+                    fileSelectState.allFiles.push({
+                        file, ext, path: file.webkitRelativePath || file.name,
+                        selected: valid, valid, index: fileSelectState.allFiles.length,
+                    });
+                }
+
+                // If only dir files exist, use tree mode; if mixed with prior flat files, stay flat
+                const hasFlatFiles = fileSelectState.allFiles.some(f => !f.path.includes("/"));
+                if (hasFlatFiles) {
+                    fileSelectState.isTreeMode = false;
+                    fileSelectState.tree = null;
+                } else {
+                    fileSelectState.isTreeMode = true;
+                    fileSelectState.tree = buildFileTree(fileSelectState.allFiles);
+                }
+                renderCurrentFileList();
+                updateSummaryBar();
+                updateUploadButton();
+            }
+
+            function buildFileTree(fileItems) {
+                const tree = { _name: "root", _isDir: true, _children: {}, _items: [] };
+                for (const item of fileItems) {
+                    const parts = item.path.split("/");
+                    let node = tree;
+                    for (let i = 0; i < parts.length - 1; i++) {
+                        if (!node._children[parts[i]]) {
+                            node._children[parts[i]] = {
+                                _name: parts[i], _isDir: true, _children: {}, _items: [],
+                            };
+                        }
+                        node = node._children[parts[i]];
+                    }
+                    node._items.push(item);
+                }
+                return tree;
+            }
+
+            function renderCurrentFileList() {
+                const container = document.getElementById("upload-file-list");
+                container.innerHTML = "";
+
+                if (fileSelectState.allFiles.length === 0) {
+                    container.innerHTML = `<div class="file-tree-empty">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;margin-bottom:0.5rem;display:block;opacity:0.4;"></i>
+                        請選擇檔案或目錄</div>`;
+                    return;
+                }
+
+                if (fileSelectState.isTreeMode && fileSelectState.tree) {
+                    renderTreeNode(fileSelectState.tree, container, -1);
+                } else {
+                    renderFlatFileList(container);
+                }
+            }
+
+            function renderTreeNode(node, container, depth) {
+                // Render directory header (skip root)
+                if (depth >= 0) {
+                    const dirEl = document.createElement("div");
+                    dirEl.className = "file-tree-item dir-item";
+                    dirEl.style.setProperty("--depth", depth);
+                    const dirPath = node._name;
+                    const validInDir = getValidCountInNode(node);
+                    const totalInDir = getTotalCountInNode(node);
+                    dirEl.innerHTML = `
+                        <span class="tree-indent" style="width:calc(${depth} * 1.25rem)"></span>
+                        <i class="fa-solid fa-caret-down dir-toggle-arrow" data-dir="${dirPath}"></i>
+                        <span class="tree-icon"><i class="fa-solid fa-folder-open" style="color:#f59e0b;"></i></span>
+                        <input type="checkbox" class="tree-checkbox" ${validInDir > 0 ? "checked" : ""}
+                            onchange="selectAllInDir(this, '${dirPath}')" data-dir-checkbox="${dirPath}" />
+                        <span class="tree-name" style="font-weight:600;">${node._name}</span>
+                        <span class="tree-size" style="font-size:0.7rem;">(${validInDir}/${totalInDir})</span>
+                    `;
+                    dirEl.querySelector(".dir-toggle-arrow").addEventListener("click", function(e) {
+                        e.stopPropagation();
+                        toggleDirNode(this);
+                    });
+                    container.appendChild(dirEl);
+                }
+
+                // Children container
+                const childrenDiv = document.createElement("div");
+                childrenDiv.className = "dir-children";
+                if (depth >= 0) {
+                    childrenDiv.dataset.dir = node._name;
+                }
+
+                // Render files in this node
+                for (const item of node._items) {
+                    const fileEl = document.createElement("div");
+                    const itemDepth = Math.max(0, depth + 1);
+                    fileEl.className = "file-tree-item" + (item.valid ? "" : " skipped-item");
+                    fileEl.style.setProperty("--depth", itemDepth);
+
+                    const extClass = item.ext.replace(".", "");
+                    const formatTag = item.valid
+                        ? `<span class="tree-tag tag-${extClass}">${extClass.toUpperCase()}</span>`
+                        : `<span class="tree-warn">⚠ 不支援</span>`;
+
+                    fileEl.innerHTML = `
+                        <span class="tree-indent" style="width:calc(${itemDepth} * 1.25rem)"></span>
+                        <span class="tree-icon"><i class="fa-solid fa-file" style="color:var(--text-muted);"></i></span>
+                        ${item.valid
+                            ? `<input type="checkbox" class="tree-checkbox" ${item.selected ? "checked" : ""}
+                                onchange="toggleFileSelection(${item.index})" />`
+                            : `<span style="width:1rem;"></span>`
+                        }
+                        <span class="tree-name">${item.file.name}</span>
+                        ${formatTag}
+                        <span class="tree-size">${formatFileSize(item.file.size)}</span>
+                    `;
+                    childrenDiv.appendChild(fileEl);
+                }
+
+                // Render sub-directories recursively
+                for (const [key, child] of Object.entries(node._children)) {
+                    renderTreeNode(child, childrenDiv, Math.max(0, depth + 1));
+                }
+
+                container.appendChild(childrenDiv);
+            }
+
+            function renderFlatFileList(container) {
+                for (const item of fileSelectState.allFiles) {
+                    const fileEl = document.createElement("div");
+                    fileEl.className = "file-tree-item" + (item.valid ? "" : " skipped-item");
+
+                    const extClass = item.ext.replace(".", "");
+                    const formatTag = item.valid
+                        ? `<span class="tree-tag tag-${extClass}">${extClass.toUpperCase()}</span>`
+                        : `<span class="tree-warn">⚠ 不支援</span>`;
+
+                    fileEl.innerHTML = `
+                        <span class="tree-icon"><i class="fa-solid fa-file" style="color:var(--text-muted);"></i></span>
+                        ${item.valid
+                            ? `<input type="checkbox" class="tree-checkbox" ${item.selected ? "checked" : ""}
+                                onchange="toggleFileSelection(${item.index})" />`
+                            : `<span style="width:1rem;"></span>`
+                        }
+                        <span class="tree-name">${item.file.name}</span>
+                        ${formatTag}
+                        <span class="tree-size">${formatFileSize(item.file.size)}</span>
+                    `;
+                    container.appendChild(fileEl);
+                }
+            }
+
+            function toggleFileSelection(index) {
+                const item = fileSelectState.allFiles[index];
+                if (item && item.valid) {
+                    item.selected = !item.selected;
+                    updateSummaryBar();
+                    updateUploadButton();
+                }
+            }
+
+            function toggleDirNode(arrowEl) {
+                arrowEl.classList.toggle("collapsed");
+                const dirName = arrowEl.dataset.dir;
+                const parentItem = arrowEl.closest(".file-tree-item");
+                if (parentItem) {
+                    const childrenDiv = parentItem.nextElementSibling;
+                    if (childrenDiv && childrenDiv.classList.contains("dir-children")) {
+                        childrenDiv.classList.toggle("collapsed");
+                    }
+                }
+            }
+
+            function selectAllInDir(checkbox, dirName) {
+                const checked = checkbox.checked;
+                // Find all file checkboxes within this dir's children container
+                const parentItem = checkbox.closest(".file-tree-item");
+                if (parentItem) {
+                    const childrenDiv = parentItem.nextElementSibling;
+                    if (childrenDiv) {
+                        const fileCheckboxes = childrenDiv.querySelectorAll(".tree-checkbox");
+                        fileCheckboxes.forEach(cb => {
+                            if (cb !== checkbox) {
+                                cb.checked = checked;
+                                // Trigger change on the index
+                                const onchangeAttr = cb.getAttribute("onchange");
+                                if (onchangeAttr && onchangeAttr.includes("toggleFileSelection")) {
+                                    const match = onchangeAttr.match(/toggleFileSelection\((\d+)\)/);
+                                    if (match) {
+                                        const idx = parseInt(match[1]);
+                                        const item = fileSelectState.allFiles[idx];
+                                        if (item && item.valid) item.selected = checked;
+                                    }
+                                }
+                                // Handle nested dir checkboxes
+                                if (cb.dataset.dirCheckbox) {
+                                    cb.checked = checked;
+                                }
+                            }
+                        });
+                    }
+                }
+                updateSummaryBar();
+                updateUploadButton();
+            }
+
+            function getValidCountInNode(node) {
+                let count = node._items.filter(i => i.valid).length;
+                for (const child of Object.values(node._children)) {
+                    count += getValidCountInNode(child);
+                }
+                return count;
+            }
+
+            function getTotalCountInNode(node) {
+                let count = node._items.length;
+                for (const child of Object.values(node._children)) {
+                    count += getTotalCountInNode(child);
+                }
+                return count;
+            }
+
+            function getSelectedFiles() {
+                return fileSelectState.allFiles
+                    .filter(f => f.selected && f.valid)
+                    .map(f => f.file);
+            }
+
+            function updateSummaryBar() {
+                const summaryBar = document.getElementById("selected-files-summary");
+                const selectedEl = document.getElementById("summary-selected");
+                const skippedEl = document.getElementById("summary-skipped");
+
+                const selectedCount = fileSelectState.allFiles.filter(f => f.selected && f.valid).length;
+                const skippedCount = fileSelectState.allFiles.filter(f => !f.valid).length;
+
+                if (fileSelectState.allFiles.length > 0) {
+                    summaryBar.style.display = "flex";
+                    selectedEl.textContent = `已選: ${selectedCount} 個檔案`;
+                    skippedEl.textContent = skippedCount > 0 ? `略過: ${skippedCount} 個不支援格式` : "";
+                } else {
+                    summaryBar.style.display = "none";
+                }
+            }
+
+            function updateUploadButton() {
+                const btn = document.getElementById("btn-start-batch-upload");
+                const selectedCount = fileSelectState.allFiles.filter(f => f.selected && f.valid).length;
+                btn.disabled = selectedCount === 0;
+            }
+
             // Call this when the modal is shown
             function showAddSourceModal(skillName) {
                 document.getElementById("source-skill-name").value = skillName;
-                document.getElementById("pdf-file-input").value = "";
                 document.getElementById("new-source-desc").value = "";
-                const fileNameDisplay =
-                    document.getElementById("file-name-display");
-                if (fileNameDisplay) {
-                    fileNameDisplay.textContent = t(
-                        "config.modal.no_file_chosen",
-                    );
-                    fileNameDisplay.style.color = "#6b7280";
-                }
+
+                // Reset multi-file input
+                const multiInput = document.getElementById("multi-file-input");
+                if (multiInput) multiInput.value = "";
+                const dirInput = document.getElementById("dir-file-input");
+                if (dirInput) dirInput.value = "";
+
+                // Reset file selection state
+                fileSelectState.allFiles = [];
+                fileSelectState.isTreeMode = false;
+                fileSelectState.tree = null;
+                fileSelectState.skippedCount = 0;
+
+                // Reset UI
+                renderCurrentFileList();
+                updateSummaryBar();
+                updateUploadButton();
+
+                // Reset all format chips to active
+                document.querySelectorAll("#format-filter-chips .format-chip").forEach(c => c.classList.add("active"));
+
                 showModal("add-source-modal");
             }
 
@@ -3111,29 +3680,37 @@ Loading logs...</pre
             }
 
             function resetUploadModal() {
-                document.getElementById("upload-filename").textContent = "-";
-                document.getElementById("upload-filesize").textContent = "-";
                 document.getElementById("upload-logs").innerHTML =
                     "等待上傳開始...";
                 document.getElementById("upload-progress-bar").style.width =
                     "0%";
                 document.getElementById("upload-percent").textContent = "0%";
                 document.getElementById("upload-phase").textContent =
-                    "準備中...";
+                    "總進度";
                 document.getElementById("upload-elapsed").innerHTML =
                     '<i class="fa-solid fa-clock"></i> 經過時間: 0s';
-
-                // Reset status badge
-                const badge = document.getElementById("upload-status-badge");
-                badge.textContent = "處理中...";
-                badge.style.background = "rgba(251, 191, 36, 0.1)";
-                badge.style.color = "#f59e0b";
 
                 // Reset buttons
                 document.getElementById("btn-upload-cancel").style.display =
                     "inline-flex";
                 document.getElementById("btn-upload-close").style.display =
                     "none";
+                document.getElementById("btn-upload-close").disabled = true;
+
+                // Reset batch table
+                document.getElementById("batch-file-tbody").innerHTML = "";
+
+                // Reset log section
+                const logSection = document.getElementById("batch-log-section");
+                if (logSection) logSection.classList.add("collapsed");
+                const logArrow = document.getElementById("batch-log-arrow");
+                if (logArrow) logArrow.classList.remove("open");
+                const logCurrentFile = document.getElementById("batch-log-current-file");
+                if (logCurrentFile) logCurrentFile.textContent = "";
+
+                // Hide cancel overlay
+                const cancelOverlay = document.getElementById("batch-cancel-overlay");
+                if (cancelOverlay) cancelOverlay.classList.remove("active");
 
                 isUploadComplete = false;
             }
@@ -3162,152 +3739,421 @@ Loading logs...</pre
                 loadConfig(); // Refresh the skill list
             }
 
-            async function addSource() {
-                const skillName =
-                    document.getElementById("source-skill-name").value;
-                const fileInput = document.getElementById("pdf-file-input");
-                const desc = document
-                    .getElementById("new-source-desc")
-                    .value.trim();
+            // ===== Batch Upload: State & Core Functions =====
+            const batchState = {
+                skillName: "",
+                files: [],           // { file, status, progress, error, index }
+                currentIndex: -1,
+                currentReader: null,
+                startTime: null,
+                isComplete: false,
+                isCancelled: false,
+            };
 
-                if (!fileInput.files || fileInput.files.length === 0) {
-                    alert("Please select a file");
-                    return;
+            const BATCH_STATUS_CLASSES = {
+                "排隊中": "status-queued",
+                "處理中": "status-processing",
+                "完成": "status-complete",
+                "失敗": "status-failed",
+                "已略過": "status-skipped",
+                "已取消": "status-cancelled",
+                "已中斷": "status-interrupted",
+            };
+
+            function handleProgressModalClose() {
+                if (!batchState.isComplete && !batchState.isCancelled && batchState.currentIndex >= 0) {
+                    requestCancelBatch();
+                } else {
+                    closeUploadModal();
+                }
+            }
+
+            function toggleBatchLogs() {
+                const section = document.getElementById("batch-log-section");
+                const arrow = document.getElementById("batch-log-arrow");
+                if (section) section.classList.toggle("collapsed");
+                if (arrow) arrow.classList.toggle("open");
+            }
+
+            function buildBatchFileTable(files) {
+                const tbody = document.getElementById("batch-file-tbody");
+                tbody.innerHTML = "";
+                for (let i = 0; i < files.length; i++) {
+                    const f = files[i];
+                    const tr = document.createElement("tr");
+                    tr.id = `batch-row-${i}`;
+                    tr.innerHTML = `
+                        <td style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${f.file.name}">
+                            <i class="fa-solid fa-file" style="color:var(--text-muted); margin-right:0.25rem;"></i>
+                            ${f.file.name}
+                        </td>
+                        <td style="font-size:0.75rem; color:var(--text-muted);">${formatFileSize(f.file.size)}</td>
+                        <td><span class="batch-status-badge status-queued" id="batch-status-${i}">排隊中</span></td>
+                        <td class="file-progress-cell">
+                            <span style="font-size:0.7rem; color:var(--text-muted);" id="batch-percent-${i}">0%</span>
+                            <div class="mini-progress-bar">
+                                <div class="mini-progress-fill" id="batch-bar-${i}" style="width:0%;"></div>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            }
+
+            function updateFileRow(index, status, progress) {
+                const badge = document.getElementById(`batch-status-${index}`);
+                const bar = document.getElementById(`batch-bar-${index}`);
+                const percent = document.getElementById(`batch-percent-${index}`);
+
+                if (badge) {
+                    badge.textContent = status;
+                    badge.className = `batch-status-badge ${BATCH_STATUS_CLASSES[status] || "status-queued"}`;
+                }
+                if (bar) bar.style.width = `${progress}%`;
+                if (percent) percent.textContent = `${Math.round(progress)}%`;
+            }
+
+            function updateOverallProgress() {
+                const total = batchState.files.length;
+                if (total === 0) return;
+
+                let completedWeight = 0;
+                for (const f of batchState.files) {
+                    if (f.status === "完成") completedWeight += 100;
+                    else if (f.status === "失敗" || f.status === "已取消" || f.status === "已中斷") completedWeight += 100;
+                    else if (f.status === "處理中") completedWeight += f.progress;
                 }
 
-                const file = fileInput.files[0];
+                const overall = Math.round(completedWeight / total);
+                document.getElementById("upload-progress-bar").style.width = `${overall}%`;
+                document.getElementById("upload-percent").textContent = `${overall}%`;
+            }
 
-                // Validate file extension
-                const allowedExtensions = [
-                    ".pdf",
-                    ".docx",
-                    ".pptx",
-                    ".txt",
-                    ".md",
-                ];
-                const fileExt = "." + file.name.split(".").pop().toLowerCase();
-                if (!allowedExtensions.includes(fileExt)) {
-                    alert(
-                        `不支援的檔案格式: ${fileExt}\n支援格式: PDF, DOCX, PPTX, TXT, MD`,
-                    );
-                    return;
+            function requestCancelBatch() {
+                const completed = batchState.files.filter(f => f.status === "完成").length;
+                const remaining = batchState.files.filter(f => f.status === "排隊中").length;
+                const total = batchState.files.length;
+
+                document.getElementById("cancel-msg-completed").textContent =
+                    `已完成的檔案（${completed}/${total}）將保留，不受影響。`;
+                document.getElementById("cancel-msg-remaining").textContent =
+                    `尚未處理的 ${remaining} 個檔案將跳過。`;
+
+                document.getElementById("batch-cancel-overlay").classList.add("active");
+            }
+
+            function closeCancelDialog() {
+                document.getElementById("batch-cancel-overlay").classList.remove("active");
+            }
+
+            function executeCancelBatch() {
+                batchState.isCancelled = true;
+
+                // Cancel current SSE reader
+                if (batchState.currentReader) {
+                    try { batchState.currentReader.cancel(); } catch(e) {}
+                    batchState.currentReader = null;
                 }
 
-                // Close the add-source modal and open progress modal
-                closeModal("add-source-modal");
-                resetUploadModal();
+                // Update statuses
+                for (let i = 0; i < batchState.files.length; i++) {
+                    const f = batchState.files[i];
+                    if (f.status === "排隊中") {
+                        f.status = "已取消";
+                        updateFileRow(i, "已取消", 0);
+                    } else if (f.status === "處理中") {
+                        f.status = "已中斷";
+                        updateFileRow(i, "已中斷", f.progress);
+                    }
+                }
 
-                // Set file info
-                document.getElementById("upload-filename").textContent =
-                    file.name;
-                document.getElementById("upload-filesize").textContent =
-                    formatFileSize(file.size);
-                document.getElementById("upload-progress-title").textContent =
-                    `上傳處理進度 - ${skillName}`;
-
-                // Show progress modal
-                document
-                    .getElementById("upload-progress-modal")
-                    .classList.add("active");
-
-                // Start elapsed timer
-                startElapsedTimer();
-
-                // Clear logs and show start message
-                document.getElementById("upload-logs").innerHTML = "";
-                appendUploadLog(`開始上傳: ${file.name}`, "info");
-                appendUploadLog(
-                    `檔案大小: ${formatFileSize(file.size)}`,
-                    "info",
-                );
-                appendUploadLog(`目標 Skill: ${skillName}`, "info");
+                updateOverallProgress();
+                stopElapsedTimer();
                 appendUploadLog("─".repeat(50), "info");
+                appendUploadLog("⚠ 批次處理已取消", "warning");
+
+                // Hide cancel overlay
+                closeCancelDialog();
+
+                // Show complete button
+                document.getElementById("btn-upload-cancel").style.display = "none";
+                document.getElementById("btn-upload-close").style.display = "inline-flex";
+                document.getElementById("btn-upload-close").disabled = false;
+                batchState.isComplete = true;
+
+                // Refresh data in background
+                loadConfig().catch(err => console.error("Failed to refresh config:", err));
+            }
+
+            function finalizeBatch() {
+                batchState.isComplete = true;
+                updateOverallProgress();
+                stopElapsedTimer();
+
+                appendUploadLog("─".repeat(50), "info");
+                const completed = batchState.files.filter(f => f.status === "完成").length;
+                const failed = batchState.files.filter(f => f.status === "失敗").length;
+                appendUploadLog(`🎉 批次處理完成！成功: ${completed}, 失敗: ${failed}`, completed > 0 ? "success" : "error");
+
+                // Update overall to 100%
+                document.getElementById("upload-progress-bar").style.width = "100%";
+                document.getElementById("upload-percent").textContent = "100%";
+
+                // Show complete button
+                document.getElementById("btn-upload-cancel").style.display = "none";
+                document.getElementById("btn-upload-close").style.display = "inline-flex";
+                document.getElementById("btn-upload-close").disabled = false;
+
+                // Refresh data
+                appendUploadLog("資料同步中...", "info");
+                loadConfig()
+                    .then(() => appendUploadLog("✅ 技能列表已更新", "success"))
+                    .catch(err => console.error("Failed to refresh config:", err));
+            }
+
+            async function processNextFile() {
+                if (batchState.isCancelled) return;
+
+                batchState.currentIndex++;
+                if (batchState.currentIndex >= batchState.files.length) {
+                    finalizeBatch();
+                    return;
+                }
+
+                const fileItem = batchState.files[batchState.currentIndex];
+                const idx = batchState.currentIndex;
+                fileItem.status = "處理中";
+                fileItem.progress = 0;
+                updateFileRow(idx, "處理中", 0);
+
+                // Update log header with current file name
+                const logCurrentFile = document.getElementById("batch-log-current-file");
+                if (logCurrentFile) logCurrentFile.textContent = `- ${fileItem.file.name}`;
+
+                appendUploadLog(`\n▶ 開始處理 [${idx + 1}/${batchState.files.length}]: ${fileItem.file.name}`, "phase");
+                appendUploadLog(`  檔案大小: ${formatFileSize(fileItem.file.size)}`, "info");
 
                 try {
-                    // Use FormData for file upload
                     const formData = new FormData();
-                    formData.append("file", file);
-                    if (desc) {
-                        formData.append("description", desc);
-                    }
+                    formData.append("file", fileItem.file);
+                    const desc = document.getElementById("new-source-desc")?.value?.trim();
+                    if (desc) formData.append("description", desc);
 
-                    const safeSkillName = encodeURIComponent(skillName);
-
-                    // First, upload the file and get task_id
-                    appendUploadLog("正在上傳檔案到伺服器...", "info");
-
+                    const safeSkillName = encodeURIComponent(batchState.skillName);
                     const response = await fetch(
                         `/api/v1/skills/config/skills/${safeSkillName}/upload-source-stream`,
-                        {
-                            method: "POST",
-                            body: formData,
-                        },
+                        { method: "POST", body: formData }
                     );
 
                     if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(
-                            error.detail || "Failed to upload file",
-                        );
+                        let errMsg = "Failed to upload file";
+                        try { const errData = await response.json(); errMsg = errData.detail || errMsg; } catch(e) {}
+                        throw new Error(errMsg);
                     }
 
-                    // Now handle SSE stream
+                    // Read SSE stream
                     const reader = response.body.getReader();
+                    batchState.currentReader = reader;
                     const decoder = new TextDecoder();
                     let buffer = "";
-                    let currentEventType = null; // Track event type from SSE
+                    let currentEventType = null;
+                    let fileComplete = false;
 
                     while (true) {
+                        if (batchState.isCancelled) break;
                         const { done, value } = await reader.read();
                         if (done) break;
 
                         buffer += decoder.decode(value, { stream: true });
                         const lines = buffer.split("\n");
-                        buffer = lines.pop() || ""; // Keep incomplete line in buffer
+                        buffer = lines.pop() || "";
 
                         for (const line of lines) {
-                            // Parse event type line
                             if (line.startsWith("event: ")) {
                                 currentEventType = line.slice(7).trim();
-                            }
-                            // Parse data line
-                            else if (line.startsWith("data: ")) {
+                            } else if (line.startsWith("data: ")) {
                                 try {
                                     const data = JSON.parse(line.slice(6));
-                                    // Add event type to data object
                                     data._eventType = currentEventType;
-                                    handleSSEEvent(data);
-                                    currentEventType = null; // Reset for next event
+                                    currentEventType = null;
+
+                                    // Route to batch-aware handler
+                                    handleBatchSSEEvent(idx, data);
+
+                                    if (data._eventType === "complete" || data.type === "complete") {
+                                        fileComplete = true;
+                                    }
                                 } catch (e) {
-                                    console.log("Parse error:", line);
+                                    console.log("SSE parse error:", line);
                                 }
                             }
                         }
                     }
 
-                    // Stream ended - if upload was successful, refresh the page data in background
-                    if (isUploadComplete) {
-                        appendUploadLog("資料同步中...", "info");
-                        // Refresh config in background so the new document shows when modal closes
-                        loadConfig()
-                            .then(() => {
-                                appendUploadLog("✅ 技能列表已更新", "success");
-                            })
-                            .catch((err) => {
-                                console.error("Failed to refresh config:", err);
-                            });
+                    batchState.currentReader = null;
+
+                    if (!batchState.isCancelled) {
+                        if (fileComplete) {
+                            fileItem.status = "完成";
+                            fileItem.progress = 100;
+                            updateFileRow(idx, "完成", 100);
+                        } else if (fileItem.status === "處理中") {
+                            // Stream ended without complete event
+                            fileItem.status = "完成";
+                            fileItem.progress = 100;
+                            updateFileRow(idx, "完成", 100);
+                        }
                     }
                 } catch (e) {
-                    appendUploadLog(`錯誤: ${e.message}`, "error");
-                    updateUploadStatus("上傳失敗", false);
-                    stopElapsedTimer();
-
-                    // Show close button instead of cancel
-                    document.getElementById("btn-upload-cancel").style.display =
-                        "none";
-                    document.getElementById("btn-upload-close").style.display =
-                        "inline-flex";
+                    if (!batchState.isCancelled) {
+                        fileItem.status = "失敗";
+                        fileItem.error = e.message;
+                        updateFileRow(idx, "失敗", fileItem.progress);
+                        appendUploadLog(`❌ 錯誤: ${e.message}`, "error");
+                    }
                 }
+
+                updateOverallProgress();
+
+                // Process next file
+                if (!batchState.isCancelled) {
+                    processNextFile();
+                }
+            }
+
+            function handleBatchSSEEvent(fileIndex, data) {
+                const eventType = data._eventType || data.type || data.event;
+                const progressPercent = data.percent !== undefined ? data.percent
+                    : data.progress !== undefined ? data.progress : data.progress_percent;
+
+                // Update per-file progress
+                if (progressPercent !== undefined) {
+                    let mappedProgress = progressPercent;
+                    if (data.phase === "extract") {
+                        mappedProgress = 10 + Math.round(progressPercent * 0.3);
+                    } else if (data.phase === "embedding") {
+                        mappedProgress = 40 + Math.round(progressPercent * 0.4);
+                    }
+                    batchState.files[fileIndex].progress = mappedProgress;
+                    updateFileRow(fileIndex, "處理中", mappedProgress);
+                    updateOverallProgress();
+                }
+
+                // Map events to progress
+                switch (eventType) {
+                    case "start":
+                        appendUploadLog(`  開始處理文件: ${data.filename}`, "phase");
+                        batchState.files[fileIndex].progress = 5;
+                        updateFileRow(fileIndex, "處理中", 5);
+                        break;
+                    case "file_saved":
+                        appendUploadLog(`  ${data.message}`, "success");
+                        batchState.files[fileIndex].progress = 8;
+                        updateFileRow(fileIndex, "處理中", 8);
+                        break;
+                    case "processing_start":
+                        const mode = data.mode === "standard" ? "標準模式" : "串流模式";
+                        appendUploadLog(`  📄 開始處理 (${mode})`, "phase");
+                        batchState.files[fileIndex].progress = 5;
+                        updateFileRow(fileIndex, "處理中", 5);
+                        break;
+                    case "phase_start":
+                        appendUploadLog(`  ${data.message || `階段: ${data.phase}`}`, "phase");
+                        if (data.phase === "extract") { batchState.files[fileIndex].progress = 10; updateFileRow(fileIndex, "處理中", 10); }
+                        else if (data.phase === "embedding") { batchState.files[fileIndex].progress = 40; updateFileRow(fileIndex, "處理中", 40); }
+                        else if (data.phase === "faiss") { batchState.files[fileIndex].progress = 80; updateFileRow(fileIndex, "處理中", 80); }
+                        else if (data.phase === "metadata") { batchState.files[fileIndex].progress = 90; updateFileRow(fileIndex, "處理中", 90); }
+                        break;
+                    case "progress":
+                        appendUploadLog(`  ${data.message}`, "info");
+                        break;
+                    case "checkpoint":
+                        if (data.phase === "batch_start") {
+                            appendUploadLog(`  🔄 處理批次 ${data.batch_num}: 頁 ${data.pages}`, "info");
+                        } else if (data.phase === "batch_complete") {
+                            appendUploadLog(`  ✓ 檢查點: 第 ${data.page || "?"} 頁`, "success");
+                        }
+                        break;
+                    case "batch_start":
+                        appendUploadLog(`  🔄 處理批次: 頁 ${data.batch_pages}`, "info");
+                        break;
+                    case "phase_complete":
+                        appendUploadLog(`  ${data.message || `✓ ${data.phase} 完成`}`, "success");
+                        if (data.phase === "extract") { batchState.files[fileIndex].progress = 40; updateFileRow(fileIndex, "處理中", 40); }
+                        else if (data.phase === "embedding") { batchState.files[fileIndex].progress = 80; updateFileRow(fileIndex, "處理中", 80); }
+                        else if (data.phase === "faiss") { batchState.files[fileIndex].progress = 90; updateFileRow(fileIndex, "處理中", 90); }
+                        else if (data.phase === "metadata") { batchState.files[fileIndex].progress = 95; updateFileRow(fileIndex, "處理中", 95); }
+                        break;
+                    case "complete":
+                        appendUploadLog(`  🎉 ${data.message || "處理完成！"}`, "success");
+                        if (data.total_chunks) appendUploadLog(`  頁段數量: ${data.total_chunks || data.chunks_created || "N/A"}`, "info");
+                        if (data.total_pages) appendUploadLog(`  頁面數: ${data.total_pages || "N/A"}`, "info");
+                        batchState.files[fileIndex].progress = 100;
+                        updateFileRow(fileIndex, "完成", 100);
+                        break;
+                    case "error":
+                        appendUploadLog(`  ❌ ${data.message || data.error || "處理失敗"}`, "error");
+                        batchState.files[fileIndex].status = "失敗";
+                        updateFileRow(fileIndex, "失敗", batchState.files[fileIndex].progress);
+                        break;
+                    case "heartbeat":
+                        break;
+                    case "dirty":
+                        appendUploadLog(`  ⚠️ 批次失敗: ${data.error || "未知錯誤"}`, "error");
+                        break;
+                    case "resume":
+                        appendUploadLog(`  📌 ${data.message || "恢復處理"}`, "phase");
+                        break;
+                }
+
+                updateOverallProgress();
+            }
+
+            async function addSource() {
+                const skillName = document.getElementById("source-skill-name").value;
+                const selectedFiles = getSelectedFiles();
+
+                if (selectedFiles.length === 0) {
+                    alert("請至少選擇一個檔案");
+                    return;
+                }
+
+                // Initialize batch state
+                batchState.skillName = skillName;
+                batchState.files = selectedFiles.map((file, i) => ({
+                    file, status: "排隊中", progress: 0, error: null, index: i,
+                }));
+                batchState.currentIndex = -1;
+                batchState.currentReader = null;
+                batchState.startTime = Date.now();
+                batchState.isComplete = false;
+                batchState.isCancelled = false;
+
+                // Close add-source modal, open progress modal
+                closeModal("add-source-modal");
+                resetUploadModal();
+
+                // Set title
+                document.getElementById("upload-progress-title").textContent =
+                    `批次上傳處理 - ${skillName}`;
+
+                // Build file table
+                buildBatchFileTable(batchState.files);
+
+                // Show progress modal
+                document.getElementById("upload-progress-modal").classList.add("active");
+
+                // Start timer
+                startElapsedTimer();
+
+                // Clear logs and show start message
+                document.getElementById("upload-logs").innerHTML = "";
+                appendUploadLog(`批次上傳開始: ${selectedFiles.length} 個檔案`, "phase");
+                appendUploadLog(`目標 Skill: ${skillName}`, "info");
+                appendUploadLog("─".repeat(50), "info");
+
+                // Start processing
+                processNextFile();
             }
 
             function handleSSEEvent(data) {
