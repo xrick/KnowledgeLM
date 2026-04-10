@@ -65,7 +65,7 @@ KnowledgeLM implements a **Dual RAG Architecture**, running two parallel systems
 ## 📂 Project Structure
 
 ```text
-DOCAI/
+KnowledgeLM/
 ├── app/
 │   ├── api/v1/endpoints/    # FastAPI route handlers
 │   ├── models/              # Pydantic & TypedDict definitions
