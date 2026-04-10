@@ -1,13 +1,30 @@
-# DocAI: Local Retrieval-Augmented Generation System
+# KnowledgeLM
+KnowledgeLM is an enterprise AI knowledge system that transforms internal company data into an intelligent, queryable assistant.
 
-> **Version:** 1.0 (2025-12-04)  
-> **Concept:** Your Personal Librarian for Documents
+## 🚀 What it does
+- Convert internal documents (PDF, Word, DB) into AI knowledge
+- Enable natural language querying
+- Generate reports and answers automatically
+- Reduce onboarding and operational costs
 
-DocAI is a robust, local RAG (Retrieval-Augmented Generation) system designed to ingest, index, and answer questions from your documents. It functions as a "personal librarian" that not only knows where every book is stored but can also read, understand, and synthesize answers based on curated knowledge domains.
+## 💼 Use Cases
+- Internal knowledge base (SOP, documentation)
+- Customer support automation
+- Employee training assistant
+- Report generation
+
+## 🧠 Tech Stack
+- LLM (Ollama / OpenAI-compatible)
+- RAG architecture
+- Vector database (Milvus / FAISS)
+- Backend (FastAPI)
+
+## 🎯 Value
+Turn your company's data into a usable AI asset.
 
 ## 📖 Overview
 
-DocAI implements a **Dual RAG Architecture**, running two parallel systems to support different use cases:
+KnowledgeLM implements a **Dual RAG Architecture**, running two parallel systems to support different use cases:
 
 1.  **Skill-Based RAG (New Architecture):**
     * Focuses on curated "Skills" (Knowledge Domains) combining multiple source files.
