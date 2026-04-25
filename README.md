@@ -36,6 +36,17 @@ KnowledgeLM implements a **Dual RAG Architecture**, running two parallel systems
     * Focuses on individual, searchable PDF files.
     * Uses **Milvus** for high-performance vector storage.
     * Features a complex 5-Phase OPMP pipeline with SSE streaming.
+    
+## Security: Sandboxed Code Execution
+LLM-generated code runs in a restricted environment:
+- **Process isolation**: Each execution in a separate subprocess
+  with resource limits (CPU time, memory, wall-clock)
+- **Filesystem restrictions**: Read-only access to input file,
+  no network, no write outside /tmp
+- **Allowed imports whitelist**: pandas, openpyxl, numpy — no os,
+  subprocess, socket
+- **Timeout**: 30s hard limit per execution
+- **Output validation**: Results schema-checked before return
 
 ## 🚀 Key Features
 
