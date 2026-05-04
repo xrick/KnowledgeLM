@@ -1,0 +1,86 @@
+2026-05-04 20:22:53,749 - main - INFO - =� Static files mounted at /static
+2026-05-04 20:22:53,762 - main - INFO - = RESTful API v1 registered at /api/v1
+2026-05-04 20:22:53,763 - main - INFO - = Legacy upload endpoint registered at /upload-pdf
+2026-05-04 20:22:53,765 - main - INFO - 🔌 Legacy chat endpoint registered at /chat
+2026-05-04 20:22:53,765 - main - INFO - 📁 File management endpoints registered at /api/v1/files
+INFO:     Started server process [47328]
+INFO:     Waiting for application startup.
+2026-05-04 20:22:53,766 - main - INFO - =� Starting DocAI v1.0.0
+2026-05-04 20:22:53,766 - main - INFO - =� Ensured directory exists: uploadfiles
+2026-05-04 20:22:53,766 - main - INFO - =� Ensured directory exists: uploadfiles/pdf
+2026-05-04 20:22:53,766 - main - INFO - =� Ensured directory exists: data
+2026-05-04 20:22:53,766 - main - INFO - =� Ensured directory exists: logs
+2026-05-04 20:22:53,766 - main - INFO - =� Ensured directory exists: static
+2026-05-04 20:22:53,766 - app.Providers.file_metadata_provider.client - INFO - File Metadata Provider initialized: data/docai.db
+2026-05-04 20:22:53,766 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x37112a7a0>
+2026-05-04 20:22:53,766 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x37112a7a0> completed
+2026-05-04 20:22:53,766 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA journal_mode=WAL', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA journal_mode=WAL', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA synchronous=NORMAL', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA synchronous=NORMAL', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA cache_size=10000', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA cache_size=10000', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA temp_store=MEMORY', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA temp_store=MEMORY', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA busy_timeout=5000', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA busy_timeout=5000', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA wal_autocheckpoint=1000', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, 'PRAGMA wal_autocheckpoint=1000', []) completed
+2026-05-04 20:22:53,767 - app.Providers.file_metadata_provider.client - INFO - Created file database connection with WAL mode
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n                CREATE TABLE IF NOT EXISTS file_metadata (\n                    file_id TEXT PRIMARY KEY,\n                    filename TEXT NOT NULL,\n                    file_type TEXT NOT NULL,\n                    file_size INTEGER,\n                    upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                    user_id TEXT,\n                    chunk_count INTEGER,\n                    embedding_status TEXT,\n                    milvus_partition TEXT,\n                    metadata_json TEXT\n                )\n        ', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE TABLE IF NOT EXISTS chunks_metadata (\n                chunk_id TEXT PRIMARY KEY,\n                file_id TEXT,\n                chunk_index INTEGER,\n                chunk_text TEXT,\n                milvus_id INTEGER,\n                FOREIGN KEY (file_id) REFERENCES file_metadata(file_id)\n            )\n        ', []) completed
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', [])
+2026-05-04 20:22:53,767 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_file_user\n            ON file_metadata(user_id)\n        ', []) completed
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', [])
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_file_upload_time\n            ON file_metadata(upload_time)\n        ', []) completed
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', [])
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370649990>, '\n            CREATE INDEX IF NOT EXISTS idx_chunk_file_id\n            ON chunks_metadata(file_id)\n        ', []) completed
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - executing functools.partial(<built-in method commit of sqlite3.Connection object at 0x370649990>)
+2026-05-04 20:22:53,768 - aiosqlite - DEBUG - operation functools.partial(<built-in method commit of sqlite3.Connection object at 0x370649990>) completed
+2026-05-04 20:22:53,768 - app.Providers.file_metadata_provider.client - INFO - Database tables initialized
+2026-05-04 20:22:53,768 - main - INFO - ✅ SQLite database provider initialized
+/Users/xrickliao/WorkSpaces/Work/Projects/KnowledgeLM/docaienv/lib/python3.11/site-packages/pymilvus/client/__init__.py:6: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound, get_distribution
+2026-05-04 20:22:53,884 - main - INFO - 🔍 Checking Milvus service at localhost:19530...
+2026-05-04 20:22:53,884 - app.Providers.vector_store_provider.milvus_client - INFO - Milvus Client initialized: localhost:19530, collection='docai_embeddings', dimension=1024
+2026-05-04 20:22:58,892 - app.Providers.vector_store_provider.milvus_client - WARNING - Milvus service health check failed: <MilvusException: (code=2, message=Fail connecting to server on localhost:19530. Timeout)>
+2026-05-04 20:22:58,892 - main - WARNING - ⚠️  Milvus service is not available at localhost:19530. Vector search features may not work properly. Please ensure Milvus is running (e.g., docker ps | grep milvus)
+2026-05-04 20:22:58,892 - main - INFO - ✅ Background integrity checker started (interval: 1 hour)
+2026-05-04 20:22:58,892 - main - INFO -  Application startup complete
+2026-05-04 20:22:58,893 - app.SkillServices.background_integrity_checker - INFO - Starting background integrity checker (interval: 3600s / 60.0min)
+2026-05-04 20:22:58,893 - app.Providers.skill_metadata_provider.client - INFO - Skill Metadata Provider initialized: data/skill_metadata.db
+INFO:     Application startup complete.
+2026-05-04 20:22:58,893 - aiosqlite - DEBUG - executing <function connect.<locals>.connector at 0x3742f9c60>
+INFO:     Uvicorn running on http://0.0.0.0:8082 (Press CTRL+C to quit)
+2026-05-04 20:22:58,895 - aiosqlite - DEBUG - operation <function connect.<locals>.connector at 0x3742f9c60> completed
+2026-05-04 20:22:58,895 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA journal_mode=WAL', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA journal_mode=WAL', []) completed
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA synchronous=NORMAL', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA synchronous=NORMAL', []) completed
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA cache_size=10000', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA cache_size=10000', []) completed
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA temp_store=MEMORY', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA temp_store=MEMORY', []) completed
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA busy_timeout=5000', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA busy_timeout=5000', []) completed
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA wal_autocheckpoint=1000', [])
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, 'PRAGMA wal_autocheckpoint=1000', []) completed
+2026-05-04 20:22:58,899 - app.Providers.skill_metadata_provider.client - INFO - Created singleton skill database connection with WAL mode
+2026-05-04 20:22:58,899 - aiosqlite - DEBUG - executing functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, "\n                SELECT skill_id, skill_name, total_chunks, indexed_chunks,\n                       processing_status, last_error, created_at, processing_started_at\n                FROM skill_metadata\n                WHERE (processing_status != 'completed'\n                   OR indexed_chunks < total_chunks)\n                  AND parent_skill_id = 'root'\n                ORDER BY created_at DESC\n            ", [])
+2026-05-04 20:22:58,900 - aiosqlite - DEBUG - operation functools.partial(<built-in method execute of sqlite3.Connection object at 0x370648f40>, "\n                SELECT skill_id, skill_name, total_chunks, indexed_chunks,\n                       processing_status, last_error, created_at, processing_started_at\n                FROM skill_metadata\n                WHERE (processing_status != 'completed'\n                   OR indexed_chunks < total_chunks)\n                  AND parent_skill_id = 'root'\n                ORDER BY created_at DESC\n            ", []) completed
+2026-05-04 20:22:58,900 - aiosqlite - DEBUG - executing functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x37434c840>)
+2026-05-04 20:22:58,900 - aiosqlite - DEBUG - operation functools.partial(<built-in method fetchall of sqlite3.Cursor object at 0x37434c840>) completed
+2026-05-04 20:22:58,900 - app.Providers.skill_metadata_provider.client - INFO - Found 0 skills with incomplete processing/indexing
+2026-05-04 20:22:58,900 - app.SkillServices.background_integrity_checker - INFO - ✅ No incomplete skills found - all indices healthy
+INFO:     127.0.0.1:52585 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52587 - "GET / HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-05-04 20:24:17,597 - main - INFO - =� Shutting down application
+2026-05-04 20:24:17,597 - app.Providers.llm_provider.manager - INFO - LLMManager initialized with default model: gpt-oss:20b
+2026-05-04 20:24:17,597 - main - INFO - ✅ LLM Manager shutdown complete
+2026-05-04 20:24:17,597 - main - INFO -  Application shutdown complete
+INFO:     Application shutdown complete.
+INFO:     Finished server process [47328]

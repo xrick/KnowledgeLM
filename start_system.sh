@@ -437,6 +437,12 @@ print_header "啟動 DocAI 服務"
 
 print_step "啟動 FastAPI 服務器..."
 
+# Disable hf_transfer at the shell level to avoid ModuleNotFoundError when
+# the user's environment has HF_HUB_ENABLE_HF_TRANSFER=1 but hf_transfer is
+# not installed in docaienv. main.py also sets this defensively before any
+# huggingface_hub import (belt-and-suspenders).
+export HF_HUB_ENABLE_HF_TRANSFER=0
+
 # Start server in background
 nohup docaienv/bin/python main.py > logs/server.log 2>&1 &
 SERVER_PID=$!

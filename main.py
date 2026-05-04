@@ -10,6 +10,12 @@ FastAPI application factory with:
 - Startup/Shutdown lifecycle management
 """
 
+# MUST be set BEFORE huggingface_hub is imported (constants are frozen at import time).
+# Prevents "ModuleNotFoundError: No module named 'hf_transfer'" when shell sets
+# HF_HUB_ENABLE_HF_TRANSFER=1 but the package is not installed in this venv.
+import os
+os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '0'
+
 import logging
 import asyncio
 from contextlib import asynccontextmanager
