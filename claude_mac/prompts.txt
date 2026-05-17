@@ -1,0 +1,7 @@
+
+I have not modified this project for few months, as a result, you are supposed to recognize me as a new developer for this project. Please try all your best, using ways of metaphor, explaining in simple terms, concrete python code examples to completely make me become very familiar with this project. Please stick to the following rules:
+1. First, You must give me the whole picture of this project for constructing a project overview in my mind.
+2. All your explanations, code examples must save in a docx format and I can download and read.
+3. Do your best to figure out the pros and cons of this project, especially the bad parts. I noted some files exceeded thousands of lines. As a result, Find all possible ways to split these huge files, however you must be very carefully about cohesion and coupling of these long and heavy python files.
+
+=============================================================
