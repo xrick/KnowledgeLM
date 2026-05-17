@@ -49,3 +49,5 @@ data/cache/sentence_transformers/models--sentence-transformers--all-MiniLM-L6-v2
 data/cache/sentence_transformers/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/pytorch_model.bin
 data/cache/sentence_transformers/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/model.safetensors
 data/cache/sentence_transformers/models--BAAI--bge-m3/snapshots/9a0624b896d81da7492a910ffa53731274b6cf3d/model.safetensors
+.env
+.gitignore
